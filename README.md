@@ -1,4 +1,4 @@
-![Integration Bee](./Media/Integration_bee_logo.svg)
+![Integration Bee](./Media/Integration_bee_logo_lightbg.svg)
 
 # Integration Bee
 
