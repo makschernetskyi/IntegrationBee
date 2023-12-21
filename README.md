@@ -1,4 +1,9 @@
-![Integration Bee](./Media/Integration_bee_logo_lightbg.svg)
+<picture>
+	<source alt="Integration Bee" media="(prefers-color-scheme: dark)" srcset="./Media/Integration_bee_logo_light_text.svg">
+	<img src="./Media/Integration_bee_logo.svg" alt="Integration Bee">
+</picture>
+
+<!-- ![Integration Bee](./Media/Integration_bee_logo_lightbg.svg) -->
 
 # Integration Bee
 
