@@ -1,0 +1,11 @@
+#app { display: grid; grid-template-columns: 1fr; grid-auto-rows: 3rem 1fr; }
+
+.Header { grid-row: 1/2; width: 100%; height: 100%; background: #FFCC00; }
+
+* { box-sizing: border-box; padding: 0; margin: 0; }
+
+body, html { width: 100%; height: 100%; }
+
+body, #app { min-height: 100vh; min-height: 100svh; }
+
+/*# sourceMappingURL=index.css.map */
