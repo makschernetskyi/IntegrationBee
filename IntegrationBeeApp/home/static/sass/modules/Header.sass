@@ -1,7 +1,103 @@
 @import "../abstracts/colors"
+@import "../abstracts/dimensions"
+
 
 .Header
   grid-row: 1/2
+  width: auto
+  display: grid
+  grid-template-columns: 1fr
+  grid-template-rows: 1fr
+
+  height: 100%
+
+.Header-Logo
+  grid-column: 1/2
+  height: 100%
+  display: flex
+  justify-content: left
+  align-items: center
+  padding: 0
+  margin: 0
+  overflow: hidden
+  padding-left: 1.5rem
+
+  img
+    height: 80%
+    padding: 0
+    margin: 0
+
+.Header-ActionButtons
+  grid-column: 1/2
+  display: grid
+  grid-template-columns: repeat(5, 1fr)
+
+.Header-ActionButtons-Button
   width: 100%
   height: 100%
-  background: $Jonquil
+  display: flex
+  justify-content: center
+  align-items: center
+  text-decoration: none
+
+
+.Header-ActionButtons-Button-text
+  width: max-content
+  height: 60%
+  display: flex
+  justify-content: center
+  align-items: center
+  border-radius: 10px
+  color: $eerie-black
+  font-family: Poppins, sans-serif
+  font-size: 0.8em
+
+
+
+.Header-ActionButtons-SignInButton
+  .Header-ActionButtons-Button-text
+    color: $orange-peel
+    font-weight: bold
+
+.Header-ActionButtons-SignUpButton
+
+
+.Header-ActionButtons-SignUpButton-text
+  width: max-content
+  padding-left: 0.5rem
+  padding-right: 0.5rem
+  height: 60%
+  background: $jonquil
+  display: flex
+  justify-content: center
+  align-items: center
+  border-radius: 10px
+  font-weight: bold
+  color: $eerie-black
+  font-family: Poppins, sans-serif
+  font-size: 0.8em
+
+@media only screen and (min-width: $medium-screen)
+
+  .Header
+    grid-template-columns: 20rem 2fr 35rem
+    padding: 1rem
+
+
+  .Header-ActionButtons
+    grid-column: 3/4
+
+  .Header-ActionButtons-Button-text
+    height: 60%
+    padding-left: 1rem
+    padding-right: 1rem
+    font-size: 1em
+    transition: background .1s
+    &:hover
+      background: #f1f1ee
+
+  .Header-ActionButtons-SignUpButton-text
+    height: 60%
+    font-size: 1em
+    padding-left: 1rem
+    padding-right: 1rem

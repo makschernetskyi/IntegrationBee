@@ -1,11 +1,33 @@
-#app { display: grid; grid-template-columns: 1fr; grid-auto-rows: 3rem 1fr; }
+#app { display: grid; grid-template-columns: 1fr; grid-template-rows: 4rem 1fr; }
 
-.Header { grid-row: 1/2; width: 100%; height: 100%; background: #FFCC00; }
+@media only screen and (min-width: 1000px) { #app { grid-template-rows: 6rem 1fr; } }
+
+.Header { grid-row: 1/2; width: auto; display: grid; grid-template-columns: 1fr; grid-template-rows: 1fr; height: 100%; }
+
+.Header-Logo { grid-column: 1/2; height: 100%; display: flex; justify-content: left; align-items: center; padding: 0; margin: 0; overflow: hidden; padding-left: 1.5rem; }
+
+.Header-Logo img { height: 80%; padding: 0; margin: 0; }
+
+.Header-ActionButtons { grid-column: 1/2; display: grid; grid-template-columns: repeat(5, 1fr); }
+
+.Header-ActionButtons-Button { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; text-decoration: none; }
+
+.Header-ActionButtons-Button-text { width: max-content; height: 60%; display: flex; justify-content: center; align-items: center; border-radius: 10px; color: #202020; font-family: Poppins, sans-serif; font-size: 0.8em; }
+
+.Header-ActionButtons-SignInButton .Header-ActionButtons-Button-text { color: #FF9C00; font-weight: bold; }
+
+.Header-ActionButtons-SignUpButton-text { width: max-content; padding-left: 0.5rem; padding-right: 0.5rem; height: 60%; background: #FFCC00; display: flex; justify-content: center; align-items: center; border-radius: 10px; font-weight: bold; color: #202020; font-family: Poppins, sans-serif; font-size: 0.8em; }
+
+@media only screen and (min-width: 1000px) { .Header { grid-template-columns: 20rem 2fr 35rem; padding: 1rem; } .Header-ActionButtons { grid-column: 3/4; } .Header-ActionButtons-Button-text { height: 60%; padding-left: 1rem; padding-right: 1rem; font-size: 1em; transition: background .1s; } .Header-ActionButtons-Button-text:hover { background: #f1f1ee; } .Header-ActionButtons-SignUpButton-text { height: 60%; font-size: 1em; padding-left: 1rem; padding-right: 1rem; } }
 
 * { box-sizing: border-box; padding: 0; margin: 0; }
 
+*::-moz-selection { color: #202020; background: #FFDE5C; }
+
+*::selection { color: #202020; background: #FFDE5C; }
+
 body, html { width: 100%; height: 100%; }
 
-body, #app { min-height: 100vh; min-height: 100svh; }
+body, #app { min-height: 100vh; min-height: 100svh; background: #FBFBFB; }
 
 /*# sourceMappingURL=index.css.map */

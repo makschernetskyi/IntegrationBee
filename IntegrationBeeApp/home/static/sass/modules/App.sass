@@ -1,7 +1,14 @@
-
+@import "../abstracts/colors"
+@import "../abstracts/dimensions"
 
 #app
   display: grid
   grid-template-columns: 1fr
-  grid-auto-rows: 3rem 1fr
+  grid-template-rows: 4rem 1fr
+
+
+@media only screen and (min-width: $medium-screen)
+  #app
+    grid-template-rows: 6rem 1fr
+
 
