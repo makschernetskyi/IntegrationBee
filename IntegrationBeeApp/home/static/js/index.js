@@ -17,10 +17,10 @@ const Contact = {
     template: '<div>Contact</div>'
 }
 const SignIn = {
-    template: '<div>sign in page</div>'
+    template: '<div style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center; font-family: Poppins, sans-serif; font-size: 2rem; color: black;">Sign up first.</div>'
 }
 const SignUp = {
-    template: '<div>sign up page</div>'
+    template: '<div style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center; font-family: Poppins, sans-serif; font-size: 2rem; color: black;">Registration is not open yet.</div>'
 }
 
 

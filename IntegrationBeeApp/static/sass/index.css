@@ -8,7 +8,7 @@ main { grid-row: 2/3; z-index: inherit; }
 
 .Header-Logo { grid-column: 1/2; height: 100%; display: flex; justify-content: left; align-items: center; padding: 0; margin: 0; overflow: hidden; }
 
-.Header-Logo img { height: 80%; padding: 0; margin: 0; }
+.Header-Logo img { height: 90%; padding: 0; margin: 0; }
 
 .Header-OpenMenuButton { display: flex; justify-content: center; align-items: center; background: none; border: none; }
 
@@ -20,11 +20,11 @@ main { grid-row: 2/3; z-index: inherit; }
 
 .Header-ActionButtons-Button { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; text-decoration: none; }
 
-.Header-ActionButtons-Button-text { width: max-content; height: 60%; display: flex; justify-content: center; align-items: center; border-radius: 10px; color: #202020; font-family: Poppins, sans-serif; font-size: 0.8em; }
+.Header-ActionButtons-Button-text { width: max-content; height: 60%; display: flex; justify-content: center; align-items: center; border-radius: 10px; color: #202020; font-family: Poppins, sans-serif; font-size: 0.8em; -webkit-user-select: none; -ms-user-select: none; user-select: none; }
 
 .Header-ActionButtons-SignInButton .Header-ActionButtons-Button-text { color: #FF9C00; font-weight: bold; }
 
-.Header-ActionButtons-SignUpButton-text { width: max-content; padding-left: 0.6rem; padding-right: 0.6rem; height: 60%; background: #FFCC00; display: flex; justify-content: center; align-items: center; border-radius: 10px; font-weight: bold; color: #202020; font-family: Poppins, sans-serif; font-size: 0.8em; }
+.Header-ActionButtons-SignUpButton-text { width: max-content; padding-left: 0.6rem; padding-right: 0.6rem; height: 60%; background: #FFCC00; display: flex; justify-content: center; align-items: center; border-radius: 10px; font-weight: bold; color: #202020; font-family: Poppins, sans-serif; font-size: 0.8em; -webkit-user-select: none; -ms-user-select: none; user-select: none; }
 
 @media only screen and (min-width: 1000px) { .Header { grid-template-columns: 20rem 2fr 42rem; padding: 1rem; } .Header-ActionButtons { grid-column: 3/4; } .Header-ActionButtons-Button-text { height: 60%; padding-left: 1rem; padding-right: 1rem; font-size: 1em; transition: background .1s; } .Header-ActionButtons-Button-text:hover { background: #f1f1ee; } .Header-ActionButtons-SignUpButton-text { height: 60%; font-size: 1em; padding-left: 1rem; padding-right: 1rem; } }
 
@@ -48,7 +48,7 @@ main { grid-row: 2/3; z-index: inherit; }
 
 .NavigationMenu.v-leave-to { transform: rotateY(90deg); opacity: 0; }
 
-.NavigationMenu-Item { opacity: 1; color: #202020; text-decoration: none; display: flex; justify-content: left; align-items: center; -webkit-tap-highlight-color: transparent; }
+.NavigationMenu-Item { width: max-content; padding-right: 2em; opacity: 1; color: #202020; text-decoration: none; display: flex; justify-content: left; align-items: center; -webkit-tap-highlight-color: transparent; -webkit-user-select: none; -ms-user-select: none; user-select: none; }
 
 .NavigationMenu-Item--active { color: #FF9C00; }
 
@@ -64,9 +64,9 @@ main { grid-row: 2/3; z-index: inherit; }
 
 *::-webkit-scrollbar-thumb { background: #FFCC00; border-radius: 100px; }
 
-body, html { width: 100%; height: 100; }
+body, html { width: 100%; height: 100%; scrollbar-gutter: stable; }
 
-body, #app { height: 100vh; hright: 100svh; min-height: 500px; background: #FBFBFB; }
+body, #app { height: 100vh; height: 100svh; min-height: 500px; background: #FBFBFB; }
 
 @media only screen and (max-width: 430px) { html ::-webkit-scrollbar, body ::-webkit-scrollbar, #app ::-webkit-scrollbar { width: 0; background: transparent; -webkit-appearance: none; } }
 
