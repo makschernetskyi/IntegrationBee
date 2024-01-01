@@ -1,14 +1,22 @@
-#app { display: grid; grid-template-columns: 1fr; grid-template-rows: 4rem 1fr; }
+#app { display: grid; grid-template-columns: 1fr; grid-template-rows: 4rem 1fr; z-index: 1; }
+
+main { grid-row: 2/3; z-index: inherit; }
 
 @media only screen and (min-width: 1000px) { #app { grid-template-rows: 6rem 1fr; } }
 
-.Header { grid-row: 1/2; width: auto; display: grid; grid-template-columns: 1fr; grid-template-rows: 1fr; height: 100%; }
+.Header { top: 0; position: sticky; grid-row: 1/2; width: auto; display: grid; grid-template-columns: 4rem 1fr 10rem; padding-right: 1em; grid-template-rows: 1fr; background: #FBFBFB; height: 100%; z-index: 2; -webkit-box-shadow: 0px 2px 2px 0px #FBFBFB; -moz-box-shadow: 0px 2px 2px 0px #FBFBFB; box-shadow: 0px 2px 2px 0px #FBFBFB; }
 
-.Header-Logo { grid-column: 1/2; height: 100%; display: flex; justify-content: left; align-items: center; padding: 0; margin: 0; overflow: hidden; padding-left: 1.5rem; }
+.Header-Logo { grid-column: 1/2; height: 100%; display: flex; justify-content: left; align-items: center; padding: 0; margin: 0; overflow: hidden; }
 
 .Header-Logo img { height: 80%; padding: 0; margin: 0; }
 
-.Header-ActionButtons { grid-column: 1/2; display: grid; grid-template-columns: repeat(5, 1fr); }
+.Header-OpenMenuButton { display: flex; justify-content: center; align-items: center; background: none; border: none; }
+
+.Header-OpenMenuButton svg { cursor: pointer; transition: fill .1s; height: 40%; width: 40%; fill: #202020; }
+
+.Header-ActionButtons { display: grid; grid-template-columns: repeat(6, 1fr); }
+
+.Header-ActionButtonsMobile { grid-column: 3/4; display: grid; grid-template-columns: repeat(2, 1fr); }
 
 .Header-ActionButtons-Button { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; text-decoration: none; }
 
@@ -16,9 +24,33 @@
 
 .Header-ActionButtons-SignInButton .Header-ActionButtons-Button-text { color: #FF9C00; font-weight: bold; }
 
-.Header-ActionButtons-SignUpButton-text { width: max-content; padding-left: 0.5rem; padding-right: 0.5rem; height: 60%; background: #FFCC00; display: flex; justify-content: center; align-items: center; border-radius: 10px; font-weight: bold; color: #202020; font-family: Poppins, sans-serif; font-size: 0.8em; }
+.Header-ActionButtons-SignUpButton-text { width: max-content; padding-left: 0.6rem; padding-right: 0.6rem; height: 60%; background: #FFCC00; display: flex; justify-content: center; align-items: center; border-radius: 10px; font-weight: bold; color: #202020; font-family: Poppins, sans-serif; font-size: 0.8em; }
 
-@media only screen and (min-width: 1000px) { .Header { grid-template-columns: 20rem 2fr 35rem; padding: 1rem; } .Header-ActionButtons { grid-column: 3/4; } .Header-ActionButtons-Button-text { height: 60%; padding-left: 1rem; padding-right: 1rem; font-size: 1em; transition: background .1s; } .Header-ActionButtons-Button-text:hover { background: #f1f1ee; } .Header-ActionButtons-SignUpButton-text { height: 60%; font-size: 1em; padding-left: 1rem; padding-right: 1rem; } }
+@media only screen and (min-width: 1000px) { .Header { grid-template-columns: 20rem 2fr 42rem; padding: 1rem; padding-left: 1rem; padding-right: 1rem; } .Header-ActionButtons { grid-column: 3/4; } .Header-ActionButtons-Button-text { height: 60%; padding-left: 1rem; padding-right: 1rem; font-size: 1em; transition: background .1s; } .Header-ActionButtons-Button-text:hover { background: #f1f1ee; } .Header-ActionButtons-SignUpButton-text { height: 60%; font-size: 1em; padding-left: 1rem; padding-right: 1rem; } }
+
+@media only screen and (min-width: calc(62rem + 20vw + 2rem)) { .Header { padding-left: 10vw; padding-right: 10vw; } }
+
+.Home { font-family: "Open Sans", sans-serif; overflow-x: hidden; overflow-y: auto; min-height: 100%; }
+
+@media only screen and (min-width: 1000px) { .Home { padding-left: 1rem; padding-right: 1rem; } }
+
+@media only screen and (min-width: calc(62rem + 20vw + 2rem)) { .Home { padding-left: 10vw; padding-right: 10vw; } }
+
+#app { perspective: 2000px; }
+
+.NavigationMenu { grid-row: 2/3; z-index: 100; position: absolute; top: 0; width: 100%; height: calc(max( 100svh - 4rem,  23rem)); max-width: 100vw; background: linear-gradient(90deg, #FBFBFB 0%, rgba(251, 251, 251, 0.7) 80%, rgba(251, 251, 251, 0) 100%); transform-origin: top left; transform: rotateY(0deg); box-sizing: border-box; padding: 1.5em 3em 1.5em 1.5em; font-family: Poppins, sans-serif; font-size: 1.2em; font-weight: bold; display: grid; grid-template-columns: 1fr; grid-template-rows: repeat(4, 5rem); }
+
+.NavigationMenu.v-enter-active { transition: all 0.3s ease; }
+
+.NavigationMenu.v-leave-active { transition: all 0.3s ease; }
+
+.NavigationMenu.v-enter-from { transform: rotateY(90deg); opacity: 0; }
+
+.NavigationMenu.v-leave-to { transform: rotateY(90deg); opacity: 0; }
+
+.NavigationMenu-Item { opacity: 1; color: #202020; text-decoration: none; display: flex; justify-content: left; align-items: center; -webkit-tap-highlight-color: transparent; }
+
+.NavigationMenu-Item--active { color: #FF9C00; }
 
 * { box-sizing: border-box; padding: 0; margin: 0; }
 
@@ -26,8 +58,16 @@
 
 *::selection { color: #202020; background: #FFDE5C; }
 
-body, html { width: 100%; height: 100%; }
+*::-webkit-scrollbar { width: 12px; }
 
-body, #app { min-height: 100vh; min-height: 100svh; background: #FBFBFB; }
+*::-webkit-scrollbar-track { background: #f1f1ee; }
+
+*::-webkit-scrollbar-thumb { background: #FFCC00; border-radius: 100px; }
+
+body, html { width: 100%; height: 100; }
+
+body, #app { height: 100vh; hright: 100svh; min-height: 500px; background: #FBFBFB; }
+
+@media only screen and (max-width: 430px) { html ::-webkit-scrollbar, body ::-webkit-scrollbar, #app ::-webkit-scrollbar { width: 0; background: transparent; -webkit-appearance: none; } }
 
 /*# sourceMappingURL=index.css.map */

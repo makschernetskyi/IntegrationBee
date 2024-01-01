@@ -1,6 +1,9 @@
 @import "./abstracts/colors"
+@import "./abstracts/dimensions"
 @import "./modules/App"
 @import "./modules/Header"
+@import "./modules/HomePage"
+@import "./modules/Menu"
 
 *
   box-sizing: border-box
@@ -16,16 +19,39 @@
   color: $eerie-black
   background: $mustard
 
+*::-webkit-scrollbar
+  width: 12px
+
+*::-webkit-scrollbar-track
+  background: $light-gray
+
+*::-webkit-scrollbar-thumb
+  background: $jonquil
+  border-radius: 100px
+
+
+
+
+
 
 
 body, html
   width: 100%
-  height: 100%
+  height: 100
 
 body, #app
-  min-height: 100vh
-  min-height: 100svh
+  height: 100vh
+  hright: 100svh
+  min-height: $minimal-height
   background: $alabaster
+
+@media only screen and (max-width: $small-screen)
+
+  html, body, #app
+    ::-webkit-scrollbar
+      width: 0
+      background: transparent
+      -webkit-appearance: none
 
 
 
