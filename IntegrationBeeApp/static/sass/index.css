@@ -26,9 +26,9 @@ main { grid-row: 2/3; z-index: inherit; }
 
 .Header-ActionButtons-SignUpButton-text { width: max-content; padding-left: 0.6rem; padding-right: 0.6rem; height: 60%; background: #FFCC00; display: flex; justify-content: center; align-items: center; border-radius: 10px; font-weight: bold; color: #202020; font-family: Poppins, sans-serif; font-size: 0.8em; }
 
-@media only screen and (min-width: 1000px) { .Header { grid-template-columns: 20rem 2fr 42rem; padding: 1rem; padding-left: 1rem; padding-right: 1rem; } .Header-ActionButtons { grid-column: 3/4; } .Header-ActionButtons-Button-text { height: 60%; padding-left: 1rem; padding-right: 1rem; font-size: 1em; transition: background .1s; } .Header-ActionButtons-Button-text:hover { background: #f1f1ee; } .Header-ActionButtons-SignUpButton-text { height: 60%; font-size: 1em; padding-left: 1rem; padding-right: 1rem; } }
+@media only screen and (min-width: 1000px) { .Header { grid-template-columns: 20rem 2fr 42rem; padding: 1rem; } .Header-ActionButtons { grid-column: 3/4; } .Header-ActionButtons-Button-text { height: 60%; padding-left: 1rem; padding-right: 1rem; font-size: 1em; transition: background .1s; } .Header-ActionButtons-Button-text:hover { background: #f1f1ee; } .Header-ActionButtons-SignUpButton-text { height: 60%; font-size: 1em; padding-left: 1rem; padding-right: 1rem; } }
 
-@media only screen and (min-width: calc(62rem + 20vw + 2rem)) { .Header { padding-left: 10vw; padding-right: 10vw; } }
+@media only screen and (min-width: calc(64rem + 20vw)) { .Header { padding-left: 10vw; padding-right: 10vw; } }
 
 .Home { font-family: "Open Sans", sans-serif; overflow-x: hidden; overflow-y: auto; min-height: 100%; }
 
