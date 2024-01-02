@@ -1,1 +1,6 @@
 venv/
+IntegrationBeeApp/db.sqlite3
+IntegrationBeeApp/Dockerfile
+IntegrationBeeApp/static/*
+IntegrationBeeApp/.dockerignore
+.idea/

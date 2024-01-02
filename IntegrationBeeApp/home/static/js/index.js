@@ -20,6 +20,9 @@ const SignIn = {
 const SignUp = {
     template: '<div style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center; font-family: Poppins, sans-serif; font-size: 2rem; color: black; text-align: center; padding: 2rem;">Registration is not open yet.</div>'
 }
+const Competition = {
+    template: '<div style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center; font-family: Poppins, sans-serif; font-size: 2rem; color: black; text-align: center; padding: 2rem;">Competition Id: {{$route.params.id}}</div>'
+}
 
 
 const routes = [
@@ -28,7 +31,8 @@ const routes = [
     { path: '/competitions', component: CompetitionsPage },
     { path: '/contact', component: Contact },
     { path: '/signIn', component: SignIn },
-    { path: '/signUp', component: SignUp }
+    { path: '/signUp', component: SignUp },
+    { path: '/competition/:id', component: Competition}
 ]
 
 const router = VueRouter.createRouter({

@@ -1,4 +1,4 @@
-
+@import "../abstracts/colors"
 
 .CompetitionsPage
   overflow-x: hidden
@@ -13,6 +13,10 @@
 .CompetitionsPage-Competitions
   grid-template-columns: 1fr
   grid-template-rows: 3.5rem auto
+
+.CompetitionsPage-Competitions-header
+  font-size: 1.5rem
+  color: $eerie-black
 
 .CompetitionsPage-Competitions
   font-family: Poppins, sans-serif
@@ -30,33 +34,114 @@
 
   padding: 2rem 1rem 1rem
 
-.CompetitionsPage-Competitions-Item
+.CompetitionsPage-Competitions-Feed-Item
   width: 100%
   font-family: "Open Sans", sans-serif
   height: max-content
   border-radius: 5px
   box-shadow: 0 2px 2px 1px rgba($eerie-black, 0.3)
-  padding: 1rem
+  padding: 1.5rem
+  display: grid
+  grid-template-columns: 2fr 8fr
+  grid-template-rows: auto auto
+  grid-row-gap: 1rem
+  color: $eerie-black
+  text-decoration: none
+
+.CompetitionsPage-Competitions--past
+  .CompetitionsPage-Competitions-Feed-Item
+    .CompetitionsPage-Competitions-Feed-Item-header
+      color: rgba($eerie-black, 0.6)
+
+
+.CompetitionsPage-Competitions-Feed-Item-header
+  grid-column: 1/3
+  grid-row: 1/2
+  font-size: 1.5rem
+
+.CompetitionsPage-Competitions-Feed-Item-Icon
+  display: none
+
+.CompetitionsPage-Competitions-Feed-Item-About
+  grid-column: 1/3
+  grid-row: 2/3
   display: grid
   grid-template-columns: 1fr
   grid-template-rows: auto auto
   grid-row-gap: 1rem
-  color: $eerie-black
+  padding: 1rem
+
+.CompetitionsPage-Competitions-Feed-Item-About-Location
+  grid-column: 1/2
+  grid-row: 1/2
+  display: flex
+  flex-flow: column
+  font-size: 1.5rem
 
 
-  h2
-    font-family: Poppins
-    font-size: 1.5rem
-    font-weight: bold
+.CompetitionsPage-Competitions-Feed-Item-About-Location-date
+  padding-right: 1em
+  display: flex
+  align-items: center
 
-  p
-    font-size: 1rem
+.CompetitionsPage-Competitions-Feed-Item-About-Location-place
+  display: flex
+  align-items: center
+
+.CompetitionsPage-Competitions-Feed-Item-About-description
+  grid-column: 1/2
+  grid-row: 2/3
+  font-size: 1rem
+
+  &::after
+    content: "\a click to learn more..."
+    white-space: pre
+    color: $tekhelet
+
 
 
 @media only screen and (min-width: $medium-screen)
   .CompetitionsPage
     padding-left: 1rem
     padding-right: 1rem
+
+  .CompetitionsPage-Competitions-Feed-Item
+    width: 100%
+    grid-template-columns: 2fr 8fr
+    grid-template-rows: auto auto
+    grid-row-gap: 1rem
+
+
+  .CompetitionsPage-Competitions-Feed-Item-Icon
+    grid-column: 1/2
+    grid-row: 2/3
+    display: flex
+    justify-content: center
+    align-items: center
+    overflow: hidden
+    img
+      width: 90%
+
+  .CompetitionsPage-Competitions-Feed-Item-About
+    grid-column: 2/3
+    grid-row: 2/3
+    display: grid
+    grid-template-columns: 1fr
+    grid-template-rows: auto auto
+
+  .CompetitionsPage-Competitions-Feed-Item-About-Location
+    grid-column: 1/2
+    grid-row: 1/2
+    display: flex
+    flex-flow: row
+
+    .CompetitionsPage-Competitions-Feed-Item-About-Location-date
+      padding-right: 1em
+
+  .CompetitionsPage-Competitions-Feed-Item-About-description
+    grid-column: 1/2
+    grid-row: 2/3
+
 
 @media only screen and (min-width: calc(62rem + 20vw + 2rem))
   .CompetitionsPage
