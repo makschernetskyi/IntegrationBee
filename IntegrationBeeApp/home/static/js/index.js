@@ -1,15 +1,13 @@
-import Header from "./vue-components/Header/Header.js"
-import Homepage from "./vue-components/Homepage/Homepage.js"
-import Menu from "./vue-components/Menu/Menu.js"
-
+import Header from "./vue-components/Header/Header.js";
+import Homepage from "./vue-components/Homepage/Homepage.js";
+import Menu from "./vue-components/Menu/Menu.js";
+import NewsPage from "./vue-components/NewsPage/NewsPage.js";
 
 const { createApp, ref, onMounted, onUnmounted } = Vue
 
 
 
-const News = {
-    template: '<div>This is the News page</div>'
-}
+
 const Competitions = {
     template: '<div>Competitions page</div>'
 }
@@ -17,16 +15,16 @@ const Contact = {
     template: '<div>Contact</div>'
 }
 const SignIn = {
-    template: '<div style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center; font-family: Poppins, sans-serif; font-size: 2rem; color: black;">Sign up first.</div>'
+    template: '<div style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center; font-family: Poppins, sans-serif; font-size: 2rem; color: black; text-align: center; padding: 2rem;">Sign up first.</div>'
 }
 const SignUp = {
-    template: '<div style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center; font-family: Poppins, sans-serif; font-size: 2rem; color: black;">Registration is not open yet.</div>'
+    template: '<div style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center; font-family: Poppins, sans-serif; font-size: 2rem; color: black; text-align: center; padding: 2rem;">Registration is not open yet.</div>'
 }
 
 
 const routes = [
     { path: '/', component: Homepage },
-    { path: '/news', component: News },
+    { path: '/news', component: NewsPage },
     { path: '/competitions', component: Competitions },
     { path: '/contact', component: Contact },
     { path: '/signIn', component: SignIn },
@@ -81,9 +79,12 @@ const App = {
     },
     template: `
         <Header @menu-visibility-btn-click="toggleMenuVisibility" :isMenuVisible="isMenuVisible"/>
-        <transition>
-            <Menu v-if="isMenuVisible && (windowSize < 1000)" @page-chosen="toggleMenuVisibility"/>
-        </transition>
+        
+        <div class="SideNavigation">
+            <transition>
+                <Menu v-if="isMenuVisible && (windowSize < 1000)" @page-chosen="toggleMenuVisibility"/>
+            </transition>
+        </div>
         <main>
             <router-view></router-view>
         </main>

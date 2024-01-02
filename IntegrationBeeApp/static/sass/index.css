@@ -30,27 +30,41 @@ main { grid-row: 2/3; z-index: inherit; }
 
 @media only screen and (min-width: calc(64rem + 20vw)) { .Header { padding-left: 10vw; padding-right: 10vw; } }
 
-.Home { font-family: "Open Sans", sans-serif; overflow-x: hidden; overflow-y: auto; min-height: 100%; }
+.Home { font-family: "Open Sans", sans-serif; overflow-x: hidden; overflow-y: auto; min-height: 100%; padding-left: 1rem; padding-right: 1rem; }
 
 @media only screen and (min-width: 1000px) { .Home { padding-left: 1rem; padding-right: 1rem; } }
 
 @media only screen and (min-width: calc(62rem + 20vw + 2rem)) { .Home { padding-left: 10vw; padding-right: 10vw; } }
 
-#app { perspective: 2000px; }
+.SideNavigation { perspective: 2000px; perspective-origin: top left; position: fixed; top: 4rem; z-index: 100; width: 100%; min-height: calc(max( 100svh - 4rem,  23rem)); }
 
-.NavigationMenu { grid-row: 2/3; z-index: 100; position: absolute; top: 0; width: 100%; height: calc(max( 100svh - 4rem,  23rem)); max-width: 100vw; background: linear-gradient(90deg, #FBFBFB 0%, rgba(251, 251, 251, 0.7) 80%, rgba(251, 251, 251, 0) 100%); transform-origin: top left; transform: rotateY(0deg); box-sizing: border-box; padding: 1.5em 3em 1.5em 1.5em; font-family: Poppins, sans-serif; font-size: 1.2em; font-weight: bold; display: grid; grid-template-columns: 1fr; grid-template-rows: repeat(4, 5rem); }
+.SideNavigation-Menu { grid-row: 2/3; top: 0; width: 100%; height: calc(max( 100vh - 4rem,  23rem)); max-width: 100vw; background: linear-gradient(90deg, #FBFBFB 0%, rgba(251, 251, 251, 0.7) 80%, rgba(251, 251, 251, 0) 100%); transform-origin: top left; transform: rotateY(0deg); box-sizing: border-box; padding: 1.5em 3em 1.5em 1.5em; font-family: Poppins, sans-serif; font-size: 1.2em; font-weight: bold; display: grid; grid-template-columns: 1fr; grid-template-rows: repeat(4, 5rem); overflow-y: auto; }
 
-.NavigationMenu.v-enter-active { transition: all 0.3s ease; }
+.SideNavigation-Menu.v-enter-active { transition: all 0.3s ease; }
 
-.NavigationMenu.v-leave-active { transition: all 0.3s ease; }
+.SideNavigation-Menu.v-leave-active { transition: all 0.3s ease; }
 
-.NavigationMenu.v-enter-from { transform: rotateY(90deg); opacity: 0; }
+.SideNavigation-Menu.v-enter-from { transform: rotateY(90deg); opacity: 0; }
 
-.NavigationMenu.v-leave-to { transform: rotateY(90deg); opacity: 0; }
+.SideNavigation-Menu.v-leave-to { transform: rotateY(90deg); opacity: 0; }
 
-.NavigationMenu-Item { width: max-content; padding-right: 2em; opacity: 1; color: #202020; text-decoration: none; display: flex; justify-content: left; align-items: center; -webkit-tap-highlight-color: transparent; -webkit-user-select: none; -ms-user-select: none; user-select: none; }
+.SideNavigation-Menu-Item { width: max-content; padding-right: 2em; opacity: 1; color: #202020; text-decoration: none; display: flex; justify-content: left; align-items: center; -webkit-tap-highlight-color: transparent; -webkit-user-select: none; -ms-user-select: none; user-select: none; }
 
-.NavigationMenu-Item--active { color: #FF9C00; }
+.SideNavigation-Menu-Item--active { color: #FF9C00; }
+
+.NewsPage { overflow-x: hidden; overflow-y: auto; min-height: 100%; padding-left: 1rem; padding-right: 1rem; }
+
+.NewsPage-Feed { width: 100%; height: max-content; display: grid; grid-template-columns: 1fr; grid-auto-rows: auto; grid-row-gap: 2rem; padding-left: 1rem; padding-right: 1rem; padding-top: 2rem; }
+
+.NewsPage-Feed-Item { width: 100%; font-family: "Open Sans", sans-serif; height: max-content; border-radius: 5px; box-shadow: 0 2px 2px 1px rgba(32, 32, 32, 0.3); padding: 1rem; }
+
+.NewsPage-Feed-Item h2 { font-size: 1.5rem; font-weight: bold; }
+
+.NewsPage-Feed-Item p { font-size: 1rem; }
+
+@media only screen and (min-width: 1000px) { .NewsPage { padding-left: 1rem; padding-right: 1rem; } }
+
+@media only screen and (min-width: calc(62rem + 20vw + 2rem)) { .NewsPage { padding-left: 10vw; padding-right: 10vw; } }
 
 * { box-sizing: border-box; padding: 0; margin: 0; }
 
@@ -64,9 +78,9 @@ main { grid-row: 2/3; z-index: inherit; }
 
 *::-webkit-scrollbar-thumb { background: #FFCC00; border-radius: 100px; }
 
-body, html { width: 100%; height: 100%; scrollbar-gutter: stable; }
+body, html { width: 100%; scrollbar-gutter: stable; }
 
-body, #app { height: 100vh; height: 100svh; min-height: 500px; background: #FBFBFB; }
+body, #app { min-height: 500px; background: #FBFBFB; }
 
 @media only screen and (max-width: 430px) { html ::-webkit-scrollbar, body ::-webkit-scrollbar, #app ::-webkit-scrollbar { width: 0; background: transparent; -webkit-appearance: none; } }
 
