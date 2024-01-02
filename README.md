@@ -18,3 +18,10 @@ Integration Bee is an integral calculus competition pioneered in 1981 by Andy Be
 
 The purpose of this app is to provide information for competitors, to sign up for the competitions, to see your ranking and profile, also
 the progress of the competitions will be posted live using tournament tables.
+
+## What does this app look like?
+![News page Demo](./Media/Demo/MobileNews.webp)
+
+---
+**Please Note that the app is still under development, star this repo and follow me to see updates.**
+
