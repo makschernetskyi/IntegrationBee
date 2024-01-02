@@ -7,7 +7,7 @@ export default {
     template: `
         <article class="NewsPage-Feed-Item">
             <h2>{{header}}</h2>
-            <p>{{content}}</p>
+            <p v-html="content"></p>
         </article>
     `
 }
