@@ -3,15 +3,14 @@ import Homepage from "./vue-components/Homepage/Homepage.js";
 import Menu from "./vue-components/Menu/Menu.js";
 import NewsPage from "./vue-components/NewsPage/NewsPage.js";
 import SocialLinks from "./vue-components/SocialLinks/SocialLinks.js";
+import CompetitionsPage from "./vue-components/CompetitionsPage/CompetitionsPage.js";
 
-const { createApp, ref, onMounted, onUnmounted } = Vue
+const { createApp, ref, onMounted, onUnmounted, toRef } = Vue
 
 
 
 
-const Competitions = {
-    template: '<div>Competitions page</div>'
-}
+
 const Contact = {
     template: '<div>Contact</div>'
 }
@@ -26,7 +25,7 @@ const SignUp = {
 const routes = [
     { path: '/', component: Homepage },
     { path: '/news', component: NewsPage },
-    { path: '/competitions', component: Competitions },
+    { path: '/competitions', component: CompetitionsPage },
     { path: '/contact', component: Contact },
     { path: '/signIn', component: SignIn },
     { path: '/signUp', component: SignUp }
@@ -38,12 +37,32 @@ const router = VueRouter.createRouter({
 })
 
 
+const MenuContainer = {
+    props: ["isMenuContentShown"],
+    components: {
+        Menu
+    },
+    setup(props){
+        const isMenuContentShown = toRef(props, "isMenuContentShown")
+        return {isMenuContentShown}
+    },
+    template: `
+        <div class="SideNavigation">
+            <transition @after-leave="$emit('closeMenu')">
+                <Menu v-if="isMenuContentShown" @click = "$emit('closeMenuContent')"/>
+            </transition>
+        </div>
+    `
+}
+
+
 
 const App = {
     components:{
         Header,
         Menu,
-        SocialLinks
+        SocialLinks,
+        MenuContainer
     },
     setup(){
 
@@ -62,17 +81,23 @@ const App = {
 
 
         const isMenuVisible = ref(false)
+        const isMenuContentShown = ref(false)
         const toggleMenuVisibility = () =>{
             isMenuVisible.value = !isMenuVisible.value
         }
         return {
             isMenuVisible,
-            windowSize
+            windowSize,
+            isMenuContentShown
         }
     },
     methods:{
         toggleMenuVisibility(){
-            this.isMenuVisible = !this.isMenuVisible
+            if(this.isMenuVisible){
+                this.isMenuContentShown = false
+            }else{
+                this.isMenuVisible = true
+            }
             if(this.isMenuVisible)
                 document.getElementsByTagName("body")[0].style.overflow = "hidden"
             else
@@ -82,11 +107,10 @@ const App = {
     template: `
         <Header @menu-visibility-btn-click="toggleMenuVisibility" :isMenuVisible="isMenuVisible"/>
         
-        <div class="SideNavigation">
-            <transition>
-                <Menu v-if="isMenuVisible && (windowSize < 1000)" @page-chosen="toggleMenuVisibility"/>
-            </transition>
-        </div>
+        <transition @after-enter="isMenuContentShown = true">
+            <MenuContainer v-if="isMenuVisible && (windowSize < 1000)"  :isMenuContentShown="isMenuContentShown" @close-menu="isMenuVisible = false" @close-menu-content="isMenuContentShown = false"/>
+        </transition>
+
         <main>
             <router-view></router-view>
         </main>

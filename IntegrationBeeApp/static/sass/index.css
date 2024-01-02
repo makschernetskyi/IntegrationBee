@@ -54,7 +54,7 @@ main { grid-row: 2/3; z-index: inherit; }
 
 .NewsPage { overflow-x: hidden; overflow-y: auto; min-height: 100%; padding-left: 1rem; padding-right: 1rem; display: grid; grid-template-columns: 1fr; grid-template-rows: 3.5rem auto; }
 
-.NewsPage-header { font-family: Poppins; font-size: 1.5rem; padding: 1rem; color: #202020; }
+.NewsPage-header { font-family: Poppins, sans-serif; font-size: 1.5rem; padding: 1rem; color: #202020; }
 
 .NewsPage-Feed { width: 100%; height: max-content; display: grid; grid-template-columns: 1fr; grid-auto-rows: auto; grid-row-gap: 2rem; padding: 2rem 1rem 1rem; }
 
@@ -83,6 +83,24 @@ main { grid-row: 2/3; z-index: inherit; }
 .SocialLinks-Item--telegram { grid-column: 4/5; }
 
 @media only screen and (min-width: 1000px) { .SocialLinks-Item svg:hover { fill: #FBFBFB; } }
+
+.CompetitionsPage { overflow-x: hidden; overflow-y: auto; min-height: 100%; padding-left: 1rem; padding-right: 1rem; display: grid; grid-template-columns: 1fr; grid-template-rows: auto auto; }
+
+.CompetitionsPage-Competitions { grid-template-columns: 1fr; grid-template-rows: 3.5rem auto; }
+
+.CompetitionsPage-Competitions { font-family: Poppins, sans-serif; font-size: 1.5rem; padding: 1rem; color: #202020; }
+
+.CompetitionsPage-Competitions-Feed { width: 100%; height: max-content; display: grid; grid-template-columns: 1fr; grid-auto-rows: auto; grid-row-gap: 2rem; padding: 2rem 1rem 1rem; }
+
+.CompetitionsPage-Competitions-Item { width: 100%; font-family: "Open Sans", sans-serif; height: max-content; border-radius: 5px; box-shadow: 0 2px 2px 1px rgba(32, 32, 32, 0.3); padding: 1rem; display: grid; grid-template-columns: 1fr; grid-template-rows: auto auto; grid-row-gap: 1rem; color: #202020; }
+
+.CompetitionsPage-Competitions-Item h2 { font-family: Poppins; font-size: 1.5rem; font-weight: bold; }
+
+.CompetitionsPage-Competitions-Item p { font-size: 1rem; }
+
+@media only screen and (min-width: 1000px) { .CompetitionsPage { padding-left: 1rem; padding-right: 1rem; } }
+
+@media only screen and (min-width: calc(62rem + 20vw + 2rem)) { .CompetitionsPage { padding-left: 10vw; padding-right: 10vw; } }
 
 * { box-sizing: border-box; padding: 0; margin: 0; }
 

@@ -1,5 +1,6 @@
 
 
+
 const {ref} = Vue
 
 export default {
@@ -11,7 +12,7 @@ export default {
     },
 
     template: `
-        <div class="SideNavigation-Menu" @click="$emit('pageChosen')">
+        <div class="SideNavigation-Menu">
             <router-link to="/"  class="SideNavigation-Menu-Item" :class="{ 'SideNavigation-Menu-Item--active': /^\\/(?:\\?.*)?(?:#.*)?$/.test($route.fullPath)}">Home</router-link>
             <router-link to="/news"  class="SideNavigation-Menu-Item" :class="{ 'SideNavigation-Menu-Item--active': /^\\/news(?:\\/[^?#]*)?(?:\\?.*)?(?:#.*)?$/.test($route.fullPath)}">News</router-link>
             <router-link to="/competitions"  class="SideNavigation-Menu-Item" :class="{ 'SideNavigation-Menu-Item--active': /^\\/competitions(?:\\/[^?#]*)?(?:\\?.*)?(?:#.*)?$/.test($route.fullPath)}"> Competitions</router-link>

@@ -1,6 +1,6 @@
 
 
-.NewsPage
+.CompetitionsPage
   overflow-x: hidden
   overflow-y: auto
   min-height: 100%
@@ -8,15 +8,19 @@
   padding-right: 1rem
   display: grid
   grid-template-columns: 1fr
+  grid-template-rows: auto auto
+
+.CompetitionsPage-Competitions
+  grid-template-columns: 1fr
   grid-template-rows: 3.5rem auto
 
-.NewsPage-header
+.CompetitionsPage-Competitions
   font-family: Poppins, sans-serif
   font-size: 1.5rem
   padding: 1rem
   color: $eerie-black
 
-.NewsPage-Feed
+.CompetitionsPage-Competitions-Feed
   width: 100%
   height: max-content
   display: grid
@@ -26,7 +30,7 @@
 
   padding: 2rem 1rem 1rem
 
-.NewsPage-Feed-Item
+.CompetitionsPage-Competitions-Item
   width: 100%
   font-family: "Open Sans", sans-serif
   height: max-content
@@ -50,11 +54,11 @@
 
 
 @media only screen and (min-width: $medium-screen)
-  .NewsPage
+  .CompetitionsPage
     padding-left: 1rem
     padding-right: 1rem
 
 @media only screen and (min-width: calc(62rem + 20vw + 2rem))
-  .NewsPage
+  .CompetitionsPage
     padding-left: 10vw
     padding-right: 10vw
