@@ -103,17 +103,19 @@ const App = {
                 this.isMenuVisible = true
             }
             if(this.isMenuVisible)
-                document.getElementsByTagName("body")[0].style.overflow = "hidden"
+                document.body.style.overflow = "hidden"
             else
-                document.getElementsByTagName("body")[0].style.overflow = "auto"
+                document.body.style.overflow = "auto"
         }
     },
     template: `
         <Header @menu-visibility-btn-click="toggleMenuVisibility" :isMenuVisible="isMenuVisible"/>
         
+        <Teleport to="body">
         <transition @after-enter="isMenuContentShown = true">
             <MenuContainer v-if="isMenuVisible && (windowSize < 1000)"  :isMenuContentShown="isMenuContentShown" @close-menu="isMenuVisible = false" @close-menu-content="isMenuContentShown = false"/>
         </transition>
+        </Teleport>
 
         <main>
             <router-view></router-view>
