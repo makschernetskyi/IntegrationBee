@@ -123,7 +123,11 @@ const App = {
         </Teleport>
 
         <main>
-            <router-view></router-view>
+            <router-view v-slot="{ Component }">
+                <transition name="page-fade" mode="out-in">
+                    <component :is="Component"></component>
+                </transition>
+            </router-view>
         </main>
         <SocialLinks/>
     `

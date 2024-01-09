@@ -13,6 +13,17 @@ main
   grid-row: 2/3
   z-index: inherit
 
+.page-fade-enter-from
+  opacity: 0
+.page-fade-leave-to
+  opacity: 0
+
+.page-fade-enter-active
+  transition: opacity .1s ease
+.page-fade-leave-active
+  transition: opacity .1s ease
+
+
 
 @media only screen and (min-width: $medium-screen)
   #app
