@@ -12,7 +12,7 @@ const { createApp, ref, onMounted, onUnmounted, toRef } = Vue
 
 
 const Contact = {
-    template: '<div>Contact</div>'
+    template: '<div style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center; font-family: Poppins, sans-serif; font-size: 2rem; color: black; text-align: center; padding: 2rem;">Contacts</div>'
 }
 const SignIn = {
     template: '<div style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center; font-family: Poppins, sans-serif; font-size: 2rem; color: black; text-align: center; padding: 2rem;">Sign up first.</div>'
