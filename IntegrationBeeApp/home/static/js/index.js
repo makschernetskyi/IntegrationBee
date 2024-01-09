@@ -99,9 +99,14 @@ const App = {
         toggleMenuVisibility(){
             if(this.isMenuVisible){
                 this.isMenuContentShown = false
+                document.body.style.overflow = "auto"
             }else{
                 this.isMenuVisible = true
+                document.body.style.overflow = "hidden"
             }
+
+        },
+        toggleBodyOverflow(){
             if(this.isMenuVisible)
                 document.body.style.overflow = "hidden"
             else
@@ -113,7 +118,7 @@ const App = {
         
         <Teleport to="body">
         <transition @after-enter="isMenuContentShown = true">
-            <MenuContainer v-if="isMenuVisible && (windowSize < 1000)"  :isMenuContentShown="isMenuContentShown" @close-menu="isMenuVisible = false" @close-menu-content="isMenuContentShown = false"/>
+            <MenuContainer v-if="isMenuVisible && (windowSize < 1000)"  :isMenuContentShown="isMenuContentShown" @close-menu="isMenuVisible = false; toggleBodyOverflow()" @close-menu-content="isMenuContentShown = false"/>
         </transition>
         </Teleport>
 
@@ -125,4 +130,7 @@ const App = {
 }
 
 
-createApp(App).use(router).mount('#app')
+const app = createApp(App)
+
+app.use(router)
+app.mount('#app')
