@@ -162,11 +162,22 @@
     &:hover
       background: $light-gray
 
+  .Header-ActionButtons-SignUpButton
+
+    .Header-ActionButtons-SignUpButton-text
+      transition: padding .1s ease, height .1s ease
+    &:hover
+      .Header-ActionButtons-SignUpButton-text
+        padding: 0.4em
+        height: 55%
+
+
   .Header-ActionButtons-SignUpButton-text
     height: 60%
     font-size: 1em
     padding-left: 1rem
     padding-right: 1rem
+
 
 @media only screen and (min-width: calc(64rem + 20vw))
   .Header
