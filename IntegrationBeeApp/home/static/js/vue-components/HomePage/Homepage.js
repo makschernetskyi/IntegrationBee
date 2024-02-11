@@ -47,7 +47,8 @@ export default {
                         Make friends!
                         </h3>
                         <p class="Home-MotivationSection-ReasonsList-Item-info">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur distinctio eius eos exercitationem itaque labore mollitia odio odit quas quis!
+                        Integration Bee events are a place where people with common interests gather, where you can find new friends
+                        and have a lot of fun with them!
                         </p>
                     </li>
                     <li class="Home-MotivationSection-ReasonsList-Item">
@@ -55,7 +56,7 @@ export default {
                         Win Prizes!
                         </h3>
                         <p class="Home-MotivationSection-ReasonsList-Item-info">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum incidunt perferendis sit ullam. Doloribus, et!
+                        Winners of Integration Bee finals will get prizes, be smart and get your rewards!
                         </p>
                     </li>
                 </ul>

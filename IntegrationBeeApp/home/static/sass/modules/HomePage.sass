@@ -124,10 +124,22 @@
     text-align: left
     color: $eerie-black
     font-weight: 600
+    position: relative
+    z-index: 1
 
     justify-content: left
     &:before
       content: ">"
+    &:after
+      content: ''
+      top: 0.5rem
+      left: 1rem
+      height: 2rem
+      width: 12rem
+      z-index: -1
+      position: absolute
+      background: $jonquil
+      transform: rotate(-4deg)
 
   .Home-MotivationSection-ReasonsList-Item-info
     display: flex
