@@ -2,7 +2,7 @@
 
 export default {
     template: `
-        <section>
+        <section class="Home-Section">
             <slot></slot>
         </section> 
     `
