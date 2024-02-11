@@ -30,7 +30,7 @@ export default {
             </HomePageSection>
             <HomePageSection class="Home-MotivationSection">
                 <h2 class="Home-MotivationSection-header">
-                    Why to Participate?
+                    Why Participate?
                 </h2>
                 <ul class="Home-MotivationSection-ReasonsList">
                     <li class="Home-MotivationSection-ReasonsList-Item">
