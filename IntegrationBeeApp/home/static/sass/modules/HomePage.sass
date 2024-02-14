@@ -3,64 +3,90 @@
 .Home
   font-family: "Open Sans", sans-serif
   overflow-x: hidden
-  overflow-y: auto
   min-height: 100%
   padding-left: 1rem
   padding-right: 1rem
   display: grid
   grid-template-columns: 1fr
 
+
 .Home-Section
+  height: calc(max(600px, 100svh - 4rem))
   width: 100%
   color: $eerie-black
+
+  &:first-of-type
+    display: grid
+    grid-template-columns: 1fr
+    grid-template-rows: 1fr 1fr
+
+    margin: 0em 1em 0em 1em
+    width: calc(100% - 2em)
+
+.Home-IntroSection-Description
+  grid-row: 1/2
+  display: flex
+  flex-flow: column
+  justify-content: center
+  gap: 3rem
+
 
 .Home-IntroSection-Description-Title
 
   display: flex
   flex-flow: column
-  //gap: 1rem
 
 
   h1
     font-family: "Poppins", sans-serif
-    font-size: 2rem
-    text-align: left
+    font-size: 1.62rem
+    text-align: center
     color: $eerie-black
     font-weight: 600
   p
+
     font-family: "Open Sans", sans-serif
-    font-size: 1.23rem
+    font-size: 1rem
 
 .Home-IntroSection-Description-About
   p
-    font-family: "Open Sans", sans-serif
-    font-size: 1.23rem
+    font-family: "Poppins", sans-serif
+    font-size: 1rem
+    text-align: center
 
 
 .Home-IntroSection-Description-Invitation
 
   font-family: "Poppins", sans-serif
-  font-size: 1.23rem
+  font-size: 1rem
   color: $eerie-black
   display: flex
   gap: 1em
   align-items: center
+  justify-content: center
+
+  font-weight: 600
 
   a
-    padding: 0.5rem 0.8rem 0.5rem 0.8rem
-    font-size: 1.23rem
-    font-weight: bolder
-    border-radius: 15px
+    padding-left: 1rem
+    padding-right: 1rem
+    height: 2.4rem
+    font-size: 1rem
+    font-weight: 600
+    border-radius: 12px
     color: $eerie-black
     text-decoration: none
     background: $jonquil
+    display: flex
+    justify-content: center
+    align-items: center
 
 
 
 
 
 .Home-IntroSection-Illustration
-  grid-column: 1/2
+  grid-row: 2/3
   height: 100%
   display: flex
   justify-content: center
@@ -68,6 +94,7 @@
 
   img
     position: relative
+    max-height: 80%
     width: 80%
     border-radius: 20px
     border: 4px solid $alabaster
@@ -80,24 +107,20 @@
 
 
 
-.Home-IntroSection-Description
-  display: flex
-  flex-flow: column
-  justify-content: center
-  gap: 3rem
+
 
 .Home-MotivationSection
   padding-top: 5rem
   display: flex
   flex-flow: column
-  margin: 0em 3em 0em 3em
-  width: calc(100% - 6em)
+  margin: 0em 1em 0em 1em
+  width: calc(100% - 2em)
   gap: 3em
 
 
 .Home-MotivationSection-header
   font-family: "Poppins", sans-serif
-  font-size: 2rem
+  font-size: 1.62rem
   text-align: left
   color: $eerie-black
   font-weight: 600
@@ -120,7 +143,7 @@
   .Home-MotivationSection-ReasonsList-Item-header
     display: flex
     font-family: "Poppins", sans-serif
-    font-size: 2rem
+    font-size: 1.62rem
     text-align: left
     color: $eerie-black
     font-weight: 600
@@ -133,9 +156,9 @@
     &:after
       content: ''
       top: 0.5rem
-      left: 1rem
-      height: 2rem
-      width: 12.5rem
+      left: 0.7rem
+      height: 1.8rem
+      width: 10rem
       z-index: -1
       position: absolute
       background: $jonquil
@@ -144,7 +167,7 @@
   .Home-MotivationSection-ReasonsList-Item-info
     display: flex
     font-family: "Poppins", sans-serif
-    font-size: 1.23rem
+    font-size: 1rem
     text-align: left
     color: $eerie-black
     font-weight: 600
@@ -157,15 +180,98 @@
     padding-left: 1rem
     padding-right: 1rem
 
-
-
   .Home-Section:first-of-type
-    height: calc(max(600px, 100vh - 96px))
-    display: grid
+    margin: 0
+    width: 100%
+    height: calc(max(600px, 100vh - 6rem))
     grid-template-columns: 1fr 1fr
+    grid-template-rows: 1fr
 
   .Home-Section:nth-of-type(2)
-    height: calc(max(600px, 100vh - 96px))
+    height: calc(max(600px, 100vh - 6rem))
+
+
+  .Home-IntroSection-Description
+    grid-column: 2/3
+    grid-row: 1/2
+    justify-content: center
+    gap: 3rem
+
+
+  .Home-IntroSection-Description-Title
+
+    h1
+      font-size: 2rem
+    p
+      font-size: 1.23rem
+
+  .Home-IntroSection-Description-About
+    p
+      font-size: 1.23rem
+
+
+  .Home-IntroSection-Description-Invitation
+    font-size: 1.23rem
+    display: flex
+    gap: 1em
+    align-items: center
+
+    a
+      padding: 0.5rem 0.8rem 0.5rem 0.8rem
+      font-size: 1.23rem
+
+
+
+
+
+
+  .Home-IntroSection-Illustration
+    grid-column: 1/2
+    grid-row: 1/2
+    height: 100%
+
+    img
+      height: auto
+      width: 80%
+
+
+
+
+
+  .Home-MotivationSection
+    padding-top: 5rem
+    display: flex
+    flex-flow: column
+    margin: 0em 3em 0em 3em
+    width: calc(100% - 6em)
+    gap: 3em
+
+
+  .Home-MotivationSection-header
+    font-size: 2rem
+    text-align: center
+
+  .Home-MotivationSection-ReasonsList
+    display: flex
+    flex-flow: column
+    gap: 3em
+
+
+  .Home-MotivationSection-ReasonsList-Item
+
+    list-style-type: none
+
+
+
+
+    .Home-MotivationSection-ReasonsList-Item-header
+      display: flex
+      font-size: 2rem
+
+    .Home-MotivationSection-ReasonsList-Item-info
+
+      font-size: 1.23rem
+
 
 @media only screen and (min-width: calc(62rem + 20vw + 2rem))
   .Home
