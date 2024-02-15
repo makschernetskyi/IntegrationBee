@@ -4,9 +4,10 @@ import Menu from "./vue-components/Menu/Menu.js";
 import NewsPage from "./vue-components/NewsPage/NewsPage.js";
 import SocialLinks from "./vue-components/SocialLinks/SocialLinks.js";
 import CompetitionsPage from "./vue-components/CompetitionsPage/CompetitionsPage.js";
+import SignInPage from "./vue-components/SignInPage/SignInPage.js";
+
 
 const { createApp, ref, onMounted, onUnmounted, toRef } = Vue
-
 
 
 
@@ -14,9 +15,7 @@ const { createApp, ref, onMounted, onUnmounted, toRef } = Vue
 const Contact = {
     template: '<div style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center; font-family: Poppins, sans-serif; font-size: 2rem; color: black; text-align: center; padding: 2rem;">Contacts</div>'
 }
-const SignIn = {
-    template: '<div style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center; font-family: Poppins, sans-serif; font-size: 2rem; color: black; text-align: center; padding: 2rem;">Sign up first.</div>'
-}
+
 const SignUp = {
     template: '<div style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center; font-family: Poppins, sans-serif; font-size: 2rem; color: black; text-align: center; padding: 2rem;">Registration is not open yet.</div>'
 }
@@ -30,7 +29,7 @@ const routes = [
     { path: '/news', component: NewsPage },
     { path: '/competitions', component: CompetitionsPage },
     { path: '/contact', component: Contact },
-    { path: '/signIn', component: SignIn },
+    { path: '/signIn', component: SignInPage },
     { path: '/signUp', component: SignUp },
     { path: '/competition/:id', component: Competition}
 ]
@@ -58,6 +57,7 @@ const MenuContainer = {
         </div>
     `
 }
+
 
 
 
@@ -133,8 +133,10 @@ const App = {
     `
 }
 
+const pinia = Pinia.createPinia()
 
 const app = createApp(App)
 
 app.use(router)
+app.use(pinia)
 app.mount('#app')
