@@ -4,6 +4,7 @@ from wagtail.models import Page
 from wagtail.fields import RichTextField
 from wagtail.admin.panels import FieldPanel
 from wagtail.fields import StreamField
+from wagtail.api import APIField
 
 from . import blocks
 
@@ -36,6 +37,22 @@ class HomePage(Page):
         FieldPanel("bullet_points")
     ]
 
+    api_fields = [
+        APIField("title_section_header"),
+        APIField("title_section_description"),
+        APIField("bullet_points_section_header"),
+        APIField("bullet_points"),
+    ]
+
+
+
+# class IndexPage(HomePage):
+#     page_title = models.CharField(max_length=50, blank=False, null=True)
+#
+#     content_panels = Page.content_panels + [
+#         FieldPanel("page_title")
+#     ]
+
 
 class NewsPage(Page):
     """News Page Model"""
@@ -47,5 +64,9 @@ class NewsPage(Page):
 
     content_panels = Page.content_panels + [
         FieldPanel("page_title")
+    ]
+
+    api_fields = [
+        APIField("page_title")
     ]
 
