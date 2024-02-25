@@ -1,9 +1,20 @@
 import HomePageSection from "./HomePageSection.js";
+import {useStore} from "../../store/index.js";
 
+const {onMounted, ref} = Vue
 
 export default {
     components: {
         HomePageSection
+    },
+
+    setup(){
+        const store = useStore().homePage;
+
+        onMounted(async ()=>{
+            await store.fetchHomePageInfo();
+        })
+        return {content: store.$state}
     },
     template: `
         <div class="Home">
@@ -13,13 +24,10 @@ export default {
                 </div>
                 <div class="Home-IntroSection-Description">
                     <div class="Home-IntroSection-Description-Title">
-                        <h1>Integration Bee now in Vienna!</h1>
+                        <h1>{{content.titleSectionHeaderText}}</h1>
 <!--                        <p>Integration bee format event is coming to Vienna!!!</p>-->
                     </div>
-                    <div class="Home-IntroSection-Description-About">
-                        <p>Test your calculus skills and discover the world
-                        of competetive mathematics!
-                        </p>
+                    <div class="Home-IntroSection-Description-About" v-html="content.titleSectionDescriptionText">
                     </div>
                     
                     <div class="Home-IntroSection-Description-Invitation">
@@ -30,35 +38,19 @@ export default {
             </HomePageSection>
             <HomePageSection class="Home-MotivationSection">
                 <h2 class="Home-MotivationSection-header">
-                    Why Participate?
+                    {{content.bulletPointsHeaderText}}
                 </h2>
                 <ul class="Home-MotivationSection-ReasonsList">
-                    <li class="Home-MotivationSection-ReasonsList-Item">
+                    
+                    <li v-for="(bulletPoint, index) in content.bulletPoints" class="Home-MotivationSection-ReasonsList-Item" :key="index">
                         <h3 class="Home-MotivationSection-ReasonsList-Item-header">
-                        Compete!
+                            {{bulletPoint.header}}
                         </h3>
                         <p class="Home-MotivationSection-ReasonsList-Item-info">
-                        Integration bee is a format where you can compete with other
-                        people in solving integrals!
+                            {{bulletPoint.text}}
                         </p>
                     </li>
-                    <li class="Home-MotivationSection-ReasonsList-Item">
-                        <h3 class="Home-MotivationSection-ReasonsList-Item-header">
-                        Make friends!
-                        </h3>
-                        <p class="Home-MotivationSection-ReasonsList-Item-info">
-                        Integration Bee events are a place where people with common interests gather, where you can find new friends
-                        and have a lot of fun with them!
-                        </p>
-                    </li>
-                    <li class="Home-MotivationSection-ReasonsList-Item">
-                        <h3 class="Home-MotivationSection-ReasonsList-Item-header">
-                        Win Prizes!
-                        </h3>
-                        <p class="Home-MotivationSection-ReasonsList-Item-info">
-                        Winners of Integration Bee finals will get prizes, be smart and get your rewards!
-                        </p>
-                    </li>
+                    
                 </ul>
             </HomePageSection>
         </div>
