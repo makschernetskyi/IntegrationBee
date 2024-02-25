@@ -44,14 +44,12 @@ class HomePage(Page):
         APIField("bullet_points"),
     ]
 
+    subpage_types = ["home.NewsPage", "home.CompetitionsPage"]
 
 
-# class IndexPage(HomePage):
-#     page_title = models.CharField(max_length=50, blank=False, null=True)
-#
-#     content_panels = Page.content_panels + [
-#         FieldPanel("page_title")
-#     ]
+
+
+
 
 
 class NewsPage(Page):
@@ -61,12 +59,118 @@ class NewsPage(Page):
 
     page_title = models.CharField(max_length=50, blank=False, null=True)
 
+    content = StreamField(
+        [
+            ("news", blocks.NewsBlock())
+        ],
+        null=True,
+        blank=True,
+        use_json_field=True
+    )
+
 
     content_panels = Page.content_panels + [
-        FieldPanel("page_title")
+        FieldPanel("page_title"),
+        FieldPanel("content"),
     ]
 
     api_fields = [
-        APIField("page_title")
+        APIField("page_title"),
+        APIField("content")
     ]
 
+    subpage_types = ["home.NewsPost"]
+
+    def get_url_parts(self, request=None):
+        return self.get_parent().get_url_parts()
+
+
+
+
+class NewsPost(Page):
+
+
+    header = models.CharField(max_length=100, blank=False, null=False)
+    text = RichTextField(features=["bold", "link"], null=True)
+    picture = models.ForeignKey(
+        "wagtailimages.Image",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+"
+    )
+
+    content_panels = Page.content_panels + [
+        FieldPanel("header"),
+        FieldPanel("text"),
+        FieldPanel("picture"),
+    ]
+
+    api_fields = [
+        APIField("header"),
+        APIField("text"),
+        APIField("picture"),
+    ]
+
+    def get_url_parts(self, request=None):
+        return self.get_parent().get_url_parts()
+
+
+class CompetitionsPage(Page):
+
+    header = models.CharField(max_length=50, null=False, blank=False)
+
+    content_panels = Page.content_panels + [
+        FieldPanel("header"),
+    ]
+
+    api_fields = [
+        APIField("header"),
+    ]
+
+    subpage_types = ["home.Competition"]
+
+    def get_url_parts(self, request=None):
+        return self.get_parent().get_url_parts()
+
+
+class Competition(Page):
+
+
+    header = models.CharField(max_length=100, blank=False, null=False)
+    short_description = RichTextField(features=["bold", "link"], null=True)
+    description = RichTextField(features=["bold", "link"], null=True)
+    event_date = models.DateTimeField(blank=True, null=True)
+    place = models.CharField(max_length=100, blank=False, null=False)
+    place_maps_url = models.CharField(max_length=100, blank=True, null=True)
+    picture = models.ForeignKey(
+        "wagtailimages.Image",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+"
+    )
+
+    content_panels = Page.content_panels + [
+        FieldPanel("header"),
+        FieldPanel("short_description"),
+        FieldPanel("description"),
+        FieldPanel("event_date"),
+        FieldPanel("place"),
+        FieldPanel("place_maps_url"),
+        FieldPanel("picture"),
+    ]
+
+    api_fields = [
+        APIField("header"),
+        APIField("header"),
+        APIField("short_description"),
+        APIField("description"),
+        APIField("event_date"),
+        APIField("place"),
+        APIField("place_maps_url"),
+        APIField("picture"),
+    ]
+
+    def get_url_parts(self, request=None):
+        return None, None, None, None
