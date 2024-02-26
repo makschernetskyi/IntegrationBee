@@ -91,7 +91,7 @@ class NewsPost(Page):
 
 
     header = models.CharField(max_length=100, blank=False, null=False)
-    text = RichTextField(features=["bold", "link"], null=True)
+    text = RichTextField(features=["bold", "link", "italic"], null=True)
     picture = models.ForeignKey(
         "wagtailimages.Image",
         null=True,

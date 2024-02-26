@@ -1,10 +1,18 @@
 import NewsItem from "./NewsItem.js"
+import {useStore} from "../../store/index.js";
+
+const {onMounted} = Vue
+
+const ITEMS_PER_PAGE = 10;
 
 export default {
     components:{
         NewsItem
     },
     setup(){
+
+        const store = useStore().newsPage
+
         const myNews = [
             {
                 header:"Integration Bee UniWien edition is coming!",
@@ -13,13 +21,21 @@ export default {
                           Information! `
             },
         ]
-        return {myNews}
+
+        onMounted(async ()=>{
+            await Promise.all([store.fetchNewsPageInfo(), store.fetchNewsInfo(1,ITEMS_PER_PAGE)])
+        })
+
+        return {
+            myNews,
+            content: store.$state
+        }
     },
     template: `
         <div class="NewsPage">
-            <h1 class="NewsPage-header">Our News:</h1>
+            <h1 class="NewsPage-header">{{content.headerText}}</h1>
             <div class="NewsPage-Feed">
-                <NewsItem v-for="news in myNews" :content="news.content" :header="news.header"/>
+                <NewsItem v-for="news in content.news" :content="news.content" :header="news.header"/>
             </div>
         </div>
     `
