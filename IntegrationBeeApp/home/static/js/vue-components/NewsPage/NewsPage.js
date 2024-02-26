@@ -1,7 +1,7 @@
 import NewsItem from "./NewsItem.js"
 import {useStore} from "../../store/index.js";
 
-const {onMounted} = Vue
+const {onMounted, onBeforeUnmount} = Vue
 
 const ITEMS_PER_PAGE = 10;
 
@@ -10,24 +10,27 @@ export default {
         NewsItem
     },
     setup(){
-
+        //console.log(this.$route)
         const store = useStore().newsPage
 
-        const myNews = [
-            {
-                header:"Integration Bee UniWien edition is coming!",
-                content: `Hi! We orginize <b>IntegrationBee competition in <i>Vienna</i></b>🥳! 
-                          Participate, find new friends and win prizes! How? Stay tuned 📻 for new
-                          Information! `
-            },
-        ]
+        const searchParams = new URLSearchParams(window.location.hash.split('/').pop());
+        let pageNumber = 1
+        console.log(searchParams.get("page"))
+        if(searchParams.has("page")){
+            pageNumber = searchParams.get("page")
+        }
+
 
         onMounted(async ()=>{
-            await Promise.all([store.fetchNewsPageInfo(), store.fetchNewsInfo(1,ITEMS_PER_PAGE)])
+            await Promise.all([store.fetchNewsPageInfo(), store.fetchNewsInfo(pageNumber,ITEMS_PER_PAGE)])
         })
 
+        onBeforeUnmount(()=>{
+            store.$reset()
+        })
+
+
         return {
-            myNews,
             content: store.$state
         }
     },

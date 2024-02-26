@@ -7,6 +7,7 @@ const HOME_PAGE_INFO_URL = "/api/v2/pages/?type=home.HomePage&fields=title,title
 
 export const useHomePageStore = defineStore('homePage', {
     state: ()=>({
+        isFetched: false,
         titleSectionHeaderText: null,
         titleSectionDescriptionText: null,
         bulletPointsHeaderText: null,
@@ -29,7 +30,7 @@ export const useHomePageStore = defineStore('homePage', {
                 this.titleSectionDescriptionText = pageInfo.title_section_description
                 this.bulletPointsHeaderText = pageInfo.bullet_points_section_header
                 pageInfo.bullet_points.forEach(point => {this.bulletPoints.push({header: point.value.header, text: point.value.text})})
-
+                this.isFetched = true
             }catch(e){
                 console.error(e)
             }

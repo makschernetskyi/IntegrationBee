@@ -11,7 +11,11 @@ export default {
     setup(){
         const store = useStore().homePage;
 
+
         onMounted(async ()=>{
+            if(store.isFetched){
+                return
+            }
             await store.fetchHomePageInfo();
         })
         return {content: store.$state}
