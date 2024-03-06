@@ -53,7 +53,7 @@ export const useNewsPageStore = defineStore('newsPage', {
                     this.news.push({
                         header: item.header,
                         content: item.text,
-                        picture_url: item.picture?.download_url
+                        pictureUrl: item.picture?.download_url
                     })
                 })
 

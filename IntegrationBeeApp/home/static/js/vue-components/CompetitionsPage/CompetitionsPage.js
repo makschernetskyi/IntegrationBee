@@ -1,44 +1,55 @@
 import CompetitionsItem from "./CompetitionsItem.js"
+import {formatDateToString} from "../../utils/formatDateToString.js"
+import {useStore} from "../../store/index.js";
+
+const {onMounted, onBeforeUnmount} = Vue
+
+const ITEMS_PER_PAGE = 10
 
 export default {
     components:{
         CompetitionsItem
     },
     setup(){
-        const upcomingCompetitions = [
-            {
-                title: "Integration Bee UniWien Summer 2024",
-                description: `First Integration Bee in UniWien, that will happen in Summer 2024!`,
-                date: "15.06.2024 18:00 CET",
-                location: "https://osm.org/go/0JrJGoMpX-?m=&node=2431089983",
-                locationName: "Oskar Morgenstern Platz 1",
-                id: 1
-            },
-        ]
-        const pastCompetitions = [
-            {
-                title: "Integration Bee UniWien Summer 2023",
-                description: `Example Past Competition`,
-                date: "15.06.2023 18:00 CET",
-                location: "https://osm.org/go/0JrJGoMpX-?m=&node=2431089983",
-                locationName: "Oskar Morgenstern Platz 1",
-                id: 2
-            },
-        ]
-        return {upcomingCompetitions, pastCompetitions}
+
+        const store = useStore().competitionsPage
+
+        const searchParams = new URLSearchParams(window.location.hash.split('/').pop());
+        let pageNumber = 1
+        console.log(searchParams.get("page"))
+        if(searchParams.has("page")){
+            pageNumber = searchParams.get("page")
+        }
+
+
+        onMounted(async ()=>{
+            await Promise.all([store.fetchCompetitionPageInfo(), store.fetchCompetitionsInfo(pageNumber, ITEMS_PER_PAGE)])
+        })
+
+        onBeforeUnmount(()=>{
+            store.$reset()
+        })
+
+
+
+
+        return {
+            store,
+            formatDateToString
+        }
     },
     template: `
         <div class="CompetitionsPage">
-            <section class="CompetitionsPage-Competitions CompetitionsPage-Competitions--upcoming">
+            <section v-if="store.upcomingCompetitions.length" class="CompetitionsPage-Competitions CompetitionsPage-Competitions--upcoming">
                 <h1 class="CompetitionsPage-Competitions-header">Upcoming Competitions:</h1>
                 <div class="CompetitionsPage-Competitions-Feed">
-                    <CompetitionsItem v-for="competition in upcomingCompetitions" :title="competition.title" :description="competition.description" :date="competition.date" :location="competition.location" :locationName="competition.locationName"  :id="competition.id"/>
+                    <CompetitionsItem v-for="competition in store.upcomingCompetitions" :title="competition.header" :description="competition.shortDescription" :date="formatDateToString(competition.date)" :location="" :locationName="competition.location"  :id="competition.id"/>
                 </div>
             </section>
-            <section class="CompetitionsPage-Competitions CompetitionsPage-Competitions--past">
+            <section v-if="store.pastCompetitions.length" class="CompetitionsPage-Competitions CompetitionsPage-Competitions--past">
                 <h1 class="CompetitionsPage-Competitions-header">Past Competitions:</h1>
                 <div class="CompetitionsPage-Competitions-Feed">
-                    <CompetitionsItem v-for="competition in pastCompetitions" :title="competition.title" :description="competition.description" :date="competition.date" :location="competition.location" :locationName="competition.locationName"  :id="competition.id"/>
+                    <CompetitionsItem v-for="competition in store.pastCompetitions" :title="competition.header" :description="competition.shortDescription" :date="formatDateToString(competition.date)" :location="" :locationName="competition.location"  :id="1"/>
                 </div>
             </section>
             

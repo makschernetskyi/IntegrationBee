@@ -21,8 +21,7 @@ export default {
                         {{locationName}}
                     </p>
                 </div>
-                <p class="CompetitionsPage-Competitions-Feed-Item-About-description">
-                    {{description}}
+                <p class="CompetitionsPage-Competitions-Feed-Item-About-description" v-html="description">
                 </p>
             </div>
         </router-link>
