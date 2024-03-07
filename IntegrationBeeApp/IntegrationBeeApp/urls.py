@@ -11,12 +11,14 @@ from search import views as search_views
 from .api import api_router
 
 
+
 urlpatterns = [
-    path('api/v2/', api_router.urls),
+    path('api/v2/cms/', api_router.urls),
     path("django-admin/", admin.site.urls),
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
+    path("api/v2/", include("api.urls")),
     re_path(r'^', include(wagtail_urls))
 ]
 

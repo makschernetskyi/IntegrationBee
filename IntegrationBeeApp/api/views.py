@@ -3,25 +3,36 @@ from django.shortcuts import render
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 
-from home.models import NewsPage
+from .serializers import UserSerializer
 
 
 
 
-class NewsAPIView(APIView):
-    def get(self, request, page_id):
+class RegisterView(APIView):
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
 
-        try:
-            page = NewsPage.objects.get(id=page_id)
-        except ObjectDoesNotExist:
-            return Response({"error": "page does not exist"}, status=404)
-        stream_data = page.content
+class UserDataView(APIView):
+    permission_classes = [IsAuthenticated]
 
-        paginator = Paginator(stream_data, per_page=10)  # Adjust per_page as needed
-        page_number = request.query_params.get("page", 1)
-        paginated_data = paginator.get_page(page_number)
+    def get(self, request):
+
+
+
+        return Response({
+            'email': request.user.email,
+            'first_name': request.user.first_name,
+            'second_name': request.user.second_name,
+            'school': request.user.school,
+            'profile_picture': request.user.profile_picture or None,
+            'date_joined': request.user.date_joined
+        })

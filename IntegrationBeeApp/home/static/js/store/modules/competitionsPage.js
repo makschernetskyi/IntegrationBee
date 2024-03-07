@@ -4,7 +4,7 @@
 const {defineStore} = Pinia;
 
 
-const PAGES_URL = "/api/v2/pages/"
+const PAGES_URL = "/api/v2/cms/pages/"
 
 
 export const useCompetitionsPageStore = defineStore('competitionsPage', {

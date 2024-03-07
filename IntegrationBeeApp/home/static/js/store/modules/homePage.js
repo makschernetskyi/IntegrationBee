@@ -2,7 +2,7 @@
 const {defineStore} = Pinia;
 
 
-const HOME_PAGE_INFO_URL = "/api/v2/pages/?type=home.HomePage&fields=title,title_section_header,title_section_description,bullet_points_section_header,bullet_points"
+const HOME_PAGE_INFO_URL = "/api/v2/cms/pages/?type=home.HomePage&fields=title,title_section_header,title_section_description,bullet_points_section_header,bullet_points"
 
 
 export const useHomePageStore = defineStore('homePage', {
