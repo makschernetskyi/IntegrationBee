@@ -2,24 +2,48 @@ import {useStore} from "../../store/index.js";
 
 const {ref, computed} = Vue
 
+const {useRouter} = VueRouter
+
+
+
 export default {
     setup(){
-        const store = useStore().signIn
-        console.log(store)
-        const emailInput = computed({get: ()=>store.emailInputValue, set: store.updateEmailInputValue})
-        const passwordInput = computed({get: ()=>store.passwordInputValue, set: store.updatePasswordInputValue})
+        const signInStore = useStore().signIn
+        console.log(signInStore)
+        const emailInput = computed({get: ()=>signInStore.emailInputValue, set: signInStore.updateEmailInputValue})
+        const passwordInput = computed({get: ()=>signInStore.passwordInputValue, set: signInStore.updatePasswordInputValue})
         const isPasswordShown = ref(false)
+
+        const authStore = useStore().auth
+
+        const self = this;
+        const router = useRouter();
+
+        const handleSubmit = (event) =>{
+            event.preventDefault()
+
+            authStore.requestSignIn(signInStore.emailInputValue, signInStore.passwordInputValue).then(()=>{
+                authStore.getUserData().then(()=>{
+                    router.push('/profile')
+                })
+            })
+
+
+        }
+
+
         return {
             emailInput,
             passwordInput,
-            store,
-            isPasswordShown
+            signInStore,
+            isPasswordShown,
+            handleSubmit
         }
     },
 
     template: `
         <div class="SignIn">
-            <form class="SignIn-Form">
+            <form class="SignIn-Form" @submit="handleSubmit">
                 <h1 class="SignIn-Form-header">Sign in</h1>
                 <div class="SignIn-Form-Email">
                     <input type="email" name="email" v-model="emailInput" class="SignIn-Form-Email-input" autocomplete="on" placeholder="E-mail: e.g. user@somemail.com">

@@ -5,3 +5,4 @@ IntegrationBeeApp/static/*
 IntegrationBeeApp/.dockerignore
 .idea/
 IntegrationBeeApp/IntegrationBeeApp/settings/production.py
+IntegrationBeeApp/backup/

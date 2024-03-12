@@ -5,12 +5,15 @@ import NewsPage from "./vue-components/NewsPage/NewsPage.js";
 import SocialLinks from "./vue-components/SocialLinks/SocialLinks.js";
 import CompetitionsPage from "./vue-components/CompetitionsPage/CompetitionsPage.js";
 import SignInPage from "./vue-components/SignInPage/SignInPage.js";
+import ProfilePage from "./vue-components/ProfilePage/ProfilePage.js"
+
+import {useStore} from "./store/index.js";
+
+const { createApp, ref, onMounted, onUnmounted, onBeforeMount, toRef } = Vue
 
 
-const { createApp, ref, onMounted, onUnmounted, toRef } = Vue
 
-
-
+//placeholders for future components
 
 const Contact = {
     template: '<div style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center; font-family: Poppins, sans-serif; font-size: 2rem; color: black; text-align: center; padding: 2rem;">Contacts</div>'
@@ -24,14 +27,17 @@ const Competition = {
 }
 
 
+//routes for Vue Router
+
 const routes = [
-    { path: '/', component: Homepage },
-    { path: '/news', component: NewsPage },
-    { path: '/competitions', component: CompetitionsPage },
-    { path: '/contact', component: Contact },
-    { path: '/signIn', component: SignInPage },
-    { path: '/signUp', component: SignUp },
-    { path: '/competition/:id', component: Competition}
+    { path: '/', component: Homepage, name: 'home' },
+    { path: '/news', component: NewsPage, name: 'news' },
+    { path: '/competitions', component: CompetitionsPage, name: 'competitions'},
+    { path: '/contact', component: Contact, name: "contact" },
+    { path: '/signIn', component: SignInPage, name: 'sign_in' },
+    { path: '/signUp', component: SignUp, name: 'sign_up' },
+    { path: '/competition/:id', component: Competition, name: 'competition'},
+    { path: '/profile', component: ProfilePage, name: 'profile'}
 ]
 
 const router = VueRouter.createRouter({
@@ -39,6 +45,19 @@ const router = VueRouter.createRouter({
   routes,
 })
 
+router.beforeEach(async (to, from, next) => {
+
+    const isAuthenticated = useStore().auth.isAuthenticated
+
+    if( ['profile'].includes(to.name) && !isAuthenticated && to.name !== 'sign_in'){
+        next('/signIn')
+        return
+    }
+    next()
+})
+
+
+// menu container component
 
 const MenuContainer = {
     props: ["isMenuContentShown"],
@@ -83,6 +102,16 @@ const App = {
             handleResize()
         }))
 
+        const authStore = useStore().auth;
+
+
+        onBeforeMount(
+            ()=>{
+                authStore.getUserData()
+            }
+        )
+
+
 
         const isMenuVisible = ref(false)
         const isMenuContentShown = ref(false)
@@ -92,7 +121,7 @@ const App = {
         return {
             isMenuVisible,
             windowSize,
-            isMenuContentShown
+            isMenuContentShown,
         }
     },
     methods:{
