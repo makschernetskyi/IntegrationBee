@@ -14,7 +14,11 @@ export const useAuthStore = defineStore('auth', {
         dateJoined: null,
         school: null,
         profilePicture: null,
-        authRequest: {},
+        userDataRequest: {
+            status: null,
+            code: null,
+            error: null
+        },
         registerRequest: {},
         signInRequest: {}
     }),
@@ -55,16 +59,22 @@ export const useAuthStore = defineStore('auth', {
         async getUserData(){
             const accessToken = Cookies.get('access');
             let response;
+            const self = this;
             try{
+                self.userDataRequest.status = "pending"
                 response = await axios.get(API_USER_DATA_URL, {
                     headers:{
                         Authorization: "Bearer " + accessToken
                     },
                     withCredentials: true
+                }).then((res)=>{
+                    self.userDataRequest.status = "resolved"
+                    return res
                 })
 
             }catch (e) {
                 console.log(e)
+                self.userDataRequest.status = "rejected"
                 return
             }
 

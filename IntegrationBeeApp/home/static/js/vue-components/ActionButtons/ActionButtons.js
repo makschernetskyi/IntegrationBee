@@ -1,12 +1,12 @@
-
-
 import {useStore} from "../../store/index.js";
+
+const {computed} = Vue
 
 export default {
     components: {},
     setup() {
 
-        const isAuth = useStore().auth.isAuthenticated
+        const isAuth = computed({get: ()=>useStore().auth.isAuthenticated})
 
         return {
             isAuth

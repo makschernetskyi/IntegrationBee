@@ -45,15 +45,25 @@ const router = VueRouter.createRouter({
   routes,
 })
 
+const protectedRoutes = ['profile']
+
 router.beforeEach(async (to, from, next) => {
 
-    const isAuthenticated = useStore().auth.isAuthenticated
+    const authStore = useStore().auth
 
-    if( ['profile'].includes(to.name) && !isAuthenticated && to.name !== 'sign_in'){
+    if(useStore().auth.userDataRequest.status == null){
+        await authStore.getUserData()
+    }
+
+    const isAuthenticated = authStore.isAuthenticated
+
+    if( protectedRoutes.includes(to.name) && !isAuthenticated && to.name !== 'sign_in'){
         next('/signIn')
         return
     }
     next()
+
+
 })
 
 
@@ -105,11 +115,11 @@ const App = {
         const authStore = useStore().auth;
 
 
-        onBeforeMount(
-            ()=>{
-                authStore.getUserData()
-            }
-        )
+        // onBeforeMount(
+        //     ()=>{
+        //         authStore.getUserData()
+        //     }
+        // )
 
 
 
