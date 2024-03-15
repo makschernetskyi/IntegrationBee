@@ -11,6 +11,7 @@ export const useAuthStore = defineStore('auth', {
         isAuthenticated: false,
         firstName: null,
         secondName: null,
+        email: null,
         dateJoined: null,
         school: null,
         profilePicture: null,
@@ -27,6 +28,7 @@ export const useAuthStore = defineStore('auth', {
           {
               firstName: state.firstName,
               secondName: state.secondName,
+              email: state.email,
               dateJoined: state.dateJoined,
               school: state.school,
               profilePicture: state.profilePicture
@@ -83,6 +85,7 @@ export const useAuthStore = defineStore('auth', {
             console.log(response)
 
             this.isAuthenticated= true;
+            this.email = data.email;
             this.firstName= data.first_name;
             this.secondName= data.second_name;
             this.dateJoined= data.date_joined;

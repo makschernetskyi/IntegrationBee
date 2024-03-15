@@ -1,0 +1,80 @@
+@import "../abstracts/colors"
+@import "../abstracts/dimensions"
+
+
+.Profile
+  font-family: "Open Sans", sans-serif
+  height: calc(max(600px, 100svh - 4rem))
+  overflow-x: hidden
+  min-height: 100%
+  padding-left: 1rem
+  padding-right: 1rem
+  padding-top: 2rem
+  display: grid
+  grid-template-columns: 1fr
+  grid-template-rows: 2fr 1fr
+
+.Profile-Data
+  grid-row: 1/2
+
+  display: grid
+  grid-template-columns: 1fr
+  grid-template-rows: 1fr 2fr
+
+.Profile-Data-Picture
+  display: flex
+  flex-flow: column
+  justify-content: left
+  align-items: start
+
+
+  grid-row: 1/2
+  grid-column: 1/2
+
+  height: calc(max(600px, 100svh - 4rem)*2/9)
+  img
+    //height: 50%
+    max-width: 200px
+    max-height: 90%
+    object-fit: cover
+
+.Profile-Data-UserInfo
+
+  grid-row: 2/3
+  grid-column: 1/2
+
+  list-style-type: none
+  display: flex
+  flex-flow: column
+  justify-content: left
+  gap: 1em
+
+  .Profile-Data-UserInfo-Field
+    display: flex
+    gap: 1em
+
+    .Profile-Data-UserInfo-Field-name
+      font-weight: bold
+
+
+@media only screen and (min-width: $medium-screen)
+  .Profile
+    padding-left: 1rem
+    padding-right: 1rem
+    height: calc(max(600px, 100svh - 6rem))
+
+  //.Profile-Data-Picture
+  //  display: flex
+  //  justify-content: center
+  //  align-items: center
+  //  height: calc(max(600px, 100svh - 6rem)*2/3)
+  //  img
+  //    height: 300px
+  //    width: 300px
+  //    object-fit: cover
+
+
+@media only screen and (min-width: calc(62rem + 20vw + 2rem))
+  .Profile
+    padding-left: 10vw
+    padding-right: 10vw
