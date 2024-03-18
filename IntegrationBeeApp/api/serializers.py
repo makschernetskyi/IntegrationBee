@@ -1,6 +1,6 @@
 from rest_framework.serializers import Serializer, ModelSerializer
 
-from .models import User
+from .models import User, Competition
 
 
 
@@ -19,3 +19,11 @@ class UserSerializer(ModelSerializer):
         user.set_password(validated_data["password"])
         user.save()
         return user
+
+
+class CompetitionSerializer(ModelSerializer):
+    participants = UserSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Competition
+        fields = ('id', 'name', 'participants')

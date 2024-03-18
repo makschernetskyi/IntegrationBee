@@ -6,6 +6,7 @@ import SocialLinks from "./vue-components/SocialLinks/SocialLinks.js";
 import CompetitionsPage from "./vue-components/CompetitionsPage/CompetitionsPage.js";
 import SignInPage from "./vue-components/SignInPage/SignInPage.js";
 import ProfilePage from "./vue-components/ProfilePage/ProfilePage.js"
+import CompetitionPage from "./vue-components/CompetitionPage/CompetitionPage.js";
 
 import {useStore} from "./store/index.js";
 
@@ -22,9 +23,7 @@ const Contact = {
 const SignUp = {
     template: '<div style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center; font-family: Poppins, sans-serif; font-size: 2rem; color: black; text-align: center; padding: 2rem;">Registration is not open yet.</div>'
 }
-const Competition = {
-    template: '<div style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center; font-family: Poppins, sans-serif; font-size: 2rem; color: black; text-align: center; padding: 2rem;">Competition Id: {{$route.params.id}}</div>'
-}
+
 
 
 //routes for Vue Router
@@ -36,7 +35,7 @@ const routes = [
     { path: '/contact', component: Contact, name: "contact" },
     { path: '/signIn', component: SignInPage, name: 'sign_in' },
     { path: '/signUp', component: SignUp, name: 'sign_up' },
-    { path: '/competition/:id', component: Competition, name: 'competition'},
+    { path: '/competition/:id', component: CompetitionPage, name: 'competition'},
     { path: '/profile', component: ProfilePage, name: 'profile'}
 ]
 

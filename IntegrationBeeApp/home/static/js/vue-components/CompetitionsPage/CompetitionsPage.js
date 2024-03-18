@@ -23,7 +23,7 @@ export default {
 
 
         onMounted(async ()=>{
-            await Promise.all([store.fetchCompetitionPageInfo(), store.fetchCompetitionsInfo(pageNumber, ITEMS_PER_PAGE)])
+            await Promise.all([store.fetchCompetitionsPageInfo(), store.fetchCompetitionsInfo(pageNumber, ITEMS_PER_PAGE)])
         })
 
         onBeforeUnmount(()=>{

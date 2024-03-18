@@ -143,6 +143,9 @@ class Competition(Page):
     event_date = models.DateTimeField(blank=True, null=True)
     place = models.CharField(max_length=100, blank=False, null=False)
     place_maps_url = models.CharField(max_length=100, blank=True, null=True)
+
+    related_competition_id = models.IntegerField(blank=True, null=True)
+
     picture = models.ForeignKey(
         "wagtailimages.Image",
         null=True,
@@ -159,6 +162,7 @@ class Competition(Page):
         FieldPanel("place"),
         FieldPanel("place_maps_url"),
         FieldPanel("picture"),
+        FieldPanel("related_competition_id"),
     ]
 
     api_fields = [
@@ -170,6 +174,7 @@ class Competition(Page):
         APIField("place"),
         APIField("place_maps_url"),
         APIField("picture"),
+        APIField("related_competition_id"),
     ]
 
     def get_url_parts(self, request=None):

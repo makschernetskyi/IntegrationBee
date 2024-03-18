@@ -47,3 +47,13 @@ class User(AbstractUser):
         return f"{self.email} - {self.first_name} {self.second_name}"
 
 
+class Competition(models.Model):
+
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100, unique=True)
+    participants = models.ManyToManyField(User, related_name='competitions')
+
+    def __str__(self):
+        return self.name
+
+

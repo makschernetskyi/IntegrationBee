@@ -1,0 +1,49 @@
+@import "../abstracts/colors"
+@import "../abstracts/dimensions"
+
+.Competition
+  height: auto
+  display: grid
+  grid-template-columns: 20rem 1fr
+  grid-template-rows: 1fr
+
+  grid-column-gap: 1rem
+
+  font-family: Poppins, sans-serif
+  font-size: 2rem
+  color: black
+  padding-left: 1rem
+  padding-right: 1rem
+  padding-top: 2rem
+
+
+.Competition-MetaInfo-time
+  font-family: "Open Sans", sans-serif
+  font-size: 1.5rem
+
+.Competition-MetaInfo-Location
+  font-family: "Open Sans", sans-serif
+  font-size: 1.5rem
+  a
+    text-decoration: none
+    color: $tekhelet
+    &:hover
+      text-decoration: underline
+
+.Competition-Description-header
+  font-family: "Open Sans", sans-serif
+  font-size: 1.5rem
+
+.Competition-Description-description
+  font-family: "Open Sans", sans-serif
+  font-size: 1.5rem
+
+.Competition-MetaInfo-Picture
+  img
+    max-width: 100%
+
+
+@media only screen and (min-width: calc(62rem + 20vw + 2rem))
+  .Competition
+    padding-left: 10vw
+    padding-right: 10vw
