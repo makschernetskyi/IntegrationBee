@@ -4,13 +4,22 @@ export default {
     setup(props){
         const {title, description, date, location, id, icon, locationName} = props
         const placeholderImage = "/static/assets/IntegrationBeeLogo.svg"
-        return {title, description, date, location, id, icon, locationName, placeholderImage}
+        return {
+            title,
+            description,
+            date,
+            location,
+            id,
+            icon: icon?icon:placeholderImage,
+            locationName,
+            placeholderImage
+        }
     },
     template: `
         <router-link :to="'/competition/' + id" class="CompetitionsPage-Competitions-Feed-Item">
             <h2 class="CompetitionsPage-Competitions-Feed-Item-header">{{title}}</h2>
             <div class="CompetitionsPage-Competitions-Feed-Item-Icon">
-                <img :src="icon ? icon : placeholderImage" alt="competition icon"/>
+                <img :src="icon" alt="competition icon"/>
             </div>
             <div class="CompetitionsPage-Competitions-Feed-Item-About">
                 <div class="CompetitionsPage-Competitions-Feed-Item-About-Location">

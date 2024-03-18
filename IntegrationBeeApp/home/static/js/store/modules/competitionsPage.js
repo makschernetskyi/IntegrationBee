@@ -87,7 +87,6 @@ export const useCompetitionsPageStore = defineStore('competitionsPage', {
                 //     return
                 // }
                 const competitions = data.items
-                console.log(competitions)
                 competitions.forEach(item => {
                     this.competitions.push({
                         id: item.id,
@@ -95,7 +94,7 @@ export const useCompetitionsPageStore = defineStore('competitionsPage', {
                         shortDescription: item.short_description,
                         date: new Date(item.event_date),
                         location: item.place,
-                        pictureUrl: item.picture?.download_url
+                        pictureUrl: item.picture?.meta.download_url
                     })
                 })
 
