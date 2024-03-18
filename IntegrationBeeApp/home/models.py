@@ -29,12 +29,21 @@ class HomePage(Page):
         blank=True
     )
 
+    homepage_picture = models.ForeignKey(
+        "wagtailimages.Image",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+"
+    )
+
 
     content_panels = Page.content_panels + [
         FieldPanel("title_section_header"),
         FieldPanel("title_section_description"),
         FieldPanel("bullet_points_section_header"),
-        FieldPanel("bullet_points")
+        FieldPanel("bullet_points"),
+        FieldPanel("homepage_picture"),
     ]
 
     api_fields = [
@@ -42,6 +51,7 @@ class HomePage(Page):
         APIField("title_section_description"),
         APIField("bullet_points_section_header"),
         APIField("bullet_points"),
+        APIField("homepage_picture"),
     ]
 
     subpage_types = ["home.NewsPage", "home.CompetitionsPage"]

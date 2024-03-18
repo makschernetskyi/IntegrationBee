@@ -24,7 +24,7 @@ export default {
         <div class="Home">
             <HomePageSection class="Home-IntroSection">
                 <div class="Home-IntroSection-Illustration">
-                    <img src="static/assets/homepic_crop.jpg" alt="">
+                    <img :src="content.picture" alt="">
                 </div>
                 <div class="Home-IntroSection-Description">
                     <div class="Home-IntroSection-Description-Title">
