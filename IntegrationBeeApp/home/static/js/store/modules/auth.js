@@ -124,13 +124,15 @@ export const useAuthStore = defineStore('auth', {
                 this.userDataRequest.error = error;
                 this.userDataRequest.errorMSG = error.message;
 
+                this.isAuthenticated = false;
+
 
                 //throw error;
             }
         },
         logout(){
-            Cookie.remove('access')
-            Cookie.remove('refresh')
+            Cookies.remove('access')
+            Cookies.remove('refresh')
         }
 
     }

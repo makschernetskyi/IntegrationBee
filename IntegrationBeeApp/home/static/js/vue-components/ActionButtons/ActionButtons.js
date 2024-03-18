@@ -1,15 +1,28 @@
 import {useStore} from "../../store/index.js";
 
 const {computed} = Vue
+const {useRouter} = VueRouter
+
 
 export default {
     components: {},
     setup() {
 
-        const isAuth = computed({get: ()=>useStore().auth.isAuthenticated})
+        const authStore = useStore().auth
+
+        const isAuth = computed({get: ()=>authStore.isAuthenticated})
+
+        const router = useRouter()
+
+        const logOut = async () =>{
+            authStore.logout()
+            await authStore.getUserData()
+            router.push('/')
+        }
 
         return {
-            isAuth
+            isAuth,
+            logOut
         }
 
     },
@@ -41,9 +54,9 @@ export default {
                     <router-link to="/profile" class="Header-ActionButtons-Button">
                         <span class="Header-ActionButtons-Button-text">profile</span>
                     </router-link>
-                    <router-link to="/signOut" class="Header-ActionButtons-Button">
-                        <span class="Header-ActionButtons-Button-text">Log out</span>
-                    </router-link>
+                    <span to="/signOut" class="Header-ActionButtons-Button">
+                        <button @click="logOut" class="Header-ActionButtons-Button-text logoutBtn">Log out</button>
+                    </span>
                 </template>
         </nav>
     `
