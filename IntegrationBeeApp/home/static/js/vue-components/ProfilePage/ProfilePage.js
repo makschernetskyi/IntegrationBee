@@ -20,7 +20,8 @@ export default {
     },
     template: `
         <div class="Profile">
-            <div class="Profile-Data">
+            <h1 class="Profile-SectionHeader">My profile:</h1>
+            <section class="Profile-Data">
                 <div class="Profile-Data-Picture">
                     <p>profile picture:</p>
                     <img :src="user.picture || placeholderImage" alt="">
@@ -43,10 +44,15 @@ export default {
                         <p class="Profile-Data-UserInfo-Field-value">{{user.school}}</p>
                     </li>
                 </ul>
-            </div>
-            <div class="Profile-MyCompetitions">
-                My competitions: [In development...]
-            </div>
+            </section>
+            <h2 class="Profile-SectionHeader">My competitions:</h2>
+            <section class="Profile-MyCompetitions">
+                <ul class="Profile-MyCompetitions-List">
+                    <li v-for="competition in user.competitions" class="Profile-MyCompetitions-List-Item">
+                        <router-link :to="'/competition/' + competition.page_id">{{competition.public_name}}</router-link>
+                    </li>
+                </ul>
+            </section>
         </div>
     `
 }

@@ -5,7 +5,8 @@ const {defineStore} = Pinia;
 
 
 const PAGES_URL = "/api/v2/cms/pages/"
-
+const COMPETITION_URL = "/api/v2/competition/"
+const ALL_COMPETITIONS_URL = "/api/v2/allCompetitions/"
 
 export const useCompetitionsPageStore = defineStore('competitionsPage', {
     state: ()=>({
@@ -17,16 +18,36 @@ export const useCompetitionsPageStore = defineStore('competitionsPage', {
             date: null,
             location: null,
             locationUrl: null,
-            pictureUrl: null
+            pictureUrl: null,
+            relatedCompetitionId: null
         },
-        competitions:[]
+        competitions:[],
+        competitionsDB: [],
+        fetchCompetitionInfoRequest:{
+            status: null,
+            code: null,
+            error: null,
+            errorMSG: null,
+        },
+        fetchCompetitionsPageInfoRequest:{
+            status: null,
+            code: null,
+            error: null,
+            errorMSG: null,
+        },
+        fetchCompetitionsInfoRequest:{
+            status: null,
+            code: null,
+            error: null,
+            errorMSG: null,
+        }
     }),
     getters:{
         pastCompetitions(state){
             return state.competitions.filter(competition=>new Date(competition.date) < Date.now()).sort((competition1, competition2)=> competition2.date - competition1.date)
         },
         upcomingCompetitions(state){
-            return state.competitions.filter(competition=>new Date(competition.date) >= Date.now()).sort((competition1, competition2)=> competition2.date - competition1.date)
+            return state.competitions.filter(competition=>new Date(competition.date) >= Date.now()).sort((competition1, competition2)=>  competition1.date - competition2.date)
         }
     },
     actions: {
@@ -90,7 +111,7 @@ export const useCompetitionsPageStore = defineStore('competitionsPage', {
                     params:{
                         type: "home.Competition",
                         id: competitionId.toString(),
-                        fields: "header,description,event_date,place,picture,place_maps_url",
+                        fields: "header,description,event_date,place,picture,place_maps_url,related_competition_id",
 
                     }
                 })
@@ -107,6 +128,72 @@ export const useCompetitionsPageStore = defineStore('competitionsPage', {
             this.currentCompetition.location = response.data.items[0].place
             this.currentCompetition.locationUrl = response.data.items[0].place_maps_url
             this.currentCompetition.pictureUrl = response.data.items[0].picture?.meta.download_url
+            this.currentCompetition.relatedCompetitionId = response.data.items[0].related_competition_id
+        },
+        async signUpForCompetition(id){
+            let response;
+            const accessToken = Cookies.get('access');
+            const requestData = new FormData();
+            requestData.set('id', id)
+            requestData.set('action', 'add')
+            try{
+                response = await axios.patch(COMPETITION_URL,requestData,{
+                    headers: {
+                        Authorization: 'Bearer ' + accessToken,
+                    }
+                })
+                console.log(response.data)
+            }catch (e) {
+                console.log(e)
+            }
+        },
+        async deregisterFromCompetition(id){
+            let response;
+            const accessToken = Cookies.get('access');
+            const requestData = new FormData();
+            requestData.set('id', id)
+            requestData.set('action', 'remove')
+            try{
+                response = await axios.patch(COMPETITION_URL,requestData,{
+                    headers: {
+                        Authorization: 'Bearer ' + accessToken,
+                    }
+                })
+                console.log(response.data)
+            }catch (e) {
+                console.log(e)
+            }
+        },
+        async fetchAllDBCompetitions(){
+            const accessToken = Cookies.get('access');
+            try{
+                const response = await axios.get(ALL_COMPETITIONS_URL,{
+                    headers: {
+                        Authorization: 'Bearer ' + accessToken,
+                    }
+                })
+                this.competitionsDB = response.data
+            }catch (e) {
+                console.log(e)
+            }
+        },
+        async addCompetition(name, maxParticipants){
+            const accessToken = Cookies.get('access');
+
+            const requestData = new FormData();
+            requestData.set("name", name)
+            requestData.set("max_participants", maxParticipants)
+
+            try{
+                const response = await axios.post(COMPETITION_URL, requestData,{
+                    headers: {
+                        Authorization: 'Bearer ' + accessToken,
+                    }
+                })
+
+            }catch (e) {
+                console.log(e)
+            }
         }
     }
 })

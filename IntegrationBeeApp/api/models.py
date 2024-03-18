@@ -18,6 +18,7 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, email, password, **extra_fields):
         extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_admin', True)
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser = True')
 
@@ -51,6 +52,7 @@ class Competition(models.Model):
 
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, unique=True)
+    max_participants = models.IntegerField(null=True, blank=True)
     participants = models.ManyToManyField(User, related_name='competitions')
 
     def __str__(self):

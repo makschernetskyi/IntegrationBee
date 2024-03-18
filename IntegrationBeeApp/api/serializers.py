@@ -7,7 +7,7 @@ from .models import User, Competition
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ["email", "first_name", "last_name", "school", "profile_picture", "date_joined"]
+        fields = ["email", "first_name", "last_name", "school", "profile_picture", "date_joined", "is_admin"]
 
     def create(self, validated_data):
         user = User.objects.create(

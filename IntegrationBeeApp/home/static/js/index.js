@@ -7,8 +7,10 @@ import CompetitionsPage from "./vue-components/CompetitionsPage/CompetitionsPage
 import SignInPage from "./vue-components/SignInPage/SignInPage.js";
 import ProfilePage from "./vue-components/ProfilePage/ProfilePage.js"
 import CompetitionPage from "./vue-components/CompetitionPage/CompetitionPage.js";
+import AdminPage from "./vue-components/AdminPage/AdminPage.js";
 
 import {useStore} from "./store/index.js";
+import adminPage from "./vue-components/AdminPage/AdminPage.js";
 
 const { createApp, ref, onMounted, onUnmounted, onBeforeMount, toRef } = Vue
 
@@ -36,7 +38,8 @@ const routes = [
     { path: '/signIn', component: SignInPage, name: 'sign_in' },
     { path: '/signUp', component: SignUp, name: 'sign_up' },
     { path: '/competition/:id', component: CompetitionPage, name: 'competition'},
-    { path: '/profile', component: ProfilePage, name: 'profile'}
+    { path: '/profile', component: ProfilePage, name: 'profile'},
+    { path: '/admin', component: AdminPage, name: 'admin'}
 ]
 
 const router = VueRouter.createRouter({
@@ -45,6 +48,7 @@ const router = VueRouter.createRouter({
 })
 
 const protectedRoutes = ['profile']
+const adminRoutes = ['admin']
 
 router.beforeEach(async (to, from, next) => {
 
@@ -56,10 +60,18 @@ router.beforeEach(async (to, from, next) => {
 
     const isAuthenticated = authStore.isAuthenticated
 
+    const isAdmin = authStore.user.isAdmin
+
     if( protectedRoutes.includes(to.name) && !isAuthenticated && to.name !== 'sign_in'){
         next('/signIn')
         return
     }
+
+    if( adminRoutes.includes(to.name) && (!isAuthenticated || !isAdmin) && to.name !== 'home'){
+        next('/')
+        return
+    }
+
     next()
 
 

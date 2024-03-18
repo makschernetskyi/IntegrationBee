@@ -12,14 +12,23 @@
   padding-top: 2rem
   display: grid
   grid-template-columns: 1fr
-  grid-template-rows: 2fr 1fr
+  grid-template-rows: 3rem 3fr 3rem 2fr
+
+.Profile-SectionHeader
+  height: 100%
+  font-size: 1rem
+  display: flex
+  align-items: center
+
 
 .Profile-Data
-  grid-row: 1/2
+  grid-row: 2/3
+  height: 100%
 
-  display: grid
-  grid-template-columns: 1fr
-  grid-template-rows: 1fr 2fr
+  //display: grid
+  //grid-template-columns: 1fr
+  //grid-template-rows: 1fr 2fr
+
 
 .Profile-Data-Picture
   display: flex
@@ -49,6 +58,9 @@
   justify-content: left
   gap: 1em
 
+  font-size: 1rem
+  color: $eerie-black
+
   .Profile-Data-UserInfo-Field
     display: flex
     gap: 1em
@@ -56,12 +68,51 @@
     .Profile-Data-UserInfo-Field-name
       font-weight: bold
 
+.Profile-MyCompetitions
+  grid-row: 4/5
+  height: calc((max(600px, 100svh - 4rem) - 8rem) * 2/5)
+  overflow-y: auto
+
+  .Profile-MyCompetitions-List
+    width: 100%
+    list-style-type: none
+    display: flex
+    flex-flow: column
+
+
+    .Profile-MyCompetitions-List-Item
+      border-radius: 5px
+
+      font-family: "Open Sans", sans-serif
+      width: 100%
+
+      a
+        padding: 0.7rem 0.7rem 0.7rem 0.7rem
+        font-size: 1rem
+        font-weight: bold
+        text-decoration: none
+        color: $eerie-black
+        min-width: 100%
+        height: 100%
+        display: flex
+
+        &:hover
+          color: $jonquil
+
+      &:nth-of-type(odd)
+        a
+          background: $light-gray
+
+
 
 @media only screen and (min-width: $medium-screen)
   .Profile
     padding-left: 1rem
     padding-right: 1rem
     height: calc(max(600px, 100svh - 6rem))
+
+  .Profile-MyCompetitions
+    height: calc((max(600px, 100svh - 6rem) - 8rem) * 2/5)
 
   //.Profile-Data-Picture
   //  display: flex
