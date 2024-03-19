@@ -11,7 +11,7 @@ class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
             raise ValueError('Email is Required')
-        user = self.model(email=self.normalize_email(email), **extra_fields)
+        user = self.model(email=self.normalize_email(email), username=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -22,7 +22,7 @@ class UserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser = True')
 
-        return self.create_user(email, password, **extra_fields)
+        return self.create_user(email, password, username=email, **extra_fields)
 
 
 
