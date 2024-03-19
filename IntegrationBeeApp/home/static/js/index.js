@@ -1,5 +1,5 @@
 import Header from "./vue-components/Header/Header.js";
-import Homepage from "./vue-components/Homepage/Homepage.js";
+import Homepage from "./vue-components/HomePage/Homepage.js";
 import Menu from "./vue-components/Menu/Menu.js";
 import NewsPage from "./vue-components/NewsPage/NewsPage.js";
 import SocialLinks from "./vue-components/SocialLinks/SocialLinks.js";
