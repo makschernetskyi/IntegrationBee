@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     "search",
-    "sass_processor",
+    # "sass_processor",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.embeds",
@@ -142,7 +142,7 @@ USE_TZ = True
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-    "sass_processor.finders.CssFinder",
+    # "sass_processor.finders.CssFinder",
 ]
 
 
@@ -153,18 +153,18 @@ STATICFILES_DIRS = [
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # SASS
-SASS_PROCESSOR_ROOT = os.path.join(PROJECT_DIR, 'static')
-
-SASS_PROCESSOR_INCLUDE_DIRS = [
-    os.path.join(PROJECT_DIR, 'home/static/sass'),
-]
-
-SASS_PROCESSOR_AUTO_INCLUDE = True
-SASS_PROCESSOR_INCLUDE_FILE_PATTERN = r'^.+\.sass$'
-
-SASS_PRECISION = 8
-
-SASS_OUTPUT_STYLE = 'compact'
+# SASS_PROCESSOR_ROOT = os.path.join(PROJECT_DIR, 'static')
+#
+# SASS_PROCESSOR_INCLUDE_DIRS = [
+#     os.path.join(PROJECT_DIR, 'home/static/sass'),
+# ]
+#
+# SASS_PROCESSOR_AUTO_INCLUDE = True
+# SASS_PROCESSOR_INCLUDE_FILE_PATTERN = r'^.+\.sass$'
+#
+# SASS_PRECISION = 8
+#
+# SASS_OUTPUT_STYLE = 'compact'
 
 # ManifestStaticFilesStorage is recommended in production, to prevent outdated
 # JavaScript / CSS assets being served from cache (e.g. after a Wagtail upgrade).

@@ -6,3 +6,5 @@ IntegrationBeeApp/.dockerignore
 .idea/
 IntegrationBeeApp/IntegrationBeeApp/settings/production.py
 IntegrationBeeApp/backup/
+Frontend/IntegrationBeeFrontend/node_modules/
+Frontend/IntegrationBeeFrontend/dist/
