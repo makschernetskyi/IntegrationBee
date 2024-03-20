@@ -1,5 +1,6 @@
 import axios from 'axios'
 import {defineStore} from 'pinia'
+import Cookies from 'js-cookie';
 
 const API_SIGN_IN_URL = "/api/v2/login/"
 const API_USER_DATA_URL = "/api/v2/userData/"

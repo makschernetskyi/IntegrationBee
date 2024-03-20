@@ -1,5 +1,6 @@
 import axios from 'axios'
 import {defineStore} from 'pinia'
+import Cookies from 'js-cookie';
 
 
 const PAGES_URL = "/api/v2/cms/pages/"
@@ -112,7 +113,6 @@ export const useCompetitionsPageStore = defineStore('competitionsPage', {
 
                     }
                 })
-                console.log(response.data)
             }catch (e) {
                 console.log(e)
                 return
@@ -156,7 +156,6 @@ export const useCompetitionsPageStore = defineStore('competitionsPage', {
                         Authorization: 'Bearer ' + accessToken,
                     }
                 })
-                console.log(response.data)
             }catch (e) {
                 console.log(e)
             }
