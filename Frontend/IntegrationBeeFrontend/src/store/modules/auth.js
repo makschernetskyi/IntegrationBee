@@ -1,4 +1,4 @@
-
+import axios from 'axios'
 import {defineStore} from 'pinia'
 
 const API_SIGN_IN_URL = "/api/v2/login/"

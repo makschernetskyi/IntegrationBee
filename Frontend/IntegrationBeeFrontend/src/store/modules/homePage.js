@@ -1,4 +1,4 @@
-
+import axios from 'axios'
 import {defineStore} from 'pinia'
 
 
@@ -25,6 +25,7 @@ export const useHomePageStore = defineStore('homePage', {
     },
     actions: {
         async fetchHomePageInfo() {
+            console.log("fetchHomeInfo")
             try {
                 const response = await axios.get(HOME_PAGE_INFO_URL);
                 const data = response.data;
@@ -60,6 +61,7 @@ export const useHomePageStore = defineStore('homePage', {
                 this.fetchHomePageInfo.error = null;
                 this.fetchHomePageInfo.errorMSG = null;
             } catch (error) {
+                console.log(error)
                 this.fetchHomePageInfo.status = 'rejected';
                 this.fetchHomePageInfo.code = null;
                 this.fetchHomePageInfo.error = error;
