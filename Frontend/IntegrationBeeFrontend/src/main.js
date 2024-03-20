@@ -13,6 +13,7 @@ import CompetitionPage from "@/components/CompetitionPage/CompetitionPage.vue";
 import SignInPage from "@/components/SignInPage/SignInPage.vue";
 import AdminPage from "@/components/AdminPage/AdminPage.vue";
 import HomePage from "@/components/HomePage/Homepage.vue"
+import SignUpPage from "@/components/SignUpPage/SignUpPage.vue"
 
 //styles
 import './styles/index.sass'
@@ -34,9 +35,7 @@ const Contact = {
     template: '<div style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center; font-family: Poppins, sans-serif; font-size: 2rem; color: black; text-align: center; padding: 2rem;">Contacts</div>'
 }
 
-const SignUp = {
-    template: '<div style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center; font-family: Poppins, sans-serif; font-size: 2rem; color: black; text-align: center; padding: 2rem;">Registration is not open yet.</div>'
-}
+
 
 //router with lazy loading
 const routes = [
@@ -45,7 +44,7 @@ const routes = [
     { path: '/competitions', component: CompetitionsPage, name: 'competitions'},
     { path: '/contact', component: Contact, name: "contact" },
     { path: '/signIn', component: SignInPage, name: 'sign_in' },
-    { path: '/signUp', component: SignUp, name: 'sign_up' },
+    { path: '/signUp', component: SignUpPage, name: 'sign_up' },
     { path: '/competition/:id', component: CompetitionPage, name: 'competition'},
     { path: '/profile', component: ProfilePage, name: 'profile'},
     { path: '/admin', component: AdminPage, name: 'admin'}

@@ -4,6 +4,7 @@ import {useNewsPageStore} from "./modules/newsPage.js";
 import {useCompetitionsPageStore} from "./modules/competitionsPage.js";
 import {useAuthStore} from "./modules/auth.js";
 import {useAdminStore} from "./modules/admin.js";
+import {useSignUpPageStore} from "./modules/signUpPage.js"
 
 
 export function useStore(){
@@ -14,6 +15,7 @@ export function useStore(){
         competitionsPage: useCompetitionsPageStore(),
         auth: useAuthStore(),
         admin: useAdminStore(),
+        signUpPage: useSignUpPageStore(),
     }
 }
 
