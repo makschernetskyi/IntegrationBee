@@ -6,12 +6,13 @@ import { createPinia } from "pinia";
 import Menu from '@/components/Menu/Menu.vue'
 import Header from "@/components/Header/Header.vue";
 import SocialLinks from "@/components/SocialLinks/SocialLinks.vue";
-// import NewsPage from "@/components/NewsPage/NewsPage.vue";
-// import CompetitionsPage from "@/components/CompetitionsPage/CompetitionsPage.vue";
-// import ProfilePage from "@/components/ProfilePage/ProfilePage.vue";
+import NewsPage from "@/components/NewsPage/NewsPage.vue";
+import CompetitionsPage from "@/components/CompetitionsPage/CompetitionsPage.vue";
+import ProfilePage from "@/components/ProfilePage/ProfilePage.vue";
 import CompetitionPage from "@/components/CompetitionPage/CompetitionPage.vue";
-// import SignInPage from "@/components/SignInPage/SignInPage.vue";
-// import AdminPage from "@/components/AdminPage/AdminPage.vue";
+import SignInPage from "@/components/SignInPage/SignInPage.vue";
+import AdminPage from "@/components/AdminPage/AdminPage.vue";
+import HomePage from "@/components/HomePage/Homepage.vue"
 
 //styles
 import './styles/index.sass'
@@ -25,6 +26,7 @@ const pinia = createPinia();
 
 //store
 import {useStore} from "@/store/index.js";
+import Homepage from "@/components/HomePage/Homepage.vue";
 
 
 //placeholders for future pages
@@ -38,15 +40,15 @@ const SignUp = {
 
 //router with lazy loading
 const routes = [
-    { path: '/', component: import('@/components/HomePage/Homepage.vue'), name: 'home' },
-    { path: '/news', component: import('@/components/NewsPage/NewsPage.vue'), name: 'news' },
-    { path: '/competitions', component: import('@/components/CompetitionPage/CompetitionPage.vue'), name: 'competitions'},
+    { path: '/', component: HomePage, name: 'home' },
+    { path: '/news', component: NewsPage, name: 'news' },
+    { path: '/competitions', component: CompetitionsPage, name: 'competitions'},
     { path: '/contact', component: Contact, name: "contact" },
-    { path: '/signIn', component: import('@/components/SignInPage/SignInPage.vue'), name: 'sign_in' },
+    { path: '/signIn', component: SignInPage, name: 'sign_in' },
     { path: '/signUp', component: SignUp, name: 'sign_up' },
     { path: '/competition/:id', component: CompetitionPage, name: 'competition'},
-    { path: '/profile', component: import('@/components/ProfilePage/ProfilePage.vue'), name: 'profile'},
-    { path: '/admin', component: import('@/components/AdminPage/AdminPage.vue'), name: 'admin'}
+    { path: '/profile', component: ProfilePage, name: 'profile'},
+    { path: '/admin', component: AdminPage, name: 'admin'}
 ]
 
 const router = createRouter({
