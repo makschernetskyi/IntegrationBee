@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 // import DnsEmailValidation from "dns-email-validation"
-import {validSurnamePattern} from "@/utils/regexPatterns.js";
+import {validSurnamePattern, validEmailPattern} from "@/utils/regexPatterns.js";
 
 
 export const useSignUpPageStore = defineStore('signUp', {
@@ -9,7 +9,9 @@ export const useSignUpPageStore = defineStore('signUp', {
             firstName: '',
             lastName: '',
             email: '',
-            school: null,
+            school: '',
+            password: '',
+            repeatedPassword: '',
             ageConsent: false,
             userAgreementConsent: false
         },
@@ -18,6 +20,8 @@ export const useSignUpPageStore = defineStore('signUp', {
             invalidLastName: false,
             invalidEmail: false,
             invalidSchool: false,
+            invalidPassword: false,
+            invalidPasswordMatch: false,
             invalidAgeConsent: false,
             invalidUserAgreementConsent: false,
         }
@@ -38,6 +42,9 @@ export const useSignUpPageStore = defineStore('signUp', {
         updateSignUpFormSchool(value){
             this.signUpForm.school = value;
         },
+        updateSignUpFormPassword(value){
+            this.signUpForm.password = value;
+        },
         updateSignUpFormAgeConsent(value){
             if(value === true || value === false)
                 this.signUpForm.firstName = value;
@@ -46,14 +53,23 @@ export const useSignUpPageStore = defineStore('signUp', {
             if(value === true || value === false)
                 this.signUpForm.firstName = value;
         },
-        async validateFormData(){
-            if(!(typeof this.lastName === "string" || this.lastName.length > 0 || validSurnamePattern.test(this.lastName))){
+        validateFormData(){
+
+            if(this.password!==this.repeatedPassword){
+                this.formErrors.invalidPasswordMatch = true;
+            }
+
+            if(!(typeof this.firstName === "string" && this.firstName.length > 0)){
+                this.formErrors.invalidFirstName = true;
+            }
+
+            if(!(typeof this.lastName === "string" && this.lastName.length > 0 && validSurnamePattern.test(this.lastName))){
                 this.formErrors.invalidLastName = true;
             }
 
-            // if(!(await DnsEmailValidation.verify(this.email).verification)){
-            //     this.formErrors.invalidEmail = true;
-            // }
+            if(!(typeof this.email === "string" && this.lastName.email > 0 && validEmailPattern.test(this.email))){
+                this.formErrors.invalidEmail = true;
+            }
 
             if(!this.ageConsent){
                 this.formErrors.invalidAgeConsent = true

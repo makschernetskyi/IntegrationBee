@@ -3,6 +3,7 @@ import {defineStore} from 'pinia'
 import Cookies from 'js-cookie';
 
 const API_SIGN_IN_URL = "/api/v2/login/"
+const API_SIGN_UP_URL = "/api/v2/register/"
 const API_USER_DATA_URL = "/api/v2/userData/"
 
 
@@ -24,7 +25,12 @@ export const useAuthStore = defineStore('auth', {
             error: null,
             errorMSG: null,
         },
-        registerRequest: {},
+        registerRequest: {
+            status: null,
+            code: null,
+            error: null,
+            errorMSG: null,
+        },
         signInRequest: {
             status: null,
             code: null,
@@ -79,15 +85,32 @@ export const useAuthStore = defineStore('auth', {
                 throw error;
             }
         },
-        async requestRegister(dataPlaceholder){
-            // const requestData = new FormData()
-            // const response = await  axios.post(API_SIGN_IN_URL, requestData, {
-            //     headers: {
-            //         'Content-Type': 'multipart/form-data'
-            //     }
-            // })
-            // Cookies.set('acccess', response.data.access)
-            // Cookies.set('refresh', response.data.refresh)
+        async requestRegister(firstName, lastName, email, school, password) {
+            const requestData = new FormData();
+            requestData.set('first_name', firstName);
+            requestData.set('second_name', lastName);
+            requestData.set('email', email);
+            requestData.set('school', school);
+            requestData.set('password', password);
+
+            try {
+                this.registerRequest.status = 'pending';
+
+                const response = await axios.post(API_SIGN_UP_URL, requestData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+
+                this.registerRequest.status = 'resolved';
+                this.registerRequest.code = response.status;
+                this.registerRequest.error = null;
+                this.registerRequest.errorMSG = null;
+            } catch (error) {
+                this.registerRequest.status = 'rejected';
+                this.registerRequest.error = error;
+                this.registerRequest.errorMSG = error.message;
+            }
         },
 
         async getUserData() {

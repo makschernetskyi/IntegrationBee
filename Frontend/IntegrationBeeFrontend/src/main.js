@@ -1,6 +1,9 @@
 
 import { createRouter, createWebHashHistory } from "vue-router";
 import { createPinia } from "pinia";
+import {onMounted, onUnmounted, ref, toRef} from "vue";
+import {createApp} from 'vue/dist/vue.esm-bundler';
+
 
 //components
 import Menu from '@/components/Menu/Menu.vue'
@@ -18,16 +21,12 @@ import SignUpPage from "@/components/SignUpPage/SignUpPage.vue"
 //styles
 import './styles/index.sass'
 
-//other imports
-import {onMounted, onUnmounted, ref, toRef} from "vue";
-import {createApp} from 'vue/dist/vue.esm-bundler';
 
 //initializing pinia
 const pinia = createPinia();
 
 //store
 import {useStore} from "@/store/index.js";
-import Homepage from "@/components/HomePage/Homepage.vue";
 
 
 //placeholders for future pages
