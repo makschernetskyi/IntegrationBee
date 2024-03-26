@@ -33,6 +33,12 @@ export const useSignUpPageStore = defineStore('signUp', {
 
     },
     actions:{
+        trimFormData(){
+            this.signUpForm.firstName = this.signUpForm.firstName.trim()
+            this.signUpForm.lastName = this.signUpForm.lastName.trim()
+            this.signUpForm.email = this.signUpForm.email.trim()
+            this.signUpForm.school = this.signUpForm.school.trim()
+        },
         validateFormData(){
 
             for(const error in this.formErrors){
@@ -40,52 +46,54 @@ export const useSignUpPageStore = defineStore('signUp', {
                     this.formErrors[error] = false
             }
 
-            if(this.password!==this.repeatedPassword){
-                console.log(this.password, this.repeatedPassword)
+            if(this.signUpForm.password!==this.signUpForm.repeatedPassword){
                 this.formErrors.invalidPasswordMatch = true;
             }
 
-            if(!/[a-z]/.test(this.password)){
+            if(!/[a-z]/.test(this.signUpForm.password)){
                 this.formErrors.errorTexts.passwordError = "Password must include lowercase letters"
                 this.formErrors.invalidPassword = true
-            }else if(!/[A-Z]/.test(this.password)){
+            }else if(!/[A-Z]/.test(this.signUpForm.password)){
                 this.formErrors.errorTexts.passwordError = "Password must include uppercase letters"
                 this.formErrors.invalidPassword = true
-            }else if(!/[0-9]/.test(this.password)){
+            }else if(!/[0-9]/.test(this.signUpForm.password)){
                 this.formErrors.errorTexts.passwordError = "Password must include at least one digit"
                 this.formErrors.invalidPassword = true
-            }else if(!/[!@#$%^&*(),.?":{}|<>_]/.test(this.password)){
+            }else if(!/[!@#$%^&*(),.?":{}|<>_]/.test(this.signUpForm.password)){
                 this.formErrors.errorTexts.passwordError = "Password must include special characters e.g. $#@_..."
                 this.formErrors.invalidPassword = true
-            }else if(this.password.length < 8){
+            }else if(this.signUpForm.password.length < 8){
                 this.formErrors.errorTexts.passwordError = "Password must be at least 8 characters long"
                 this.formErrors.invalidPassword = true
-            }else if(typeof this.password !== "string"){
+            }else if(typeof this.signUpForm.password !== "string"){
                 this.formErrors.errorTexts.passwordError = "Invalid password"
+                this.formErrors.invalidPassword = true
+            }else if(/\s/.test(this.signUpForm.password)){
+                this.formErrors.errorTexts.passwordError = "Password cannot contain spaces"
                 this.formErrors.invalidPassword = true
             }
 
-            if(!(typeof this.firstName === "string" && this.firstName.length > 0)){
+            if(!(typeof this.signUpForm.firstName === "string" && this.signUpForm.firstName.length > 0)){
                 this.formErrors.invalidFirstName = true;
             }
 
-            if(!(typeof this.lastName === "string" && this.lastName.length > 0 && validSurnamePattern.test(this.lastName))){
+            if(!(typeof this.signUpForm.lastName === "string" && this.signUpForm.lastName.length > 0 && validSurnamePattern.test(this.signUpForm.lastName))){
                 this.formErrors.invalidLastName = true;
             }
 
-            if(!(typeof this.email === "string" && this.email.length > 0 && validEmailPattern.test(this.email))){
+            if(!(typeof this.signUpForm.email === "string" && this.signUpForm.email.length > 0 && validEmailPattern.test(this.signUpForm.email))){
                 this.formErrors.invalidEmail = true;
             }
 
-            if(!(typeof this.school === "string" && this.school.length > 0)){
+            if(!(typeof this.signUpForm.school === "string" && this.signUpForm.school.length > 0)){
                 this.formErrors.invalidSchool = true;
             }
 
-            if(!this.ageConsent){
+            if(!this.signUpForm.ageConsent){
                 this.formErrors.invalidAgeConsent = true
             }
 
-            if(!this.userAgreementConsent){
+            if(!this.signUpForm.userAgreementConsent){
                 this.formErrors.invalidUserAgreementConsent = true
             }
 
