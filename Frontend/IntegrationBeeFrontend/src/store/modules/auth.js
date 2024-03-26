@@ -2,6 +2,8 @@ import axios from 'axios'
 import {defineStore} from 'pinia'
 import Cookies from 'js-cookie';
 
+import {useErrorStore} from "./error.js";
+
 const API_SIGN_IN_URL = "/api/v2/login/"
 const API_SIGN_UP_URL = "/api/v2/register/"
 const API_USER_DATA_URL = "/api/v2/userData/"
@@ -73,8 +75,14 @@ export const useAuthStore = defineStore('auth', {
                 this.signInRequest.code = response.status; // Status code
                 return response.data;
             } catch (error) {
-            // Handle errors
-                console.error('Error during sign in:', error);
+
+                const errorStore = useErrorStore()
+                if(error.response.data.detail === "No active account found with the given credentials"){
+                    errorStore.addError({text:"Wrong email or password."})
+                }else{
+                    errorStore.addError({text:"Error during signing in. try later."})
+                }
+
 
                 this.signInRequest.status = 'rejected';
                 this.signInRequest.code = error.response ? error.response.status : null; // Status code if available
@@ -109,6 +117,18 @@ export const useAuthStore = defineStore('auth', {
                 this.registerRequest.error = null;
                 this.registerRequest.errorMSG = null;
             } catch (error) {
+
+                const errorStore = useErrorStore()
+
+                if(error.response.data.error && error.response.data.error[0] === "User with this email already exists."){
+                    errorStore.addError({text:"User with this email already exists."})
+                }else{
+                    errorStore.addError({text:"Error during registration. try later."})
+                }
+
+
+
+
                 this.registerRequest.status = 'rejected';
                 this.registerRequest.error = error;
                 this.registerRequest.errorMSG = error.message;

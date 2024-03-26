@@ -5,6 +5,7 @@ import {useCompetitionsPageStore} from "./modules/competitionsPage.js";
 import {useAuthStore} from "./modules/auth.js";
 import {useAdminStore} from "./modules/admin.js";
 import {useSignUpPageStore} from "./modules/signUpPage.js"
+import {useErrorStore} from "@/store/modules/error.js";
 
 
 export function useStore(){
@@ -16,6 +17,7 @@ export function useStore(){
         auth: useAuthStore(),
         admin: useAdminStore(),
         signUpPage: useSignUpPageStore(),
+        error: useErrorStore()
     }
 }
 

@@ -18,9 +18,9 @@
       signUpPageStore.trimFormData()
       if(signUpPageStore.validateFormData()){
           await authStore.requestRegister(signUpPageStore.signUpForm.firstName, signUpPageStore.signUpForm.lastName, signUpPageStore.signUpForm.email, signUpPageStore.signUpForm.school, signUpPageStore.signUpForm.password)
-              .then(()=>{
-                  router.push('/profile')
-              })
+          if(!authStore.registerRequest.error){
+              await router.push('/profile')
+          }
       }
 
   }

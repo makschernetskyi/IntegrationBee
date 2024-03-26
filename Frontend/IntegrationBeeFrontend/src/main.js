@@ -1,7 +1,7 @@
 
 import { createRouter, createWebHashHistory } from "vue-router";
 import { createPinia } from "pinia";
-import {onMounted, onUnmounted, ref, toRef} from "vue";
+import {onMounted, onUnmounted, ref, toRef, computed} from "vue";
 import {createApp} from 'vue/dist/vue.esm-bundler';
 
 
@@ -17,6 +17,7 @@ import SignInPage from "@/components/SignInPage/SignInPage.vue";
 import AdminPage from "@/components/AdminPage/AdminPage.vue";
 import HomePage from "@/components/HomePage/Homepage.vue"
 import SignUpPage from "@/components/SignUpPage/SignUpPage.vue"
+import ErrorMessage from "@/components/ErrorMessage/ErrorMessage.vue";
 
 //styles
 import './styles/index.sass'
@@ -115,7 +116,8 @@ const App = {
         Header,
         Menu,
         SocialLinks,
-        MenuContainer
+        MenuContainer,
+        ErrorMessage
     },
     setup(){
 
@@ -133,6 +135,7 @@ const App = {
         }))
 
         const authStore = useStore().auth;
+        const errorStore = useStore().error;
 
 
         // onBeforeMount(
@@ -141,10 +144,12 @@ const App = {
         //     }
         // )
 
-
+        const isErrorVisible = computed(()=>Boolean(errorStore.errors.length) )
+        const userError = computed(()=>errorStore.errors.length ? errorStore.errors[0] : null)
 
         const isMenuVisible = ref(false)
         const isMenuContentShown = ref(false)
+
         const toggleMenuVisibility = () =>{
             isMenuVisible.value = !isMenuVisible.value
         }
@@ -152,6 +157,10 @@ const App = {
             isMenuVisible,
             windowSize,
             isMenuContentShown,
+            isErrorVisible,
+            removeError: errorStore.removeError,
+            userError
+
         }
     },
     methods:{
@@ -177,18 +186,21 @@ const App = {
         
         <Teleport to="body">
         <transition @after-enter="isMenuContentShown = true">
-            <MenuContainer v-if="isMenuVisible && (windowSize < 1000)"  :isMenuContentShown="isMenuContentShown" @close-menu="isMenuVisible = false; toggleBodyOverflow()" @close-menu-content="isMenuContentShown = false"/>
+          <MenuContainer v-if="isMenuVisible && (windowSize < 1000)"  :isMenuContentShown="isMenuContentShown" @close-menu="isMenuVisible = false; toggleBodyOverflow()" @close-menu-content="isMenuContentShown = false"/>
         </transition>
         </Teleport>
 
         <main>
-            <router-view v-slot="{ Component }">
-                <transition name="page-fade" mode="out-in">
-                    <component :is="Component"></component>
-                </transition>
-            </router-view>
+          <router-view v-slot="{ Component }">
+            <transition name="page-fade" mode="out-in">
+              <component :is="Component"></component>
+            </transition>
+          </router-view>
         </main>
         <SocialLinks/>
+        <transition>
+          <ErrorMessage v-if="isErrorVisible" @error-message:close="removeError" :text="userError?.text"/>
+        </transition>
     `
 }
 

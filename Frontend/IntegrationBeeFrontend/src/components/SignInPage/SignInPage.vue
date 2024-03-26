@@ -9,7 +9,6 @@
 
 
     const signInStore = useStore().signIn
-    console.log(signInStore)
     const emailInput = computed({get: ()=>signInStore.emailInputValue, set: signInStore.updateEmailInputValue})
     const passwordInput = computed({get: ()=>signInStore.passwordInputValue, set: signInStore.updatePasswordInputValue})
     const isPasswordShown = ref(false)

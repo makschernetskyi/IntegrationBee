@@ -17,6 +17,10 @@ from home.models import Competition as CompetitionPage
 class RegisterView(APIView):
     def post(self, request):
         try:
+            email = request.data.get('email')
+            if email and User.objects.filter(email=email).exists():
+                raise ValidationError("User with this email already exists.")
+
             serializer = UserSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
