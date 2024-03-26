@@ -82,10 +82,10 @@ router.beforeEach(async (to, from, next) => {
         return
     }
 
-    if( ['sign_in', 'sign_up'].includes(to.name) && isAuthenticated ){
-        next('/')
-        return
-    }
+    // if( ['sign_in', 'sign_up'].includes(to.name) && isAuthenticated ){
+    //     next('/')
+    //     return
+    // }
 
     next()
 
