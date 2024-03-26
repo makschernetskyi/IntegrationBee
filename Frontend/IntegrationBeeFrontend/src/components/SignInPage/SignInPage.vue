@@ -25,6 +25,7 @@
         if(!authStore.signInRequest.error){
             await authStore.getUserData()
             if(!authStore.userDataRequest.error){
+                signInStore.$reset()
                 await router.push('/profile')
             }
         }

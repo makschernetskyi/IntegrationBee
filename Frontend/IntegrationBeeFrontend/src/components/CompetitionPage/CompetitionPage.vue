@@ -36,6 +36,7 @@
     }
 
     const [user, competition] = [userInfo, competitionInfo];
+    const isAuthenticated = computed(()=>authStore.isAuthenticated)
 
 </script>
 <template>
@@ -50,9 +51,11 @@
                 <template v-if="!competition.locationUrl">{{competition.location}}</template>
                 <a v-if="competition.locationUrl" :href="competition.locationUrl" target="_blank">{{competition.location}}</a>
             </p>
-            <p v-if="competition.relatedCompetitionId && user.competitions.map(c=>c.id).includes(competition.relatedCompetitionId)" class="Competition-MetaInfo-goingMessage">You are going.</p>
-            <button v-if="competition.relatedCompetitionId && !user.competitions.map(c=>c.id).includes(competition.relatedCompetitionId)" class="Competition-MetaInfo-JoinBtn" @click="()=>joinCompetition(competition.relatedCompetitionId)">Join!</button>
-            <button v-if="competition.relatedCompetitionId && user.competitions.map(c=>c.id).includes(competition.relatedCompetitionId)" class="Competition-MetaInfo-LeaveBtn" @click="()=>leaveCompetition(competition.relatedCompetitionId)">Quit</button>
+            <p v-if="isAuthenticated && competition.relatedCompetitionId && user.competitions.map(c=>c.id).includes(competition.relatedCompetitionId)" class="Competition-MetaInfo-goingMessage">You are going.</p>
+            <button v-if="isAuthenticated && competition.relatedCompetitionId && !user.competitions.map(c=>c.id).includes(competition.relatedCompetitionId)" class="Competition-MetaInfo-JoinBtn" @click="()=>joinCompetition(competition.relatedCompetitionId)">Join!</button>
+            <button v-if="isAuthenticated && competition.relatedCompetitionId && user.competitions.map(c=>c.id).includes(competition.relatedCompetitionId)" class="Competition-MetaInfo-LeaveBtn" @click="()=>leaveCompetition(competition.relatedCompetitionId)">Quit</button>
+            <p v-if="!isAuthenticated" class="Competition-MetaInfo-notAuthenticatedMessage">in order to participate sign in first.</p>
+            <router-link to="/signIn" v-if="!isAuthenticated" class="Competition-MetaInfo-signInLink">Sign in</router-link>
         </div>
         <div class="Competition-Description">
             <h2 class="Competition-Description-header">{{competition.header}}</h2>

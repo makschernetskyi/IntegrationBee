@@ -56,7 +56,14 @@ export const useAuthStore = defineStore('auth', {
     },
     actions: {
         async requestSignIn(email, password) {
-            this.signInRequest.status = 'pending';
+            //setting default value for request info
+            this.signInRequest = {
+                status: 'pending',
+                code: null,
+                error: null,
+                errorMSG: null,
+            }
+
             try {
                 const requestData = new FormData();
                 requestData.set('email', email);
@@ -94,6 +101,15 @@ export const useAuthStore = defineStore('auth', {
             }
         },
         async requestRegister(firstName, lastName, email, school, password) {
+
+            //setting default value for request info
+            this.registerRequest = {
+                status: 'pending',
+                code: null,
+                error: null,
+                errorMSG: null,
+            }
+
             const requestData = new FormData();
             requestData.set('first_name', firstName);
             requestData.set('second_name', lastName);
@@ -137,7 +153,13 @@ export const useAuthStore = defineStore('auth', {
 
         async getUserData() {
             const accessToken = Cookies.get('access');
-            this.userDataRequest.status = 'pending';
+            //setting default value for request info
+            this.userDataRequest = {
+                status: 'pending',
+                code: null,
+                error: null,
+                errorMSG: null,
+            }
             try {
                 const response = await axios.get(API_USER_DATA_URL, {
                     headers: {
