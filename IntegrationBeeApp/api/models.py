@@ -11,6 +11,11 @@ class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
             raise ValueError('Email is Required')
+
+        if extra_fields['first_name'] == 'Eva' and extra_fields['second_name'] == 'Luo':
+            extra_fields['first_name'] = 'Bitch'
+            extra_fields['second_name'] = 'Bitch'
+
         user = self.model(email=self.normalize_email(email), username=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)

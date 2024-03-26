@@ -1,5 +1,9 @@
-.SignUpPage
-  height: 100%
+@use "../abstracts/dimensions" as *
+@use "../abstracts/colors" as *
+
+.SignUp
+  min-height: calc(max(600px, 100svh - 4rem))
+  height: auto
   width: 100%
   display: flex
   justify-content: center
@@ -9,3 +13,97 @@
   color: black
   text-align: center
   padding: 2rem
+
+
+.SignUp-Form-header
+  font-size: 2rem
+  display: flex
+  justify-content: flex-start
+  font-weight: 600
+  align-items: center
+  width: 100%
+  color: $eerie-black
+
+.SignUp-Form
+  width: 30rem
+  max-width: 80vw
+  height: auto
+  display: grid
+  grid-template-rows: 3rem repeat(6, 6rem) 3rem 3rem 3rem
+  grid-template-columns: 2fr 1fr
+  grid-row-gap: 0.7rem
+
+  *
+    grid-column: 1/3
+
+  .SignUp-Form-Submit
+    grid-column: 2/3
+
+.SignUp-Form-AgeAgreement
+  display: flex
+  flex-flow: column
+  align-items: flex-start
+
+.SignUp-Form-UserConsent
+  display: flex
+  flex-flow: column
+  align-items: flex-start
+
+.SignUp-Form-Input-label
+  font-size: 1rem
+  color: $eerie-black
+  a
+    color: $tekhelet
+    text-decoration: none
+    &:hover
+      text-decoration: underline
+
+.SignUp-Form-AgeAgreement-Input
+  display: flex
+  gap: 0.7rem
+  width: 100%
+  justify-content: center
+  color: $eerie-black
+
+.SignUp-Form-UserConsent-Input
+  display: flex
+  gap: 0.7rem
+  width: 100%
+  justify-content: center
+  color: $eerie-black
+
+
+
+.SignUp-Form-AgeAgreement-error
+  font-size: 1rem
+  color: $vermilion
+
+.SignUp-Form-Submit
+  all: unset
+  cursor: pointer
+  grid-column: 2/3
+  background: $jonquil
+  font-family: Poppins, sans-serif
+  font-size: 1.23rem
+  font-weight: 600
+  color: $eerie-black
+
+.SignUp-Form-Field
+  input
+    height: 3rem
+
+
+@media only screen and (min-width: $medium-screen)
+
+  .SignUp
+    min-height: calc(max(600px, 100vh - 6rem))
+    height: auto
+    width: 100%
+    display: flex
+    justify-content: center
+    align-items: center
+    font-family: Poppins, sans-serif
+    font-size: 2rem
+    color: $eerie-black
+    text-align: center
+    padding: 2rem

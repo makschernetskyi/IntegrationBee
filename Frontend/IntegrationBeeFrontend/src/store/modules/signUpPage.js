@@ -24,39 +24,45 @@ export const useSignUpPageStore = defineStore('signUp', {
             invalidPasswordMatch: false,
             invalidAgeConsent: false,
             invalidUserAgreementConsent: false,
+            errorTexts:{
+                passwordError: ''
+            }
         }
     }),
     getters:{
 
     },
     actions:{
-        updateSignUpFormFirstName(value){
-            this.signUpForm.firstName = value;
-        },
-        updateSignUpFormLastName(value){
-            this.signUpForm.lastName = value;
-        },
-        updateSignUpFormEmail(value){
-            this.signUpForm.email = value;
-        },
-        updateSignUpFormSchool(value){
-            this.signUpForm.school = value;
-        },
-        updateSignUpFormPassword(value){
-            this.signUpForm.password = value;
-        },
-        updateSignUpFormAgeConsent(value){
-            if(value === true || value === false)
-                this.signUpForm.firstName = value;
-        },
-        updateSignUpFormUserAgreementConsent(value){
-            if(value === true || value === false)
-                this.signUpForm.firstName = value;
-        },
         validateFormData(){
 
+            for(const error in this.formErrors){
+                if(error!=="errorTexts")
+                    this.formErrors[error] = false
+            }
+
             if(this.password!==this.repeatedPassword){
+                console.log(this.password, this.repeatedPassword)
                 this.formErrors.invalidPasswordMatch = true;
+            }
+
+            if(!/[a-z]/.test(this.password)){
+                this.formErrors.errorTexts.passwordError = "Password must include lowercase letters"
+                this.formErrors.invalidPassword = true
+            }else if(!/[A-Z]/.test(this.password)){
+                this.formErrors.errorTexts.passwordError = "Password must include uppercase letters"
+                this.formErrors.invalidPassword = true
+            }else if(!/[0-9]/.test(this.password)){
+                this.formErrors.errorTexts.passwordError = "Password must include at least one digit"
+                this.formErrors.invalidPassword = true
+            }else if(!/[!@#$%^&*(),.?":{}|<>_]/.test(this.password)){
+                this.formErrors.errorTexts.passwordError = "Password must include special characters e.g. $#@_..."
+                this.formErrors.invalidPassword = true
+            }else if(this.password.length < 8){
+                this.formErrors.errorTexts.passwordError = "Password must be at least 8 characters long"
+                this.formErrors.invalidPassword = true
+            }else if(typeof this.password !== "string"){
+                this.formErrors.errorTexts.passwordError = "Invalid password"
+                this.formErrors.invalidPassword = true
             }
 
             if(!(typeof this.firstName === "string" && this.firstName.length > 0)){
@@ -67,8 +73,12 @@ export const useSignUpPageStore = defineStore('signUp', {
                 this.formErrors.invalidLastName = true;
             }
 
-            if(!(typeof this.email === "string" && this.lastName.email > 0 && validEmailPattern.test(this.email))){
+            if(!(typeof this.email === "string" && this.email.length > 0 && validEmailPattern.test(this.email))){
                 this.formErrors.invalidEmail = true;
+            }
+
+            if(!(typeof this.school === "string" && this.school.length > 0)){
+                this.formErrors.invalidSchool = true;
             }
 
             if(!this.ageConsent){
@@ -80,8 +90,10 @@ export const useSignUpPageStore = defineStore('signUp', {
             }
 
             for(const error in this.formErrors){
-                if(this.formErrors[error]){
-                    return false
+                if(error!=="errorTexts"){
+                    if(this.formErrors[error]){
+                        return false
+                    }
                 }
             }
             return true;

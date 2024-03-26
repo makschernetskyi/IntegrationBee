@@ -102,6 +102,8 @@ export const useAuthStore = defineStore('auth', {
                     },
                 });
 
+                console.log(response)
+
                 this.registerRequest.status = 'resolved';
                 this.registerRequest.code = response.status;
                 this.registerRequest.error = null;
