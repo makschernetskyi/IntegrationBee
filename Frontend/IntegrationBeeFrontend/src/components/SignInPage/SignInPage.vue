@@ -18,15 +18,16 @@
     const self = this;
     const router = useRouter();
 
-    const handleSubmit = (event) =>{
+    const handleSubmit = async (event) =>{
         event.preventDefault()
 
-        authStore.requestSignIn(signInStore.emailInputValue, signInStore.passwordInputValue).then(()=>{
-            authStore.getUserData().then(()=>{
-                router.push('/profile')
-            })
-        })
-
+        await authStore.requestSignIn(signInStore.emailInputValue, signInStore.passwordInputValue)
+        if(!authStore.signInRequest.error){
+            await authStore.getUserData()
+            if(!authStore.userDataRequest.error){
+                await router.push('/profile')
+            }
+        }
 
     }
 

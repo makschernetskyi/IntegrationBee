@@ -163,8 +163,11 @@ export const useAuthStore = defineStore('auth', {
                 return data;
             } catch (error) {
                 // Handle errors
+
+                const errorStore = useErrorStore()
                 if (error.response && error.response.status !== 401)
-                    console.error('Error while fetching user data:', error);
+                    errorStore.addError({text:"Error has occurred while fetching profile data. Try again later."})
+
                 this.userDataRequest.status = 'rejected';
                 this.userDataRequest.code = error.response ? error.response.status : null; // Status code if available
                 this.userDataRequest.error = error;

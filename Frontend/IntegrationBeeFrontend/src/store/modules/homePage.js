@@ -1,6 +1,8 @@
 import axios from 'axios'
 import {defineStore} from 'pinia'
 
+import {useErrorStore} from "@/store/modules/error.js";
+
 
 const HOME_PAGE_INFO_URL = "/api/v2/cms/pages/?type=home.HomePage&fields=title,title_section_header,title_section_description,bullet_points_section_header,bullet_points,homepage_picture"
 
@@ -60,6 +62,10 @@ export const useHomePageStore = defineStore('homePage', {
                 this.fetchHomePageInfo.error = null;
                 this.fetchHomePageInfo.errorMSG = null;
             } catch (error) {
+
+                const errorStore = useErrorStore()
+                errorStore.addError({text: "Error has occurred while fetching home page. Try again later."})
+
                 this.fetchHomePageInfo.status = 'rejected';
                 this.fetchHomePageInfo.code = null;
                 this.fetchHomePageInfo.error = error;

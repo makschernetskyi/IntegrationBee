@@ -2,6 +2,8 @@ import axios from 'axios'
 import {defineStore} from 'pinia'
 import Cookies from 'js-cookie';
 
+import {useErrorStore} from "@/store/modules/error.js";
+
 
 const PAGES_URL = "/api/v2/cms/pages/"
 const COMPETITION_URL = "/api/v2/competition/"
@@ -51,27 +53,68 @@ export const useCompetitionsPageStore = defineStore('competitionsPage', {
     },
     actions: {
         async fetchCompetitionsPageInfo(){
-            try{
-                const response = await axios.get(PAGES_URL,{
-                    params:{
+            try {
+                // Reset the request status before making a new request
+                this.fetchCompetitionsPageInfoRequest = {
+                    status: 'pending',
+                    code: null,
+                    error: null,
+                    errorMSG: null,
+                };
+
+                const response = await axios.get(PAGES_URL, {
+                    params: {
                         type: "home.CompetitionsPage",
                         fields: "header"
                     }
-                })
-                const data = response.data
-                // if(!data || !data.items){
-                //     console.error("no homepage data received")
-                //     return
-                // }
-                const pageInfo = data.items["0"]
-                this.header = pageInfo.header
+                });
 
-            }catch(e){
-                console.error(e)
+                const data = response.data;
+                if (!data || !data.items || Object.keys(data.items).length === 0) {
+                    console.error("No competitions page data received");
+                    // Update request status indicating an error
+                    this.fetchCompetitionsPageInfoRequest = {
+                        status: 'rejected',
+                        code: null,
+                        error: "No competitions page data received",
+                        errorMSG: "No competitions page data received",
+                    };
+                    return;
+                }
+
+                const pageInfo = data.items["0"];
+                this.header = pageInfo.header;
+
+                // Update request status after successful response
+                this.fetchCompetitionsPageInfoRequest = {
+                    status: 'resolved',
+                    code: null,
+                    error: null,
+                    errorMSG: null,
+                };
+
+            } catch (error) {
+                console.error(error);
+
+                // Update request status and error details if request fails
+                this.fetchCompetitionsPageInfoRequest = {
+                    status: 'rejected',
+                    code: error.response?.status || null,
+                    error: error,
+                    errorMSG: error.message,
+                };
             }
         },
         async fetchCompetitionsInfo(page, itemsPerPage=10) {
             try {
+                // Reset the request status before making a new request
+                this.fetchCompetitionsInfoRequest = {
+                    status: 'pending',
+                    code: null,
+                    error: null,
+                    errorMSG: null,
+                };
+
                 const response = await axios.get(PAGES_URL, {
                     params: {
                         type: "home.Competition",
@@ -79,13 +122,22 @@ export const useCompetitionsPageStore = defineStore('competitionsPage', {
                         limit: itemsPerPage,
                         offset: itemsPerPage * (page - 1)
                     }
-                })
-                const data = response.data
-                // if(!data || !data.items){
-                //     console.error("no homepage data received")
-                //     return
-                // }
-                const competitions = data.items
+                });
+
+                const data = response.data;
+                if (!data || !data.items) {
+                    console.error("No competition data received");
+                    // Update request status indicating an error
+                    this.fetchCompetitionsInfoRequest = {
+                        status: 'rejected',
+                        code: null,
+                        error: "No competition data received",
+                        errorMSG: "No competition data received",
+                    };
+                    return;
+                }
+
+                const competitions = data.items;
                 competitions.forEach(item => {
                     this.competitions.push({
                         id: item.id,
@@ -94,101 +146,305 @@ export const useCompetitionsPageStore = defineStore('competitionsPage', {
                         date: new Date(item.event_date),
                         location: item.place,
                         pictureUrl: item.picture?.meta.download_url
-                    })
-                })
+                    });
+                });
 
-            } catch (e) {
-                console.error(e)
+                // Update request status after successful response
+                this.fetchCompetitionsInfoRequest = {
+                    status: 'resolved',
+                    code: null,
+                    error: null,
+                    errorMSG: null,
+                };
+
+            } catch (error) {
+
+                const errorStore = useErrorStore()
+                errorStore.addError({text: "Error has occurred while fetching competitions page. Try again later."})
+
+                // Update request status and error details if request fails
+                this.fetchCompetitionsInfoRequest = {
+                    status: 'rejected',
+                    code: error.response?.status,
+                    error: error,
+                    errorMSG: error.message,
+                };
             }
 
         },
         async fetchCompetitionInfo(competitionId){
-            let response;
-            try{
-                response = await axios.get(PAGES_URL,{
-                    params:{
+            try {
+                // Reset the request status before making a new request
+                this.fetchCompetitionInfoRequest = {
+                    status: 'pending',
+                    code: null,
+                    error: null,
+                    errorMSG: null,
+                };
+
+                const response = await axios.get(PAGES_URL, {
+                    params: {
                         type: "home.Competition",
                         id: competitionId.toString(),
                         fields: "header,description,event_date,place,picture,place_maps_url,related_competition_id",
-
                     }
-                })
-            }catch (e) {
-                console.log(e)
-                return
-            }
+                });
 
-            this.currentCompetition.id = response.data.items[0].id
-            this.currentCompetition.header = response.data.items[0].header
-            this.currentCompetition.description = response.data.items[0].description
-            this.currentCompetition.date = new Date(response.data.items[0].event_date)
-            this.currentCompetition.location = response.data.items[0].place
-            this.currentCompetition.locationUrl = response.data.items[0].place_maps_url
-            this.currentCompetition.pictureUrl = response.data.items[0].picture?.meta.download_url
-            this.currentCompetition.relatedCompetitionId = response.data.items[0].related_competition_id
+                const data = response.data;
+                if (!data || !data.items || data.items.length === 0) {
+                    // Update request status indicating an error
+
+                    const errorStore = useErrorStore()
+                    errorStore.addError({text: "This competition does not exist."})
+
+                    this.fetchCompetitionInfoRequest = {
+                        status: 'rejected',
+                        code: null,
+                        error: "No competition data received",
+                        errorMSG: "No competition data received",
+                    };
+                    return;
+                }
+
+                const competition = data.items[0];
+                this.currentCompetition.id = competition.id;
+                this.currentCompetition.header = competition.header;
+                this.currentCompetition.description = competition.description;
+                this.currentCompetition.date = new Date(competition.event_date);
+                this.currentCompetition.location = competition.place;
+                this.currentCompetition.locationUrl = competition.place_maps_url;
+                this.currentCompetition.pictureUrl = competition.picture?.meta.download_url;
+                this.currentCompetition.relatedCompetitionId = competition.related_competition_id;
+
+                // Update request status after successful response
+                this.fetchCompetitionInfoRequest = {
+                    status: 'resolved',
+                    code: null,
+                    error: null,
+                    errorMSG: null,
+                };
+
+            } catch (error) {
+
+                const errorStore = useErrorStore()
+                errorStore.addError({text: "Error has occurred while fetching the data of this competition"})
+
+                // Update request status and error details if request fails
+                this.fetchCompetitionInfoRequest = {
+                    status: 'rejected',
+                    code: error.response?.status,
+                    error: error,
+                    errorMSG: error.message,
+                };
+            }
         },
         async signUpForCompetition(id){
-            let response;
-            const accessToken = Cookies.get('access');
-            const requestData = new FormData();
-            requestData.set('id', id)
-            requestData.set('action', 'add')
-            try{
-                response = await axios.patch(COMPETITION_URL,requestData,{
+            try {
+                // Reset the request status before making a new request
+                this.signUpForCompetitionRequest = {
+                    status: 'pending',
+                    code: null,
+                    error: null,
+                    errorMSG: null,
+                };
+
+                const accessToken = Cookies.get('access');
+                const requestData = new FormData();
+                requestData.set('id', id);
+                requestData.set('action', 'add');
+
+                const response = await axios.patch(COMPETITION_URL, requestData, {
                     headers: {
                         Authorization: 'Bearer ' + accessToken,
                     }
-                })
-                console.log(response.data)
-            }catch (e) {
-                console.log(e)
+                });
+
+                console.log(response.data);
+
+                // Update request status after successful response
+                this.signUpForCompetitionRequest = {
+                    status: 'resolved',
+                    code: null,
+                    error: null,
+                    errorMSG: null,
+                };
+
+            } catch (error) {
+                console.error(error);
+
+                // Check if the error is unauthorized
+                if (error.response && error.response.status === 401) {
+                    // Update request status for unauthorized error
+
+                    const errorStore = useErrorStore()
+                    errorStore.addError({text: "Unauthorized. please sign in first."})
+
+                    this.signUpForCompetitionRequest = {
+                        status: 'rejected',
+                        code: 401,
+                        error: error,
+                        errorMSG: "Unauthorized: Please login again",
+                    };
+                } else {
+                    // Update request status for other errors
+
+                    const errorStore = useErrorStore()
+                    errorStore.addError({text: "Could not sign up for this competition. Try again later."})
+
+                    this.signUpForCompetitionRequest = {
+                        status: 'rejected',
+                        code: error.response?.status || null,
+                        error: error,
+                        errorMSG: error.message,
+                    };
+                }
             }
         },
         async deregisterFromCompetition(id){
-            let response;
-            const accessToken = Cookies.get('access');
-            const requestData = new FormData();
-            requestData.set('id', id)
-            requestData.set('action', 'remove')
-            try{
-                response = await axios.patch(COMPETITION_URL,requestData,{
+            try {
+                // Reset the request status before making a new request
+                this.deregisterFromCompetitionRequest = {
+                    status: 'pending',
+                    code: null,
+                    error: null,
+                    errorMSG: null,
+                };
+
+                const accessToken = Cookies.get('access');
+                const requestData = new FormData();
+                requestData.set('id', id);
+                requestData.set('action', 'remove');
+
+                const response = await axios.patch(COMPETITION_URL, requestData, {
                     headers: {
                         Authorization: 'Bearer ' + accessToken,
                     }
-                })
-            }catch (e) {
-                console.log(e)
+                });
+
+                // Update request status after successful response
+                this.deregisterFromCompetitionRequest = {
+                    status: 'resolved',
+                    code: null,
+                    error: null,
+                    errorMSG: null,
+                };
+
+            } catch (error) {
+                console.error(error);
+
+                // Check if the error is unauthorized
+                if (error.response && error.response.status === 401) {
+                    // Update request status for unauthorized error
+
+                    const errorStore = useErrorStore()
+                    errorStore.addError({text: "Unauthorized. please sign in first."})
+
+                    this.deregisterFromCompetitionRequest = {
+                        status: 'rejected',
+                        code: 401,
+                        error: error,
+                        errorMSG: "Unauthorized: Please login again",
+                    };
+                } else {
+                    // Update request status for other errors
+
+                    const errorStore = useErrorStore()
+                    errorStore.addError({text: "Could not deregister from the competition. try again later."})
+
+                    this.deregisterFromCompetitionRequest = {
+                        status: 'rejected',
+                        code: error.response?.status || null,
+                        error: error,
+                        errorMSG: error.message,
+                    };
+                }
             }
         },
         async fetchAllDBCompetitions(){
-            const accessToken = Cookies.get('access');
-            try{
-                const response = await axios.get(ALL_COMPETITIONS_URL,{
+            try {
+                // Reset the request status before making a new request
+                this.fetchAllDBCompetitionsRequest = {
+                    status: 'pending',
+                    code: null,
+                    error: null,
+                    errorMSG: null,
+                };
+
+                const accessToken = Cookies.get('access');
+
+                const response = await axios.get(ALL_COMPETITIONS_URL, {
                     headers: {
                         Authorization: 'Bearer ' + accessToken,
                     }
-                })
-                this.competitionsDB = response.data
-            }catch (e) {
-                console.log(e)
+                });
+
+                // Update competitionsDB state after successful response
+                this.competitionsDB = response.data;
+
+                // Update request status after successful response
+                this.fetchAllDBCompetitionsRequest = {
+                    status: 'resolved',
+                    code: null,
+                    error: null,
+                    errorMSG: null,
+                };
+
+            } catch (error) {
+
+                const errorStore = useErrorStore()
+                errorStore.addError({text: "Error: Could not fetch competitions from the database."})
+
+                // Update request status and error details if request fails
+                this.fetchAllDBCompetitionsRequest = {
+                    status: 'rejected',
+                    code: error.response?.status || null,
+                    error: error,
+                    errorMSG: error.message,
+                };
             }
         },
         async addCompetition(name, maxParticipants){
-            const accessToken = Cookies.get('access');
+            try {
+                // Reset the request status before making a new request
+                this.addCompetitionRequest = {
+                    status: 'pending',
+                    code: null,
+                    error: null,
+                    errorMSG: null,
+                };
 
-            const requestData = new FormData();
-            requestData.set("name", name)
-            requestData.set("max_participants", maxParticipants)
+                const accessToken = Cookies.get('access');
 
-            try{
-                const response = await axios.post(COMPETITION_URL, requestData,{
+                const requestData = new FormData();
+                requestData.set("name", name);
+                requestData.set("max_participants", maxParticipants);
+
+                const response = await axios.post(COMPETITION_URL, requestData, {
                     headers: {
                         Authorization: 'Bearer ' + accessToken,
                     }
-                })
+                });
 
-            }catch (e) {
-                console.log(e)
+                // Update request status after successful response
+                this.addCompetitionRequest = {
+                    status: 'resolved',
+                    code: null,
+                    error: null,
+                    errorMSG: null,
+                };
+
+            } catch (error) {
+
+                const errorStore = useErrorStore()
+                errorStore.addError({text: "Error has occurred. Could not add a competition."})
+
+                // Update request status and error details if request fails
+                this.addCompetitionRequest = {
+                    status: 'rejected',
+                    code: error.response?.status || null,
+                    error: error,
+                    errorMSG: error.message,
+                };
             }
         }
     }
