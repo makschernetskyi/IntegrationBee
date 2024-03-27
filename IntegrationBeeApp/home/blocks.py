@@ -1,6 +1,7 @@
 
 
 from wagtail import blocks
+from wagtail.images.blocks import ImageChooserBlock
 
 
 class HomeBulletPointBlock(blocks.StructBlock):
@@ -12,6 +13,7 @@ class HomeBulletPointBlock(blocks.StructBlock):
     class Meta:
         label = "Bullet Point"
 
+
 class NewsBlock(blocks.StructBlock):
     """header and text"""
 
@@ -22,3 +24,16 @@ class NewsBlock(blocks.StructBlock):
 
     class Meta:
         label = "News"
+
+
+class TeamMemberBlock(blocks.StructBlock):
+    """header and text"""
+
+    name = blocks.CharBlock(required=True, help_text="add name")
+    role = blocks.CharBlock(required=True, help_text="add role")
+    contacts = blocks.TextBlock(required=True, help_text="add contacts")
+    picture = ImageChooserBlock()
+
+
+    class Meta:
+        label = "team member"

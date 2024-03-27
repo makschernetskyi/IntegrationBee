@@ -189,3 +189,41 @@ class Competition(Page):
 
     def get_url_parts(self, request=None):
         return None, None, None, None
+
+
+class ContactsPage(Page):
+    """Contacts Page Model"""
+
+    about_us = models.TextField(blank=False, null=True)
+    contacts = models.TextField(blank=False, null=True)
+    socials = models.TextField (blank=True, null=True)
+
+
+    our_team = StreamField(
+        [
+            ("team_member", blocks.TeamMemberBlock())
+        ],
+        null=True,
+        blank=True,
+        use_json_field=True
+    )
+
+
+    content_panels = Page.content_panels + [
+        FieldPanel("about_us"),
+        FieldPanel("contacts"),
+        FieldPanel("socials"),
+        FieldPanel("our_team")
+    ]
+
+    api_fields = [
+        APIField("about_us"),
+        APIField("contacts"),
+        APIField("socials"),
+        APIField("our_team")
+    ]
+
+    subpage_types = []
+
+    def get_url_parts(self, request=None):
+        return self.get_parent()
