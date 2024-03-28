@@ -1,7 +1,7 @@
 
 import { createRouter, createWebHashHistory } from "vue-router";
 import { createPinia } from "pinia";
-import {onMounted, onUnmounted, ref, toRef, computed} from "vue";
+import {onMounted, onUnmounted, ref, toRef, computed, onBeforeMount} from "vue";
 import {createApp} from 'vue/dist/vue.esm-bundler';
 
 
@@ -18,6 +18,8 @@ import AdminPage from "@/components/AdminPage/AdminPage.vue";
 import HomePage from "@/components/HomePage/Homepage.vue"
 import SignUpPage from "@/components/SignUpPage/SignUpPage.vue"
 import ErrorMessage from "@/components/ErrorMessage/ErrorMessage.vue";
+import ContactsPage from "@/components/ContactsPage/ContactsPage.vue";
+import CookieBanner from "@/components/CookieBanner/CookieBanner.vue";
 
 //styles
 import './styles/index.sass'
@@ -30,10 +32,9 @@ const pinia = createPinia();
 import {useStore} from "@/store/index.js";
 
 
+
 //placeholders for future pages
-const Contact = {
-    template: '<div style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center; font-family: Poppins, sans-serif; font-size: 2rem; color: black; text-align: center; padding: 2rem;">Contacts</div>'
-}
+
 
 
 
@@ -42,7 +43,7 @@ const routes = [
     { path: '/', component: HomePage, name: 'home' },
     { path: '/news', component: NewsPage, name: 'news' },
     { path: '/competitions', component: CompetitionsPage, name: 'competitions'},
-    { path: '/contact', component: Contact, name: "contact" },
+    { path: '/contact', component: ContactsPage, name: "contact" },
     { path: '/signIn', component: SignInPage, name: 'sign_in' },
     { path: '/signUp', component: SignUpPage, name: 'sign_up' },
     { path: '/competition/:id', component: CompetitionPage, name: 'competition'},
@@ -122,10 +123,12 @@ const App = {
         Menu,
         SocialLinks,
         MenuContainer,
-        ErrorMessage
+        ErrorMessage,
+        CookieBanner,
     },
     setup(){
 
+        //dynamical handling of the window sizes
         const windowSize = ref(window.innerWidth)
 
         const handleResize = () => {
@@ -139,32 +142,46 @@ const App = {
             handleResize()
         }))
 
+        //handling cookies
+
+        const isCookieConsent = ref(false)
+
+        onBeforeMount(
+            ()=>{
+                isCookieConsent.value = Boolean(localStorage.getItem('isCookieConsent'))
+            }
+        )
+
+        const setCookieConsent = () =>{
+            localStorage.setItem('isCookieConsent', 'true')
+            isCookieConsent.value = true
+        }
+
+        //stores
         const authStore = useStore().auth;
         const errorStore = useStore().error;
 
-
-        // onBeforeMount(
-        //     ()=>{
-        //         authStore.getUserData()
-        //     }
-        // )
-
+        //error message visibility
         const isErrorVisible = computed(()=>Boolean(errorStore.errors.length) )
         const userError = computed(()=>errorStore.errors.length ? errorStore.errors[0] : null)
 
+        //menu visibility
         const isMenuVisible = ref(false)
         const isMenuContentShown = ref(false)
 
         const toggleMenuVisibility = () =>{
             isMenuVisible.value = !isMenuVisible.value
         }
+
         return {
             isMenuVisible,
             windowSize,
             isMenuContentShown,
             isErrorVisible,
             removeError: errorStore.removeError,
-            userError
+            userError,
+            setCookieConsent,
+            isCookieConsent,
 
         }
     },
@@ -205,6 +222,9 @@ const App = {
         <SocialLinks/>
         <transition>
           <ErrorMessage v-if="isErrorVisible" @error-message:close="removeError" :text="userError?.text"/>
+        </transition>
+        <transition>
+          <CookieBanner v-if="!isCookieConsent" @cookie-banner:close="setCookieConsent"/>
         </transition>
     `
 }

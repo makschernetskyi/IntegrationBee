@@ -54,7 +54,7 @@ class HomePage(Page):
         APIField("homepage_picture"),
     ]
 
-    subpage_types = ["home.NewsPage", "home.CompetitionsPage"]
+    subpage_types = ["home.NewsPage", "home.CompetitionsPage", "home.ContactsPage"]
 
 
 
@@ -194,6 +194,8 @@ class Competition(Page):
 class ContactsPage(Page):
     """Contacts Page Model"""
 
+    # template = "home/home.html"
+
     about_us = models.TextField(blank=False, null=True)
     contacts = models.TextField(blank=False, null=True)
     socials = models.TextField (blank=True, null=True)
@@ -223,7 +225,5 @@ class ContactsPage(Page):
         APIField("our_team")
     ]
 
-    subpage_types = []
-
     def get_url_parts(self, request=None):
-        return self.get_parent()
+        return None, None, None, None

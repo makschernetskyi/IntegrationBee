@@ -17,7 +17,7 @@ class HomeBulletPointBlock(blocks.StructBlock):
 class NewsBlock(blocks.StructBlock):
     """header and text"""
 
-    header =  blocks.CharBlock(required=True, help_text="add header")
+    header = blocks.CharBlock(required=True, help_text="add header")
     text = blocks.TextBlock(required=True, help_text="add text")
     picture = blocks.TextBlock(required=False, help_text="add image")
 
@@ -27,7 +27,7 @@ class NewsBlock(blocks.StructBlock):
 
 
 class TeamMemberBlock(blocks.StructBlock):
-    """header and text"""
+    """name role contacts and picture"""
 
     name = blocks.CharBlock(required=True, help_text="add name")
     role = blocks.CharBlock(required=True, help_text="add role")
@@ -36,4 +36,4 @@ class TeamMemberBlock(blocks.StructBlock):
 
 
     class Meta:
-        label = "team member"
+        label = "team_member"

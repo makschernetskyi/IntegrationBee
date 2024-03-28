@@ -1,0 +1,66 @@
+@use "../abstracts/dimensions" as *
+@use "../abstracts/colors" as *
+
+.Contacts
+  min-height: calc(max(600px, 100svh - 4rem))
+  height: auto
+  width: 100%
+  display: flex
+  align-items: flex-start
+  flex-flow: column
+  font-family: Poppins, sans-serif
+  color: black
+  text-align: center
+  padding: 1rem
+
+.Contacts-Section
+  width: 100%
+  height: max-content
+  display: flex
+  flex-flow: column
+  align-items: flex-start
+  padding: 1rem
+
+.Contacts-Section-header
+  font-family: Poppins, sans-serif
+  font-size: 1.29rem
+  font-weight: 600
+
+.Contacts-AboutUs-text
+  font-size: 0.8rem
+
+.Contacts-Contacts-contact
+  font-size: 0.8rem
+
+.Contacts-Socials-social
+  font-size: 0.8rem
+
+@media only screen and (min-width: $medium-screen)
+
+  .Contacts
+    min-height: calc(max(600px, 100vh - 6rem))
+    height: auto
+    width: 100%
+    font-family: Poppins, sans-serif
+    color: $eerie-black
+    text-align: center
+    padding: 2rem
+
+  .Contacts-Section-header
+    font-family: Poppins, sans-serif
+    font-size: 2rem
+    font-weight: 600
+
+  .Contacts-AboutUs-text
+    font-size: 1rem
+
+  .Contacts-Contacts-contact
+    font-size: 1rem
+
+  .Contacts-Socials-social
+    font-size: 1rem
+
+@media only screen and (min-width: calc(62rem + 20vw + 2rem))
+  .Contacts
+    padding-left: 10vw
+    padding-right: 10vw
