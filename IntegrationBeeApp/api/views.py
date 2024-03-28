@@ -66,6 +66,21 @@ class UserDataView(APIView):
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+class PublicCompetitionView(APIView):
+    def get(self, request):
+        id = request.query_params.get('id')
+        if id is None:
+            return Response({"error": "ID parameter is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        competition = get_object_or_404(Competition, id=id)
+
+        serializer = CompetitionSerializer(competition, many=False)
+        publicData = {
+            'max_participants':  serializer.data['max_participants'] if hasattr(serializer.data, "max_participants") else None,
+            'participants_count': len(serializer.data['participants'])
+        }
+        return Response(publicData)
+
 
 class CompetitionView(APIView):
     permission_classes = [IsAuthenticated]
@@ -92,6 +107,9 @@ class CompetitionView(APIView):
 
         competition = get_object_or_404(Competition, id=competitition_id)
         user = request.user
+
+        if hasattr(competition, 'max_participants') and competition.max_participants and competition.participants.count()>=competition.max_participants:
+            return Response({"error": "Maximum number of participants reached."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             if action == "add":

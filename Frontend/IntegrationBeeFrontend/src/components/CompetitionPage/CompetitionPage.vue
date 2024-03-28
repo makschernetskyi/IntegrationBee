@@ -28,11 +28,15 @@
     async function joinCompetition(id){
         await competitionsStore.signUpForCompetition(id)
         await authStore.getUserData()
+        competitionsStore.$reset()
+        await competitionsStore.fetchCompetitionInfo(competitionId)
     }
 
     async function leaveCompetition(id){
         await competitionsStore.deregisterFromCompetition(id)
         await authStore.getUserData()
+        competitionsStore.$reset()
+        await competitionsStore.fetchCompetitionInfo(competitionId)
     }
 
     const [user, competition] = [userInfo, competitionInfo];
@@ -51,11 +55,17 @@
                 <template v-if="!competition.locationUrl">{{competition.location}}</template>
                 <a v-if="competition.locationUrl" :href="competition.locationUrl" target="_blank">{{competition.location}}</a>
             </p>
-            <p v-if="isAuthenticated && competition.relatedCompetitionId && user.competitions.map(c=>c.id).includes(competition.relatedCompetitionId)" class="Competition-MetaInfo-goingMessage">You are going.</p>
-            <button v-if="isAuthenticated && competition.relatedCompetitionId && !user.competitions.map(c=>c.id).includes(competition.relatedCompetitionId)" class="Competition-MetaInfo-JoinBtn" @click="()=>joinCompetition(competition.relatedCompetitionId)">Join!</button>
-            <button v-if="isAuthenticated && competition.relatedCompetitionId && user.competitions.map(c=>c.id).includes(competition.relatedCompetitionId)" class="Competition-MetaInfo-LeaveBtn" @click="()=>leaveCompetition(competition.relatedCompetitionId)">Quit</button>
-            <p v-if="!isAuthenticated" class="Competition-MetaInfo-notAuthenticatedMessage">in order to participate sign in first.</p>
-            <router-link to="/signIn" v-if="!isAuthenticated" class="Competition-MetaInfo-signInLink">Sign in</router-link>
+            <template v-if="!competitionInfo.maxParticipants || Number(competitionInfo.participants) < Number(competitionInfo.maxParticipants)">
+                <p v-if="isAuthenticated && competition.relatedCompetitionId && user.competitions.map(c=>c.id).includes(competition.relatedCompetitionId)" class="Competition-MetaInfo-goingMessage">You are going.</p>
+                <button v-if="isAuthenticated && competition.relatedCompetitionId && !user.competitions.map(c=>c.id).includes(competition.relatedCompetitionId)" class="Competition-MetaInfo-JoinBtn" @click="()=>joinCompetition(competition.relatedCompetitionId)">Join!</button>
+                <button v-if="isAuthenticated && competition.relatedCompetitionId && user.competitions.map(c=>c.id).includes(competition.relatedCompetitionId)" class="Competition-MetaInfo-LeaveBtn" @click="()=>leaveCompetition(competition.relatedCompetitionId)">Quit</button>
+                <p v-if="!isAuthenticated" class="Competition-MetaInfo-notAuthenticatedMessage">in order to participate sign in first.</p>
+                <router-link to="/signIn" v-if="!isAuthenticated" class="Competition-MetaInfo-signInLink">Sign in</router-link>
+            </template>
+            <template v-if="competitionInfo.maxParticipants && Number(competitionInfo.participants) >= Number(competitionInfo.maxParticipants)">
+                <p class="Competition-MetaInfo-info">registration is closed</p>
+            </template>
+            <p class="Competition-MetaInfo-info">participants: {{competitionInfo.participants}}<template v-if="competitionInfo.maxParticipants">/{{competitionInfo.maxParticipants}}</template></p>
         </div>
         <div class="Competition-Description">
             <h2 class="Competition-Description-header">{{competition.header}}</h2>

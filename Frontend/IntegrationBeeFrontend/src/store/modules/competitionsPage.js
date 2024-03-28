@@ -7,6 +7,7 @@ import {useErrorStore} from "@/store/modules/error.js";
 
 const PAGES_URL = "/api/v2/cms/pages/"
 const COMPETITION_URL = "/api/v2/competition/"
+const PUBLIC_COMPETITION_URL = "/api/v2/publicCompetition/"
 const ALL_COMPETITIONS_URL = "/api/v2/allCompetitions/"
 
 export const useCompetitionsPageStore = defineStore('competitionsPage', {
@@ -20,7 +21,9 @@ export const useCompetitionsPageStore = defineStore('competitionsPage', {
             location: null,
             locationUrl: null,
             pictureUrl: null,
-            relatedCompetitionId: null
+            relatedCompetitionId: null,
+            maxParticipants: null,
+            participants: null,
         },
         competitions:[],
         competitionsDB: [],
@@ -215,6 +218,18 @@ export const useCompetitionsPageStore = defineStore('competitionsPage', {
                 this.currentCompetition.locationUrl = competition.place_maps_url;
                 this.currentCompetition.pictureUrl = competition.picture?.meta.download_url;
                 this.currentCompetition.relatedCompetitionId = competition.related_competition_id;
+
+                const dbCompetitionResponse = await axios.get(PUBLIC_COMPETITION_URL, {
+                    params:{
+                        id: this.currentCompetition.relatedCompetitionId
+                    }
+                })
+
+                //todo more error handling
+
+
+                this.currentCompetition.maxParticipants = dbCompetitionResponse.data.maxParticipants
+                this.currentCompetition.participants = dbCompetitionResponse.data.participants_count
 
                 // Update request status after successful response
                 this.fetchCompetitionInfoRequest = {
