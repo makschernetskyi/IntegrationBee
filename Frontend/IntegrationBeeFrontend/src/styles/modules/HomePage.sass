@@ -177,6 +177,77 @@
     justify-content: left
 
 
+.Home-SponsorsSection
+  padding-top: 0
+  display: flex
+
+  justify-content: center
+  align-items: center
+
+  width: 100%
+  overflow-x: hidden
+
+  .Home-SponsorsSection-Content
+    display: flex
+    flex-flow: column
+    width: 100%
+    justify-content: flex-start
+    align-items: center
+    gap: 2rem
+
+    .Home-SponsorsSection-Content-header
+      width: 100%
+      font-family: "Poppins", sans-serif
+      font-size: 1.62rem
+      text-align: center
+      color: $eerie-black
+      display: flex
+      justify-content: center
+      font-weight: 600
+
+    .Home-SponsorsSection-Content-SponsorsList
+      display: flex
+      flex-flow: row
+      flex-wrap: wrap
+      width: max-content
+      max-width: 80%
+      justify-content: center
+      list-style: none
+      gap: 1rem
+
+      .Home-SponsorsSection-Content-SponsorsList-Item
+        height: 6rem
+        background: $light-gray
+        padding-left: 1rem
+        padding-right: 1rem
+        display: flex
+        justify-content: center
+        align-items: center
+        border-radius: 2px
+
+        img
+          height: 4rem
+          width: auto
+
+
+
+
+    .Home-SponsorsSection-Content-AcknowledgementsList
+      display: flex
+      flex-flow: row
+      flex-wrap: wrap
+      width: max-content
+      max-width: 80%
+      justify-content: center
+      list-style: none
+      gap: 2rem
+      .Home-SponsorsSection-Content-AcknowledgementsList-Item
+        font-family: Poppins, sans-serif
+        font-size: 1rem
+        color: $eerie-black
+
+
+
 @media only screen and (min-width: $medium-screen)
   .Home
     padding-left: 1rem
@@ -243,6 +314,7 @@
     gap: 3em
 
 
+
   .Home-MotivationSection-header
     font-size: 2rem
     text-align: center
@@ -273,6 +345,34 @@
     .Home-MotivationSection-ReasonsList-Item-info
 
       font-size: 1.23rem
+
+  .Home-SponsorsSection
+    padding-top: 5rem
+    .Home-SponsorsSection-Content
+      justify-content: center
+      .Home-SponsorsSection-Content-header
+        font-size: 2rem
+        margin-top: 0
+
+      .Home-SponsorsSection-Content-SponsorsList
+        .Home-SponsorsSection-Content-SponsorsList-Item
+          height: 10rem
+          padding-right: 1rem
+          padding-left: 1rem
+          img
+            height: 8rem
+
+          //  transition: all .1s
+          //  filter: grayscale(1)
+          //
+          //&:hover
+          //  img
+          //    filter: none
+
+      .Home-SponsorsSection-Content-AcknowledgementsList
+       .Home-SponsorsSection-Content-AcknowledgementsList-Item
+         font-size: 1.23rem
+
 
 
 @media only screen and (min-width: calc(62rem + 20vw + 2rem))

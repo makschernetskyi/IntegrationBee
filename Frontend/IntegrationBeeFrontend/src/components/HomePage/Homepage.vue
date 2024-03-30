@@ -54,5 +54,28 @@
 
             </ul>
         </HomePageSection>
+        <HomePageSection class="Home-SponsorsSection">
+            <div class="Home-SponsorsSection-Content">
+                <h2 class="Home-SponsorsSection-Content-header">
+                    Supported by
+                </h2>
+                <ul class="Home-SponsorsSection-Content-SponsorsList">
+
+                    <li v-for="(sponsor, index) in content.sponsors" class="Home-SponsorsSection-Content-SponsorsList-Item" :key="index">
+                        <img :src="sponsor.picture" alt="sponsor logo">
+                    </li>
+
+                </ul>
+                <h2 class="Home-SponsorsSection-Content-header">With Appreciation to:</h2>
+                <ul class="Home-SponsorsSection-Content-AcknowledgementsList">
+
+                    <li v-for="(acknowledgement, index) in content.acknowledgements" class="Home-SponsorsSection-Content-AcknowledgementsList-Item" :key="index">
+                        {{acknowledgement.name}}
+                    </li>
+
+                </ul>
+            </div>
+
+        </HomePageSection>
     </div>
 </template>

@@ -37,6 +37,24 @@ class HomePage(Page):
         related_name="+"
     )
 
+    sponsors = StreamField(
+        [
+            ("sponsor", blocks.HomeSponsorBlock())
+        ],
+        use_json_field=True,
+        null=True,
+        blank=True
+    )
+
+    acknowledgements = StreamField(
+        [
+            ("thanks_to", blocks.HomeAcknowledgementBlock())
+        ],
+        use_json_field=True,
+        null=True,
+        blank=True
+    )
+
 
     content_panels = Page.content_panels + [
         FieldPanel("title_section_header"),
@@ -44,6 +62,8 @@ class HomePage(Page):
         FieldPanel("bullet_points_section_header"),
         FieldPanel("bullet_points"),
         FieldPanel("homepage_picture"),
+        FieldPanel("sponsors"),
+        FieldPanel("acknowledgements"),
     ]
 
     api_fields = [
@@ -52,6 +72,8 @@ class HomePage(Page):
         APIField("bullet_points_section_header"),
         APIField("bullet_points"),
         APIField("homepage_picture"),
+        APIField("sponsors"),
+        APIField("acknowledgements"),
     ]
 
     subpage_types = ["home.NewsPage", "home.CompetitionsPage", "home.ContactsPage"]

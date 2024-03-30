@@ -14,6 +14,26 @@ class HomeBulletPointBlock(blocks.StructBlock):
         label = "Bullet Point"
 
 
+class HomeSponsorBlock(blocks.StructBlock):
+    """sponsor_picture"""
+
+    sponsor_picture = ImageChooserBlock()
+
+    class Meta:
+        label = "sponsor"
+
+
+class HomeAcknowledgementBlock(blocks.StructBlock):
+    """header and text"""
+
+    name = blocks.CharBlock(required=True, help_text="add name")
+
+    class Meta:
+        label = "name"
+
+
+
+
 class NewsBlock(blocks.StructBlock):
     """header and text"""
 

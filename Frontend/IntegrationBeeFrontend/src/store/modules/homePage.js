@@ -4,7 +4,7 @@ import {defineStore} from 'pinia'
 import {useErrorStore} from "@/store/modules/error.js";
 
 
-const HOME_PAGE_INFO_URL = "/api/v2/cms/pages/?type=home.HomePage&fields=title,title_section_header,title_section_description,bullet_points_section_header,bullet_points,homepage_picture"
+const HOME_PAGE_INFO_URL = "/api/v2/cms/pages/?type=home.HomePage&fields=title,title_section_header,title_section_description,bullet_points_section_header,bullet_points,homepage_picture,sponsors,acknowledgements"
 
 
 export const useHomePageStore = defineStore('homePage', {
@@ -15,6 +15,8 @@ export const useHomePageStore = defineStore('homePage', {
         bulletPointsHeaderText: null,
         bulletPoints: [],
         picture: null,
+        sponsors: [],
+        acknowledgements: [],
         fetchHomePageInfo:{
             status: null,
             code: null,
@@ -50,6 +52,25 @@ export const useHomePageStore = defineStore('homePage', {
                         this.bulletPoints.push({ header: point.value.header, text: point.value.text });
                     }
                 });
+
+                // Clear existing acknowledgements
+                this.acknowledgements = [];
+
+                // Populate acknowledgements
+                pageInfo.acknowledgements.forEach(point => {
+                    if (point.value && point.value.name) {
+                        this.acknowledgements.push({ name: point.value.name });
+                    }
+                });
+
+                //fetching sponsors pictures
+                //todo more error handling here
+
+                const sponsorsPicturesIds = pageInfo.sponsors.map(item => item.value.sponsor_picture);
+                const picturesResponses = await Promise.all(sponsorsPicturesIds.map(id => axios.get(`/api/v2/cms/images/${id}/`)));
+                const sponsorsPictures = picturesResponses.map(item => item.data.meta.download_url);
+
+                this.sponsors = sponsorsPictures.map(picture=>({picture}))
 
 
                 // Update state
