@@ -66,6 +66,32 @@ class UserDataView(APIView):
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+class UsersView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            if not request.user.is_admin:
+                return Response({"error": "Only admin users are authorized to view users."},
+                                status=status.HTTP_401_UNAUTHORIZED)
+
+            users = User.objects.all()
+            users_serializer = UserSerializer(users, many=True)
+            users_data = users_serializer.data
+
+            for user in users_data:
+                user.pop('password')
+
+            for userDB, user in zip(users, users_data):
+                user['competitions'] = list(map(lambda competition: competition.get('id'), CompetitionSerializer(userDB.competitions, many=True).data))
+
+            return Response(users_data)
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
 class PublicCompetitionView(APIView):
     def get(self, request):
         id = request.query_params.get('id')
@@ -122,6 +148,11 @@ class CompetitionView(APIView):
 
 
     def delete(self, request):
+
+        if not request.user.is_admin:
+            return Response({"error": "Only admin users are authorized to delete competitions"},
+                            status=status.HTTP_401_UNAUTHORIZED)
+
         try:
             id = request.query_params.get('id')
             if id is None:
@@ -151,6 +182,11 @@ class CompetitionsView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+
+        if not request.user.is_admin:
+            return Response({"error": "Only admin users are authorized to see all competitions"},
+                            status=status.HTTP_401_UNAUTHORIZED)
+
         try:
             competitions = Competition.objects.all()
             serializer = CompetitionSerializer(competitions, many=True)

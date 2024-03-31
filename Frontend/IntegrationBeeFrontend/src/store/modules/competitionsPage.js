@@ -44,6 +44,18 @@ export const useCompetitionsPageStore = defineStore('competitionsPage', {
             code: null,
             error: null,
             errorMSG: null,
+        },
+        addCompetitionRequest: {
+            status: null,
+            code: null,
+            error: null,
+            errorMSG: null,
+        },
+        removeCompetitionRequest: {
+            status: null,
+            code: null,
+            error: null,
+            errorMSG: null,
         }
     }),
     getters:{
@@ -395,6 +407,7 @@ export const useCompetitionsPageStore = defineStore('competitionsPage', {
 
                 // Update competitionsDB state after successful response
                 this.competitionsDB = response.data;
+                console.log(this.competitionsDB)
 
                 // Update request status after successful response
                 this.fetchAllDBCompetitionsRequest = {
@@ -455,6 +468,52 @@ export const useCompetitionsPageStore = defineStore('competitionsPage', {
 
                 // Update request status and error details if request fails
                 this.addCompetitionRequest = {
+                    status: 'rejected',
+                    code: error.response?.status || null,
+                    error: error,
+                    errorMSG: error.message,
+                };
+            }
+        },
+        async removeCompetition(id){
+            try {
+                // Reset the request status before making a new request
+                this.addCompetitionRequest = {
+                    status: 'pending',
+                    code: null,
+                    error: null,
+                    errorMSG: null,
+                };
+
+                const accessToken = Cookies.get('access');
+
+
+                const response = await axios.delete(COMPETITION_URL, {
+                    headers: {
+                        Authorization: 'Bearer ' + accessToken,
+                    },
+                    params: {
+                        id: id
+                    }
+                });
+
+                this.competitionsDB = this.competitionsDB.filter(item=>item.id!==id)
+
+                // Update request status after successful response
+                this.removeCompetitionRequest = {
+                    status: 'resolved',
+                    code: null,
+                    error: null,
+                    errorMSG: null,
+                };
+
+            } catch (error) {
+
+                const errorStore = useErrorStore()
+                errorStore.addError({text: "Error has occurred. Could not remove a competition."})
+
+                // Update request status and error details if request fails
+                this.removeCompetitionRequest = {
                     status: 'rejected',
                     code: error.response?.status || null,
                     error: error,
