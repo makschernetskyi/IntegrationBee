@@ -51,7 +51,7 @@ this way is not a good practice, hence the app is now built separately
 Backend is built with Django (Wagtail + Django Rest Api) and serves as both
 API and CMS.
 
-## Database
+### Database
 Django is a flexible Framework that allows to easily connect to any database, in current
 version we use sqlite for development and MySQL for production.
 
