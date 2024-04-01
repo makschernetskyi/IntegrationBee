@@ -29,7 +29,7 @@ const logOut = async () =>{
             </router-link>
         </template>
         <template v-if="isAuth">
-            <router-link to="/profile" class="Header-ActionButtons-Button Header-ActionButtons-SignInButton">
+            <router-link to="/profile" class="Header-ActionButtons-Button Header-ActionButtons-ProfileButton">
                 <span class="Header-ActionButtons-Button-text">profile</span>
             </router-link>
             <span to="/signOut" class="Header-ActionButtons-Button">

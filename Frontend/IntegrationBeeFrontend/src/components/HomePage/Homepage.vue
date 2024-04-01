@@ -26,7 +26,6 @@
             <div class="Home-IntroSection-Description">
                 <div class="Home-IntroSection-Description-Title">
                     <h1>{{content.titleSectionHeaderText}}</h1>
-    <!--                        <p>Integration bee format event is coming to Vienna!!!</p>-->
                 </div>
                 <div class="Home-IntroSection-Description-About" v-html="content.titleSectionDescriptionText">
                 </div>
