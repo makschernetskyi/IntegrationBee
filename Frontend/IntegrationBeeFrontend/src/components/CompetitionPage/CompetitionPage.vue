@@ -1,6 +1,7 @@
 <script setup>
     import {useStore} from "@/store/index.js";
     import {formatDateToString} from "@/utils/formatDateToString.js";
+    import formatRichText from "@/utils/richTextFormatter.js";
 
     import  {useRouter} from 'vue-router';
     import {onMounted, computed, onBeforeUnmount} from 'vue'
@@ -70,7 +71,7 @@
         </div>
         <div class="Competition-Description">
             <h2 class="Competition-Description-header">{{competition.header}}</h2>
-            <p class="Competition-Description-description" v-html="'About: ' + competition.description"></p>
+            <p class="Competition-Description-description" v-html="'Details: ' + formatRichText(competition.description)"></p>
         </div>
     </div>
 </template>
