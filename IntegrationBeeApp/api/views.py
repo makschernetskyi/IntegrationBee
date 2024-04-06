@@ -102,7 +102,7 @@ class PublicCompetitionView(APIView):
 
         serializer = CompetitionSerializer(competition, many=False)
         publicData = {
-            'max_participants':  serializer.data['max_participants'] if hasattr(serializer.data, "max_participants") else None,
+            'max_participants':  serializer.data['max_participants'] if 'max_participants' in serializer.data else None,
             'participants_count': len(serializer.data['participants'])
         }
         return Response(publicData)
@@ -123,18 +123,19 @@ class CompetitionView(APIView):
 
 
     def patch(self, request):
-        competitition_id = request.data.get('id')
-        if competitition_id is None:
+        competition_id = request.data.get('id')
+        if competition_id is None:
             return Response({"error": "Competition ID is required"}, status=status.HTTP_400_BAD_REQUEST)
 
         action = request.data.get('action')
         if action not in ("add", "remove"):
             return Response({"error": "Invalid action"}, status=status.HTTP_400_BAD_REQUEST)
 
-        competition = get_object_or_404(Competition, id=competitition_id)
+        competition = get_object_or_404(Competition, id=competition_id)
         user = request.user
 
-        if hasattr(competition, 'max_participants') and competition.max_participants and competition.participants.count()>=competition.max_participants:
+        # todo: or because idk if it's object or a dictionary and it's 1am, so it needs to be fixed
+        if (hasattr(competition, 'max_participants') or 'max_participants' in competition) and competition.max_participants and competition.participants.count()>=competition.max_participants:
             return Response({"error": "Maximum number of participants reached."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:

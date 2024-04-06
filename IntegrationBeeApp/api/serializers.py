@@ -35,4 +35,4 @@ class CompetitionSerializer(ModelSerializer):
 
     class Meta:
         model = Competition
-        fields = ('id', 'name', 'participants')
+        fields = ('id', 'name', 'participants', 'max_participants')

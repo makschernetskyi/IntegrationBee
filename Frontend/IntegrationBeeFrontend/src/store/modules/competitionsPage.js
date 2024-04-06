@@ -109,7 +109,6 @@ export const useCompetitionsPageStore = defineStore('competitionsPage', {
                 };
 
             } catch (error) {
-                console.error(error);
 
                 // Update request status and error details if request fails
                 this.fetchCompetitionsPageInfoRequest = {
@@ -229,19 +228,23 @@ export const useCompetitionsPageStore = defineStore('competitionsPage', {
                 this.currentCompetition.location = competition.place;
                 this.currentCompetition.locationUrl = competition.place_maps_url;
                 this.currentCompetition.pictureUrl = competition.picture?.meta.download_url;
-                this.currentCompetition.relatedCompetitionId = competition.related_competition_id;
-
-                const dbCompetitionResponse = await axios.get(PUBLIC_COMPETITION_URL, {
-                    params:{
-                        id: this.currentCompetition.relatedCompetitionId
-                    }
-                })
-
-                //todo more error handling
 
 
-                this.currentCompetition.maxParticipants = dbCompetitionResponse.data.maxParticipants
-                this.currentCompetition.participants = dbCompetitionResponse.data.participants_count
+                if(competition.related_competition_id) {
+                    this.currentCompetition.relatedCompetitionId = competition.related_competition_id;
+
+                    const dbCompetitionResponse = await axios.get(PUBLIC_COMPETITION_URL, {
+                        params: {
+                            id: this.currentCompetition.relatedCompetitionId
+                        }
+                    })
+
+                    //todo more error handling
+
+
+                    this.currentCompetition.maxParticipants = dbCompetitionResponse.data.max_participants
+                    this.currentCompetition.participants = dbCompetitionResponse.data.participants_count
+                }
 
                 // Update request status after successful response
                 this.fetchCompetitionInfoRequest = {
@@ -297,7 +300,6 @@ export const useCompetitionsPageStore = defineStore('competitionsPage', {
                 };
 
             } catch (error) {
-                console.error(error);
 
                 // Check if the error is unauthorized
                 if (error.response && error.response.status === 401) {
@@ -357,7 +359,6 @@ export const useCompetitionsPageStore = defineStore('competitionsPage', {
                 };
 
             } catch (error) {
-                console.error(error);
 
                 // Check if the error is unauthorized
                 if (error.response && error.response.status === 401) {
@@ -407,7 +408,6 @@ export const useCompetitionsPageStore = defineStore('competitionsPage', {
 
                 // Update competitionsDB state after successful response
                 this.competitionsDB = response.data;
-                console.log(this.competitionsDB)
 
                 // Update request status after successful response
                 this.fetchAllDBCompetitionsRequest = {
@@ -445,7 +445,9 @@ export const useCompetitionsPageStore = defineStore('competitionsPage', {
 
                 const requestData = new FormData();
                 requestData.set("name", name);
-                requestData.set("max_participants", maxParticipants);
+                if(maxParticipants){
+                    requestData.set("max_participants", maxParticipants);
+                }
 
                 const response = await axios.post(COMPETITION_URL, requestData, {
                     headers: {

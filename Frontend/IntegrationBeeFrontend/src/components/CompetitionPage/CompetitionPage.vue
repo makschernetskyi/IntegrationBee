@@ -23,6 +23,7 @@
     })
 
     const competitionInfo = computed({get: ()=>competitionsStore.currentCompetition})
+    const requestInfo = computed(()=>competitionsStore.fetchCompetitionInfoRequest)
     const userInfo = computed({get: ()=>authStore.user})
 
     async function joinCompetition(id){
@@ -62,10 +63,10 @@
                 <p v-if="!isAuthenticated" class="Competition-MetaInfo-notAuthenticatedMessage">in order to participate sign in first.</p>
                 <router-link to="/signIn" v-if="!isAuthenticated" class="Competition-MetaInfo-signInLink">Sign in</router-link>
             </template>
-            <template v-if="competitionInfo.maxParticipants && Number(competitionInfo.participants) >= Number(competitionInfo.maxParticipants)">
+            <template v-if="(competitionInfo.maxParticipants && Number(competitionInfo.participants) >= Number(competitionInfo.maxParticipants)) || (competitionInfo.relatedCompetitionId === null && requestInfo.status && requestInfo.status!== 'pending')">
                 <p class="Competition-MetaInfo-info">registration is closed</p>
             </template>
-            <p class="Competition-MetaInfo-info">participants: {{competitionInfo.participants}}<template v-if="competitionInfo.maxParticipants">/{{competitionInfo.maxParticipants}}</template></p>
+            <p v-if="competitionInfo.participants !== null" class="Competition-MetaInfo-info">participants: {{competitionInfo.participants}}<template v-if="competitionInfo.maxParticipants !== null">/{{competitionInfo.maxParticipants}}</template></p>
         </div>
         <div class="Competition-Description">
             <h2 class="Competition-Description-header">{{competition.header}}</h2>
