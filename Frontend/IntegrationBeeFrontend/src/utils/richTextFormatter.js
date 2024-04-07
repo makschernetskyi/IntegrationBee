@@ -9,7 +9,7 @@ export default function (richText) {
     }
 
     //allow <br> tags
-    richText = richText.replace("&lt;br&gt;", "<br>")
+    richText = richText.replaceAll("&lt;br&gt;", "<br>")
 
 
     // Remove script tags and their content
