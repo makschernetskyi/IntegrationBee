@@ -71,7 +71,7 @@
         </div>
         <div class="Competition-Description">
             <h2 class="Competition-Description-header">{{competition.header}}</h2>
-            <p class="Competition-Description-description" v-html="'Details: ' + formatRichText(competition.description)"></p>
+            <p class="Competition-Description-description" v-html="competition.description && 'Details: ' + formatRichText(competition.description)"></p>
         </div>
     </div>
 </template>
