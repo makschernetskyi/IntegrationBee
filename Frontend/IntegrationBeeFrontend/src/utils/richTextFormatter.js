@@ -4,6 +4,10 @@ import {scriptRegex} from "./regexPatterns.js";
 export default function (richText) {
     //richText is a string in html format
 
+    if(!richText){
+        return ''
+    }
+
     //allow <br> tags
     richText = richText.replace("&lt;br&gt;", "<br>")
 
