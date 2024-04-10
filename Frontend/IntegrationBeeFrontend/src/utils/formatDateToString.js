@@ -7,5 +7,5 @@ export const formatDateToString = (date) =>{
     const convertTo2PlacesString = (num) =>{
         return num>=10 ? num.toString() : '0' + num.toString()
     }
-    return `${months[date.getMonth()]} ${date.getDay()}. ${date.getFullYear()} ${convertTo2PlacesString(hours)}:${convertTo2PlacesString(date.getMinutes())} CET`
+    return `${months[date.getMonth()]} ${date.getDate()}. ${date.getFullYear()} ${convertTo2PlacesString(hours)}:${convertTo2PlacesString(date.getMinutes())} CET`
 }
