@@ -24,6 +24,10 @@
     margin: 0em 1em 0em 1em
     width: calc(100% - 2em)
 
+.ScrollLowerHint
+    //todo mobile version
+    display: none
+
 .Home-IntroSection-Description
   grid-row: 1/2
   display: flex
@@ -264,6 +268,24 @@
   .Home-Section:nth-of-type(2)
     height: calc(max(600px, 100vh - 6rem))
 
+  .ScrollLowerHint
+    display: flex
+    width: 45px
+    height: 45px
+    position: absolute
+    z-index: 30
+    bottom: 2rem
+    left: calc(50vw - 5px)
+    opacity: 0
+    animation-delay: 2s
+    animation-name: ScrollLowerHint-animation
+    animation-duration: 5s
+    animation-iteration-count: infinite
+
+    svg
+      fill: $jonquil
+      width: 100%
+      height: 100%
 
   .Home-IntroSection-Description
     grid-column: 2/3
@@ -383,3 +405,20 @@
   .Home
     padding-left: 10vw
     padding-right: 10vw
+
+
+
+@keyframes ScrollLowerHint-animation
+  0%
+    opacity: 0
+    transform: translateY(-1rem)
+
+  50%
+    opacity: 0
+    transform: translateY(-1rem)
+  75%
+    opacity: 1
+
+  100%
+    opacity: 0
+    transform: translateY(0)
