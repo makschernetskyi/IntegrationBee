@@ -58,9 +58,16 @@ class Competition(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, unique=True)
     max_participants = models.IntegerField(null=True, blank=True)
-    participants = models.ManyToManyField(User, related_name='competitions')
+    participants = models.ManyToManyField(User, through="UserToCompetitionRelationship", related_name='competitions')
 
     def __str__(self):
         return self.name
+
+
+class UserToCompetitionRelationship(models.Model):
+    User = models.ForeignKey(User, on_delete=models.CASCADE)
+    Competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
+    registration_date = models.DateField()
+    status = models.TextField(null=True, blank=True)  # winner semifinalist finalist or competitor
 
 
