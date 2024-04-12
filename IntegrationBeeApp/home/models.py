@@ -5,8 +5,11 @@ from wagtail.fields import RichTextField
 from wagtail.admin.panels import FieldPanel
 from wagtail.fields import StreamField
 from wagtail.api import APIField
+from wagtail.search import index
 
 from . import blocks
+
+from api import models as api_models
 
 
 class HomePage(Page):
@@ -37,6 +40,19 @@ class HomePage(Page):
         related_name="+"
     )
 
+    project_description = RichTextField(features=["bold", "link"], null=True)
+
+    example_youtube_video_link = models.CharField(max_length=150, blank=True, null=True)
+
+    main_sponsor_picture = models.ForeignKey(
+        "wagtailimages.Image",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+    )
+
+    main_sponsor_description = RichTextField(features=["bold", "link"], null=True)
+
     sponsors = StreamField(
         [
             ("sponsor", blocks.HomeSponsorBlock())
@@ -64,6 +80,11 @@ class HomePage(Page):
         FieldPanel("homepage_picture"),
         FieldPanel("sponsors"),
         FieldPanel("acknowledgements"),
+        FieldPanel("project_description"),
+        FieldPanel("example_youtube_video_link"),
+        FieldPanel("main_sponsor_picture"),
+        FieldPanel("main_sponsor_description"),
+
     ]
 
     api_fields = [
@@ -74,6 +95,19 @@ class HomePage(Page):
         APIField("homepage_picture"),
         APIField("sponsors"),
         APIField("acknowledgements"),
+        APIField("project_description"),
+        APIField("example_youtube_video_link"),
+        APIField("main_sponsor_picture"),
+        APIField("main_sponsor_description"),
+    ]
+
+    search_fields = Page.search_fields + [
+        index.SearchField('title_section_header', partial_match=True),
+        index.SearchField('title_section_description', partial_match=True),
+        index.SearchField('bullet_points_section_header', partial_match=True),
+        index.SearchField('project_description', partial_match=True),
+        index.SearchField('example_youtube_video_link', partial_match=True),
+        index.SearchField('main_sponsor_description', partial_match=True),
     ]
 
     subpage_types = ["home.NewsPage", "home.CompetitionsPage", "home.ContactsPage"]
@@ -91,24 +125,17 @@ class NewsPage(Page):
 
     page_title = models.CharField(max_length=50, blank=False, null=True)
 
-    content = StreamField(
-        [
-            ("news", blocks.NewsBlock())
-        ],
-        null=True,
-        blank=True,
-        use_json_field=True
-    )
-
 
     content_panels = Page.content_panels + [
         FieldPanel("page_title"),
-        FieldPanel("content"),
     ]
 
     api_fields = [
         APIField("page_title"),
-        APIField("content")
+    ]
+
+    search_fields = Page.search_fields + [
+        index.SearchField('page_title', partial_match=True),
     ]
 
     subpage_types = ["home.NewsPost"]
@@ -144,6 +171,11 @@ class NewsPost(Page):
         APIField("picture"),
     ]
 
+    search_fields = Page.search_fields + [
+        index.SearchField('header', partial_match=True),
+        index.SearchField('text', partial_match=True),
+    ]
+
     def get_url_parts(self, request=None):
         return self.get_parent().get_url_parts()
 
@@ -158,6 +190,10 @@ class CompetitionsPage(Page):
 
     api_fields = [
         APIField("header"),
+    ]
+
+    search_fields = Page.search_fields + [
+        index.SearchField('header', partial_match=True),
     ]
 
     subpage_types = ["home.Competition"]
@@ -177,6 +213,14 @@ class Competition(Page):
     place_maps_url = models.CharField(max_length=100, blank=True, null=True)
 
     related_competition_id = models.IntegerField(blank=True, null=True)
+    related_competition_test = models.ForeignKey(
+        api_models.Competition,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='+',
+        verbose_name='api_competition'
+    )
 
     picture = models.ForeignKey(
         "wagtailimages.Image",
@@ -195,6 +239,7 @@ class Competition(Page):
         FieldPanel("place_maps_url"),
         FieldPanel("picture"),
         FieldPanel("related_competition_id"),
+        FieldPanel("related_competition_test"),
     ]
 
     api_fields = [
@@ -207,6 +252,15 @@ class Competition(Page):
         APIField("place_maps_url"),
         APIField("picture"),
         APIField("related_competition_id"),
+        APIField("related_competition_test"),
+    ]
+
+    search_fields = Page.search_fields + [
+        index.SearchField('header', partial_match=True),
+        index.SearchField('short_description', partial_match=True),
+        index.SearchField('description', partial_match=True),
+        index.SearchField('event_date'),
+        index.SearchField('place', partial_match=True),
     ]
 
     def get_url_parts(self, request=None):
@@ -245,6 +299,12 @@ class ContactsPage(Page):
         APIField("contacts"),
         APIField("socials"),
         APIField("our_team")
+    ]
+
+    search_fields = Page.search_fields + [
+        index.SearchField('about_us', partial_match=True),
+        index.SearchField('contacts', partial_match=True),
+        index.SearchField('socials', partial_match=True),
     ]
 
     def get_url_parts(self, request=None):
