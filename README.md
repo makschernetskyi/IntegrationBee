@@ -38,6 +38,13 @@ the app is available under the address www.integrationbee.at
 
 In current version this app is separated in two parts responsible for frontend and backend
 
+### Setup
+
+Python >=3.11.1
+pip >= 24.0
+nodeJS >= v20.8.1
+yarn >= 1.22.19
+
 ### Frontend
 this app is a Single Page Application (SPA) therefore it is powered
 by Vue 3 + Vite and separated from the backend, since Django does not
