@@ -3,6 +3,8 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import { createPinia } from "pinia";
 import {onMounted, onUnmounted, ref, toRef, computed, onBeforeMount} from "vue";
 import {createApp} from 'vue/dist/vue.esm-bundler';
+import VuePlyr from 'vue-plyr'
+import 'vue-plyr/dist/vue-plyr.css'
 
 
 //components
@@ -236,4 +238,7 @@ const app =createApp(App)
 
 app.use(router)
 app.use(pinia)
+app.use(VuePlyr, {
+    plyr: {}
+})
 app.mount('#app')
