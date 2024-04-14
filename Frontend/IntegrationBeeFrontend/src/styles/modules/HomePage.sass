@@ -16,24 +16,28 @@
   width: 100%
   color: $eerie-black
 
-  &:first-of-type
-    display: grid
-    grid-template-columns: 1fr
-    grid-template-rows: 1fr 1fr
-
-    margin: 0em 1em 0em 1em
-    width: calc(100% - 2em)
 
 .ScrollLowerHint
     //todo mobile version
     display: none
 
+.Home-IntroSection
+  display: grid
+  grid-template-columns: 1fr
+  grid-template-rows: 2fr 3fr
+
+  padding-top: 1rem
+  padding-left: 1rem
+  padding-right: 1rem
+  width: 100%
+
+
 .Home-IntroSection-Description
-  grid-row: 1/2
+  grid-row: 2/3
   display: flex
   flex-flow: column
   justify-content: center
-  gap: 3rem
+  gap: 2rem
 
 
 .Home-IntroSection-Description-Title
@@ -91,7 +95,7 @@
 
 
 .Home-IntroSection-Illustration
-  grid-row: 2/3
+  grid-row: 1/2
   height: 100%
   display: flex
   justify-content: center
@@ -99,18 +103,63 @@
 
   img
     position: relative
-    max-height: 80%
+    max-height: 100%
     width: 80%
     border-radius: 20px
-    border: 4px solid $alabaster
-    -webkit-box-shadow: -22px -20px 0px 0px $jonquil
-    -moz-box-shadow: -22px -20px 0px 0px $jonquil
-    box-shadow: -22px -20px 0px 0px $jonquil
-    transition: all .2s ease
+    //border: 4px solid $alabaster
+    //-webkit-box-shadow: -22px -20px 0px 0px $jonquil
+    //-moz-box-shadow: -22px -20px 0px 0px $jonquil
+    //box-shadow: -22px -20px 0px 0px $jonquil
+    //transition: all .2s ease
     z-index: 3
     display: inline-block
 
 
+.Home-AboutSection
+  padding: 0
+  display: grid
+  grid-template-columns: 1fr
+  grid-template-rows: auto auto
+  grid-row-gap: 1rem
+
+  .Home-AboutSection-Description
+    width: 100%
+    height: max-content
+    display: flex
+    flex-flow: column
+    justify-content: center
+    align-items: flex-start
+    gap: 1rem
+
+    .Home-AboutSection-Description-title
+      font-size: 1.62rem
+      font-family: Poppins, sans-serif
+      font-weight: 600
+      width: 100%
+      display: flex
+      flex-flow: row
+      justify-content: left
+      align-items: center
+    .Home-AboutSection-Description-content
+      font-size: 1rem
+      font-family: Poppins, sans-serif
+      width: 100%
+      display: flex
+      flex-flow: column
+      align-items: flex-start
+      height: max-content
+
+
+
+  .Home-AboutSection-Demo
+    width: 100%
+    height: max-content
+    display: flex
+
+    div
+      width: 100%
+      height: auto
+      border-radius: 12px
 
 
 
@@ -258,15 +307,14 @@
     padding-left: 1rem
     padding-right: 1rem
 
-  .Home-Section:first-of-type
+  .Home-IntroSection
     margin: 0
     width: 100%
     height: calc(max(600px, 100vh - 6rem))
     grid-template-columns: 1fr 1fr
     grid-template-rows: 1fr
 
-  .Home-Section:nth-of-type(2)
-    height: calc(max(600px, 100vh - 6rem))
+
 
   .ScrollLowerHint
     display: flex
@@ -325,7 +373,57 @@
     img
       height: auto
       width: 80%
+      max-height: 80%
 
+
+  .Home-AboutSection
+    padding-top: 5rem
+    padding-bottom: 5rem
+    display: grid
+    grid-template-columns: 1fr 1fr
+    grid-column-gap: 2rem
+    grid-template-rows: 1fr
+
+    .Home-AboutSection-Description
+      width: 100%
+      height: 100%
+      display: flex
+      flex-flow: column
+      justify-content: center
+      align-items: flex-start
+
+      .Home-AboutSection-Description-title
+        font-size: 2rem
+        font-family: Poppins, sans-serif
+        font-weight: 600
+        width: 100%
+        display: flex
+        flex-flow: row
+        justify-content: left
+        align-items: center
+      .Home-AboutSection-Description-content
+        font-size: 1rem
+        font-family: Poppins, sans-serif
+        font-weight: 600
+        width: 100%
+        display: flex
+        flex-flow: column
+        align-items: flex-start
+        height: max-content
+
+
+
+    .Home-AboutSection-Demo
+      width: 100%
+      height: 100%
+      display: flex
+      justify-content: center
+      align-items: center
+
+      div
+        width: 100%
+        height: auto
+        border-radius: 12px
 
 
   .Home-MotivationSection
@@ -334,6 +432,7 @@
     flex-flow: column
     margin: 0em 3em 0em 3em
     width: calc(100% - 6em)
+    //height: calc(max(600px, 100vh - 6rem))
     gap: 3em
 
     min-height: calc(max(600px, 100vh - 6rem))
@@ -405,6 +504,9 @@
   .Home
     padding-left: 10vw
     padding-right: 10vw
+
+
+
 
 
 

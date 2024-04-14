@@ -4,7 +4,7 @@ import {defineStore} from 'pinia'
 import {useErrorStore} from "@/store/modules/error.js";
 
 
-const HOME_PAGE_INFO_URL = "/api/v2/cms/pages/?type=home.HomePage&fields=title,title_section_header,title_section_description,bullet_points_section_header,bullet_points,homepage_picture,sponsors,acknowledgements"
+const API_PAGES_URL = "/api/v2/cms/pages/"
 
 
 export const useHomePageStore = defineStore('homePage', {
@@ -12,9 +12,13 @@ export const useHomePageStore = defineStore('homePage', {
         isFetched: false,
         titleSectionHeaderText: null,
         titleSectionDescriptionText: null,
+        aboutDescription: null,
+        aboutDemoVideoLink: null,
         bulletPointsHeaderText: null,
         bulletPoints: [],
         picture: null,
+        mainSponsorPicture: null,
+        mainSponsorDescription: null,
         sponsors: [],
         acknowledgements: [],
         fetchHomePageInfo:{
@@ -30,7 +34,12 @@ export const useHomePageStore = defineStore('homePage', {
     actions: {
         async fetchHomePageInfo() {
             try {
-                const response = await axios.get(HOME_PAGE_INFO_URL);
+                const response = await axios.get(API_PAGES_URL, {
+                    params: {
+                        type: "home.HomePage",
+                        fields: "title,title_section_header,title_section_description,project_description,example_youtube_video_link,main_sponsor_picture,main_sponsor_description,bullet_points_section_header,bullet_points,homepage_picture,sponsors,acknowledgements"
+                    }
+                });
                 const data = response.data;
 
                 if (!data || !data.items || !data.items["0"]) {
@@ -78,6 +87,10 @@ export const useHomePageStore = defineStore('homePage', {
                 this.titleSectionDescriptionText = pageInfo.title_section_description;
                 this.bulletPointsHeaderText = pageInfo.bullet_points_section_header;
                 this.picture = pageInfo.homepage_picture?.meta.download_url
+                this.aboutDescription = pageInfo.project_description
+                this.aboutDemoVideoLink = pageInfo.example_youtube_video_link
+                this.mainSponsorPicture = pageInfo.main_sponsor_picture?.meta.download_url
+                this.mainSponsorDescription = pageInfo.main_sponsor_description
                 this.isFetched = true;
 
                 this.fetchHomePageInfo.error = null;
