@@ -1,7 +1,10 @@
 <script setup>
-    import {onBeforeMount} from "vue";
+import {computed, onBeforeMount} from "vue";
     import TeamMembersCarousel from "./teamMembersCarousel.vue";
     import {useStore} from "@/store/index.js";
+    import {validEmailPattern} from "@/utils/regexPatterns.js";
+import richTextFormatter from "@/utils/richTextFormatter.js";
+import {formatLinksInText} from "@/utils/formatLinksInText.js";
 
     const contactsStore = useStore().contactsPage;
 
@@ -9,6 +12,8 @@
         if(!contactsStore.getContactsPageInfoRequest.status)
             contactsStore.getContactsPageInfo()
     })
+
+    const contactsList = computed(()=>contactsStore.contacts?.split('\n').map(contact=>contact.trim()))
 
 
 </script>
@@ -20,7 +25,10 @@
       </section>
       <section class="Contacts-Section Contacts-Contacts">
           <h2 class="Contacts-Section-header Contacts-Contacts-header">Contact:</h2>
-          <p v-for="contact in contactsStore.contacts?.split('\n')" class="Contacts-Contacts-contact">{{ contact }}</p>
+          <template v-for="contact in contactsList">
+              <p v-if="typeof contact === 'string' && contact.length" class="Contacts-Contacts-contact" v-html="formatLinksInText(richTextFormatter(contact))"></p>
+              <br v-if="typeof contact === 'string' && !contact.length"/>
+          </template>
       </section>
       <section class="Contacts-Section Contacts-Socials">
           <h2 class="Contacts-Section-header Contacts-Socials-header">Socials:</h2>
