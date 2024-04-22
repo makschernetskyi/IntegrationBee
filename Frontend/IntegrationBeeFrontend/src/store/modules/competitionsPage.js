@@ -522,6 +522,20 @@ export const useCompetitionsPageStore = defineStore('competitionsPage', {
                     errorMSG: error.message,
                 };
             }
+        },
+        resetCurrentCompetition(){
+            this.currentCompetition = {
+                id: null,
+                header: null,
+                description: null,
+                date: null,
+                location: null,
+                locationUrl: null,
+                pictureUrl: null,
+                relatedCompetitionId: null,
+                maxParticipants: null,
+                participants: null,
+            }
         }
     }
 })

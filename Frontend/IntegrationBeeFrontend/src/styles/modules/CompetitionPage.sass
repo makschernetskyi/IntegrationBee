@@ -4,54 +4,33 @@
 .Competition
   height: auto
   display: grid
-  grid-template-columns: 20rem 1fr
-  grid-template-rows: 1fr
-
-  grid-column-gap: 1rem
-
-  font-family: Poppins, sans-serif
-  font-size: 2rem
-  color: black
-  padding-left: 1rem
-  padding-right: 1rem
-  padding-top: 2rem
   background: $alabaster
+
+.Competition-Picture
+  display: none
 
 
 .Competition-MetaInfo-time
   font-family: "Open Sans", sans-serif
-  font-size: 1.5rem
 
 .Competition-MetaInfo-Location
   font-family: "Open Sans", sans-serif
-  font-size: 1.5rem
   a
     text-decoration: none
     color: $tekhelet
-    &:hover
-      text-decoration: underline
 
-.Competition-Description-header
-  font-family: "Open Sans", sans-serif
-  font-size: 1.5rem
+.Competition-MetaInfo-Registration
+      width: 100%
 
 .Competition-Description-description
   font-family: "Open Sans", sans-serif
-  font-size: 1.5rem
+
 
 .Competition-MetaInfo-Picture
   display: flex
   justify-content: center
 
-  img
-    max-width: 100%
-    max-height: 200px
-
 .Competition-MetaInfo-JoinBtn
-  width: 6rem
-  margin-left: 7rem
-  margin-top: 2rem
-  height: 3rem
   border: none
   outline: none
   border-radius: 12px
@@ -60,24 +39,11 @@
   justify-content: center
   align-items: center
   font-family: Poppins, sans-serif
-  font-size: 1.5rem
-  font-weight: bold
+  font-weight: 600
   color: $eerie-black
 
-  cursor: pointer
-
-  transition: background .1s
-
-  &:hover
-    background: $alabaster
-    color: $jonquil
 
 .Competition-MetaInfo-LeaveBtn
-
-  width: 6rem
-  margin-left: 7rem
-  margin-top: 2rem
-  height: 3rem
   border: none
   outline: none
   border-radius: 12px
@@ -86,44 +52,20 @@
   justify-content: center
   align-items: center
   font-family: Poppins, sans-serif
-  font-size: 1.5rem
-  font-weight: bold
+  font-weight: 600
   color: #333
 
-  cursor: pointer
 
-  transition: background .1s
 
-  &:hover
-    background: $alabaster
-    color: $jonquil
 
-.Competition-MetaInfo-goingMessage
-  margin-top: 2rem
-  width: 100%
-  display: flex
-  justify-content: center
-  font-size: 1.5rem
-
-.Competition-MetaInfo-notAuthenticatedMessage
-  margin-top: 2rem
-  width: 100%
-  display: flex
-  justify-content: center
-  font-size: 1.5rem
-
-.Competition-MetaInfo-info
-  margin-top: 2rem
-  width: 100%
-  display: flex
-  justify-content: center
-  font-size: 1.5rem
+//.Competition-MetaInfo-info
+//  margin-top: 2rem
+//  width: 100%
+//  display: flex
+//  justify-content: center
+//  font-size: 1.5rem
 
 .Competition-MetaInfo-signInLink
-  width: 6rem
-  margin-left: 7rem
-  margin-top: 2rem
-  height: 3rem
   border: none
   outline: none
   border-radius: 12px
@@ -132,20 +74,243 @@
   justify-content: center
   align-items: center
   font-family: Poppins, sans-serif
-  font-size: 1.5rem
-  font-weight: bold
+  font-weight: 600
   color: $eerie-black
   text-decoration: none
 
-  cursor: pointer
 
-  transition: background .1s
+@media only screen and (max-width: $medium-screen)
+  .Competition
+    grid-template-columns: 100%
+    grid-template-rows: auto auto auto auto
 
-  &:hover
-    background: $alabaster
-    color: $jonquil
+  .Competition-Picture
+    display: flex
+    width: 100%
+    height: 10rem
+    grid-row: 1/2
+    img
+      width: 100%
+      height: 100%
+      object-fit: cover
+
+  .Competition-Header
+    grid-row: 2/3
+    padding-left: 1rem
+    padding-right: 1rem
+    font-size: $h-text-small-screen
+
+  .Competition-MetaInfo
+    grid-row: 3/4
+    padding-left: 1rem
+    padding-right: 1rem
+
+    .Competition-MetaInfo-Picture
+      display: none
+
+    .Competition-MetaInfo-Registration--joined
+      width: 14rem
+      grid-template-columns: 1fr 4rem
+
+    .Competition-MetaInfo-Registration
+      padding-top: 1rem
+      display: grid
+      grid-template-columns: 1fr 5rem
+      grid-template-rows: auto auto
+      grid-row-gap: 1rem
+      width: 12rem
+
+      .Competition-MetaInfo-time
+        font-size: $p-text-small-screen
+
+      .Competition-MetaInfo-Location
+        font-size: $p-text-small-screen
+
+      .Competition-MetaInfo-toParticipateMsg
+        grid-row: 1/2
+        grid-column: 1/2
+        height: 100%
+        width: max-content
+        display: flex
+        align-items: center
+        font-size: $p-text-small-screen
+        font-weight: 600
+
+      .Competition-MetaInfo-goingMessage
+        grid-row: 1/2
+        grid-column: 1/2
+        height: 100%
+        width: max-content
+        display: flex
+        align-items: center
+        font-size: $p-text-small-screen
+        font-weight: 600
+
+      .Competition-MetaInfo-signInLink
+        grid-row: 1/2
+        grid-column: 2/2
+      .Competition-MetaInfo-JoinBtn
+        grid-row: 1/2
+        grid-column: 2/2
+      .Competition-MetaInfo-LeaveBtn
+        grid-row: 1/2
+        grid-column: 2/2
+      .participantsCount
+        grid-row: 2/3
+        grid-column: 1/3
+        font-size: $p-text-small-screen
+        height: 100%
+        display: flex
+        justify-content: left
+        align-items: center
+        font-weight: 600
+
+  .Competition-Description
+    grid-row: 4/5
+    padding-left: 1rem
+    padding-right: 1rem
+    padding-top: 2rem
+
+  .Competition-MetaInfo-JoinBtn
+    width: 5rem
+    height: 2.5rem
+    font-size: $p-text-small-screen
+
+  .Competition-MetaInfo-signInLink
+    width: 5rem
+    height: 2.5rem
+    font-size: $p-text-small-screen
+
+  .Competition-MetaInfo-LeaveBtn
+
+    width: 4rem
+    height: 2.5rem
+    font-size: $p-text-small-screen
 
 
+
+
+@media only screen and (min-width: $medium-screen)
+  .Competition
+    grid-template-columns: 20rem 1fr
+    grid-template-rows: 3rem auto
+
+    grid-column-gap: 1rem
+
+    padding-left: 1rem
+    padding-right: 1rem
+    padding-top: 1rem
+
+  .Competition-Header
+    font-size: $h-text-large-screen
+    grid-column: 2/3
+    grid-row: 1/2
+
+  .Competition-Description
+    grid-column: 2/3
+    grid-row: 2/3
+
+    .Competition-Description-description
+      font-size: $p-text-large-screen
+
+  .Competition-MetaInfo
+    grid-column: 1/2
+    grid-row: 1/3
+
+    .Competition-MetaInfo-Picture
+      img
+        max-width: 100%
+        max-height: 200px
+
+    .Competition-MetaInfo-Registration
+      display: grid
+      grid-template-columns: 1fr 6rem
+      grid-template-rows: auto auto
+      margin-top: 2rem
+      width: 15rem
+
+      .Competition-MetaInfo-toParticipateMsg
+        grid-row: 1/2
+        grid-column: 1/2
+        height: 100%
+        width: 100%
+        display: flex
+        align-items: center
+        font-size: $p-text-large-screen
+
+      .Competition-MetaInfo-goingMessage
+        grid-row: 1/2
+        grid-column: 1/2
+        height: 100%
+        width: 100%
+        display: flex
+        align-items: center
+        font-size: $p-text-large-screen
+
+
+      .Competition-MetaInfo-signInLink
+        grid-row: 1/2
+        grid-column: 2/3
+      .Competition-MetaInfo-JoinBtn
+        grid-row: 1/2
+        grid-column: 2/3
+      .Competition-MetaInfo-LeaveBtn
+        grid-row: 1/2
+        grid-column: 2/3
+
+      .participantsCount
+        grid-row: 2/3
+        grid-column: 1/3
+        margin-top: 2rem
+        font-size: $p-text-large-screen
+
+
+  .Competition-MetaInfo-time
+    font-size: 1.5rem
+    margin-top: 1rem
+
+  .Competition-MetaInfo-Location
+    font-size: 1.5rem
+    a
+      &:hover
+        text-decoration: underline
+
+  .Competition-MetaInfo-JoinBtn
+    width: 6rem
+    height: 2.5rem
+    font-size: $p-text-large-screen
+    cursor: pointer
+
+
+    &:hover
+      background: $alabaster
+      //border: 4px solid $lavender
+      color: $lavender
+
+  .Competition-MetaInfo-signInLink
+    width: 6rem
+    height: 2.5rem
+    font-size: $p-text-large-screen
+    cursor: pointer
+
+    &:hover
+      background: $alabaster
+      //border: 4px solid $lavender
+      color: $lavender
+
+  .Competition-MetaInfo-LeaveBtn
+
+    width: 6rem
+    height: 2.5rem
+    font-size: $p-text-large-screen
+    cursor: pointer
+
+    transition: background .1s
+
+    &:hover
+      background: transparent
+      //border: 4px solid $lavender
+      color: $lavender
 
 
 @media only screen and (min-width: calc(62rem + 20vw + 2rem))
