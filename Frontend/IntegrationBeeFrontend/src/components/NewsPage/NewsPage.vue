@@ -33,7 +33,7 @@
     <div class="NewsPage">
         <h1 class="NewsPage-header">{{content.headerText}}</h1>
         <div class="NewsPage-Feed">
-            <NewsItem v-for="news in content.news" :content="news.content" :header="news.header"/>
+            <NewsItem v-for="news in store.newsLatestToFirst" :content="news.content" :header="news.header"/>
         </div>
     </div>
 </template>

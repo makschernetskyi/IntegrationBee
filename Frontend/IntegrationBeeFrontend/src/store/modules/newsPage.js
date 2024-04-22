@@ -25,6 +25,9 @@ export const useNewsPageStore = defineStore('newsPage', {
         }
     }),
     getters:{
+        newsLatestToFirst(state){
+            return state.news.reverse()
+        }
     },
     actions: {
         async fetchNewsPageInfo(){
