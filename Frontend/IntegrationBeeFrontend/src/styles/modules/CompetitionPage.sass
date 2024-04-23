@@ -6,9 +6,14 @@
   display: grid
   background: $alabaster
 
+  *
+    font-family: "Open Sans", sans-serif
+
 .Competition-Picture
   display: none
 
+.Competition-Header
+  font-family: "Open Sans", sans-serif
 
 .Competition-MetaInfo-time
   font-family: "Open Sans", sans-serif
@@ -19,11 +24,20 @@
     text-decoration: none
     color: $tekhelet
 
+
+
 .Competition-MetaInfo-Registration
       width: 100%
 
-.Competition-Description-description
-  font-family: "Open Sans", sans-serif
+.Competition-Description
+  h3
+    font-family: "Open Sans", sans-serif
+
+  .Competition-Description-description
+    font-family: "Open Sans", sans-serif
+    a
+      text-decoration: none
+      color: $tekhelet
 
 
 .Competition-MetaInfo-Picture
@@ -99,11 +113,13 @@
     padding-left: 1rem
     padding-right: 1rem
     font-size: $h-text-small-screen
+    padding-top: 1rem
 
   .Competition-MetaInfo
     grid-row: 3/4
     padding-left: 1rem
     padding-right: 1rem
+    padding-top: 1rem
 
     .Competition-MetaInfo-Picture
       display: none
@@ -212,6 +228,11 @@
 
     .Competition-Description-description
       font-size: $p-text-large-screen
+
+      a
+        cursor: pointer
+        &:hover
+          text-decoration: underline
 
   .Competition-MetaInfo
     grid-column: 1/2
