@@ -12,7 +12,6 @@
 
     const searchParams = new URLSearchParams(window.location.hash.split('/').pop());
     let pageNumber = 1
-    console.log(searchParams.get("page"))
     if(searchParams.has("page")){
         pageNumber = searchParams.get("page")
     }
