@@ -10,6 +10,9 @@ const api = axios.create({
 
 api.interceptors.request.use(config => {
   const accessToken = Cookies.get('access');
+  if(!Cookies.get("refresh")){
+    Cookies.set("refresh", "null")
+  }
   config.headers.Authorization = accessToken ? `Bearer ${accessToken}` : '';
   return config;
 });
