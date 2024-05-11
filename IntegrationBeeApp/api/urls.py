@@ -6,7 +6,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from .views import RegisterView, UserDataView, CompetitionView, CompetitionsView, PublicCompetitionView, UsersView
+from .views import RegisterView, UserDataView, CompetitionView, CompetitionsView, PublicCompetitionView, UsersView, VerifyEmailView
 
 urlpatterns = [
     path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -16,5 +16,6 @@ urlpatterns = [
     path('competition/', CompetitionView.as_view(), name="competition"),
     path('publicCompetition/', PublicCompetitionView.as_view(), name="public_competition"),
     path('allCompetitions/', CompetitionsView.as_view(), name="all_competitions"),
-    path('allUsers/', UsersView.as_view(), name="all_users")
+    path('allUsers/', UsersView.as_view(), name="all_users"),
+    path('verifyemail/', VerifyEmailView.as_view(), name="verify_email")
 ]

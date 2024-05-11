@@ -24,9 +24,9 @@ class UserManager(BaseUserManager):
     def create_superuser(self, email, password, **extra_fields):
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_admin', True)
+        extra_fields.setdefault('is_active', True)
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser = True')
-
         return self.create_user(email, password, **extra_fields)
 
 
@@ -36,18 +36,40 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=50, null=False, blank=False)
     second_name = models.CharField(max_length=50, null=False, blank=False)
     school = models.CharField(max_length=100, null=True, blank=True)
+    phone_number = models.CharField(max_length=20, null=True, blank=True)
+
+    gender = models.CharField(max_length=50, null=True, blank=True)
+    studies_profile = models.TextField(null=True, blank=True)
+    degree_of_studies = models.CharField(max_length=100, null=True, blank=True)
+    semester_of_studies = models.PositiveSmallIntegerField(null=True, blank=True)
 
 
     is_admin = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
+    email_verified = models.BooleanField(default=False, null=False, blank=False)
+
+    ADMIN = 1
+    MODERATOR = 2
+    EDITOR = 3
+    USER = 4
+
+    ROLE_CHOICES = (
+        (ADMIN, "Admin"),
+        (MODERATOR, "Moderator"),
+        (EDITOR, "Editor"),
+        (USER, "User")
+    )
+
+    role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, blank=True, null=True)
 
     profile_picture = models.ImageField(upload_to="user_pictures/profile_pictures/", blank=True, null=True)
 
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'second_name']
+    REQUIRED_FIELDS = ['first_name', 'second_name', 'school', 'role']
 
     def __str__(self):
         return f"{self.email} - {self.first_name} {self.second_name}"
@@ -69,5 +91,17 @@ class UserToCompetitionRelationship(models.Model):
     Competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
     registration_date = models.DateTimeField(auto_now_add=True)
     status = models.TextField(null=True, blank=True)  # winner semifinalist finalist or competitor
+
+
+class EmailVerificationToken(models.Model):
+    User = models.ForeignKey(User, on_delete=models.CASCADE)
+    token = models.CharField(max_length=300, null=False)
+    date_created = models.DateTimeField(auto_now_add=True, blank=False, null=False)
+
+
+class ForgotPasswordToken(models.Model):
+    User = models.ForeignKey(User, on_delete=models.CASCADE)
+    token = models.CharField(max_length=300, null=False)
+    date_created = models.DateTimeField(auto_now_add=True, blank=False, null=False)
 
 

@@ -1,7 +1,6 @@
 from rest_framework.serializers import Serializer, ModelSerializer
 
-from .models import User, Competition
-
+from .models import User, Competition, EmailVerificationToken, ForgotPasswordToken
 
 
 class UserSerializer(ModelSerializer):
@@ -16,14 +15,14 @@ class UserSerializer(ModelSerializer):
             validated_data['first_name'] = 'Bitch'
             validated_data['second_name'] = 'Bitch'
 
-        print(validated_data)
 
         user = User.objects.create(
             email=validated_data["email"],
             username=validated_data["email"],
             first_name=validated_data["first_name"],
             second_name=validated_data["second_name"],
-            school=validated_data["school"]
+            school=validated_data["school"],
+            role=User.USER
         )
         user.set_password(validated_data["password"])
         user.save()
@@ -36,3 +35,16 @@ class CompetitionSerializer(ModelSerializer):
     class Meta:
         model = Competition
         fields = ('id', 'name', 'participants', 'max_participants')
+
+
+class EmailVerificationTokenSerializer(ModelSerializer):
+    User = UserSerializer(read_only=True, many=False)
+    class Meta:
+        model = EmailVerificationToken
+        fields = ("User", "token", "date_created")
+
+class ForgotPasswordTokenSerializer(ModelSerializer):
+    User = UserSerializer(read_only=True, many=False)
+    class Meta:
+        model = ForgotPasswordToken
+        fields = ("User", "token", "date_created")
