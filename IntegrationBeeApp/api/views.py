@@ -1,15 +1,20 @@
+from django.db import transaction, IntegrityError
 from django.shortcuts import render, get_object_or_404
+from django.template.loader import render_to_string
+from django.shortcuts import redirect
 from rest_framework import status
+from uuid import uuid4
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import ValidationError
 
-from .serializers import UserSerializer, CompetitionSerializer
-from .models import Competition, User
+from .serializers import UserSerializer, CompetitionSerializer, EmailVerificationTokenSerializer
+from .models import Competition, User, EmailVerificationToken
 
 from home.models import Competition as CompetitionPage
+from api.services.send_email import send_email
 
 
 
@@ -23,10 +28,62 @@ class RegisterView(APIView):
 
             serializer = UserSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            serializer.save()
+            user = serializer.save()
+
+            verification_token = str(uuid4())
+
+            EmailVerificationToken.objects.create(
+                User=user,
+                token=verification_token
+            )
+
+            verification_link = "https://www.integrationbee.at/api/v2/verifyemail/" + f"?token={verification_token}"
+            send_email(
+                [email],
+                message=render_to_string(
+                   template_name='verificationEmail.html',
+                   context={
+                       "verification_link": verification_link
+                   }
+                ),
+                subject="(NO REPLY) Verify your email address.",
+                is_html=True
+            )
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except ValidationError as e:
             return Response({"error": e.detail}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class VerifyEmailView(APIView):
+    def get(self, request):
+        request_verification_token = request.query_params.get('token')
+        if not request_verification_token:
+            return Response({"error": "Token is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # Using select_related to fetch related user data in the same query for efficiency
+            token = EmailVerificationToken.objects.select_related('User').get(token=request_verification_token)
+        except EmailVerificationToken.DoesNotExist:
+            return Response({"error": "Invalid token."}, status=status.HTTP_404_NOT_FOUND)
+
+        # Activate the user in a transaction to ensure data integrity
+        try:
+            with transaction.atomic():
+                user = token.User
+                if not user.is_active:
+                    user.is_active = True
+                    user.save()
+                    token.delete()
+                else:
+                    return Response({"error": "User is already active."}, status=status.HTTP_409_CONFLICT)
+        except IntegrityError:
+            # Handle specific database errors related to the integrity of the database
+            return Response({"error": "Database integrity error during user activation."},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        redirect_url = 'https://integrationbee.at/#/signIn?emailVerified=true'
+        return redirect(redirect_url)
 
 
 class UserDataView(APIView):

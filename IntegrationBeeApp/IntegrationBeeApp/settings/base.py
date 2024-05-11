@@ -31,7 +31,6 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     "search",
-    # "sass_processor",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.embeds",
@@ -194,9 +193,6 @@ WAGTAILADMIN_BASE_URL = "http://example.com"
 #Rest framework
 
 REST_FRAMEWORK = {
-    # 'DEFAULT_PERMISSION_CLASSES': (
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
@@ -222,3 +218,6 @@ SIMPLE_JWT = {
 }
 
 AUTH_USER_MODEL = 'api.User'
+
+
+
