@@ -1,8 +1,8 @@
 
-from django.urls import path
+from django.urls import re_path
 
 from .views import admin_page
 
 urlpatterns = [
-    path('/', admin_page, name='admin_page'),
+    re_path(r'^', admin_page, name='admin_page'),
 ]

@@ -19,7 +19,7 @@ urlpatterns = [
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
     path("api/v2/", include("api.urls")),
-    path("admin_panel/*", include("admin_panel.urls")),
+    re_path(r'^admin_page/', include("admin_panel.urls")),
     re_path(r'^', include(wagtail_urls))
 ]
 

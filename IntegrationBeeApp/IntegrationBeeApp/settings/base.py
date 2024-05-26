@@ -66,6 +66,9 @@ MIDDLEWARE = [
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
 ]
 
+CSRF_COOKIE_NAME = 'csrftoken'
+CSRF_COOKIE_HTTPONLY = False
+
 ROOT_URLCONF = "IntegrationBeeApp.urls"
 
 

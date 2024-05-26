@@ -43,15 +43,15 @@ class Command(BaseCommand):
 			for file in files:
 				if file.endswith(".js"):
 					source_path = os.path.join(root, file)
-					destination_path = os.path.join(base_dir, "./admin_panel/static/js/", file)
+					destination_path = os.path.join(base_dir, "admin_panel/static/js/", file)
 					shutil.copy2(source_path, destination_path)
 				elif file.endswith(".css"):
 					source_path = os.path.join(root, file)
-					destination_path = os.path.join(base_dir, "./admin_panel/static/css/", file)
+					destination_path = os.path.join(base_dir, "admin_panel/static/css/", file)
 					shutil.copy2(source_path, destination_path)
 				elif file.endswith('.html'):
 					source_path = os.path.join(root, file)
-					destination_path = os.path.join(base_dir, "./admin_panel/templates/home", 'home.html')
+					destination_path = os.path.join(base_dir, "admin_panel/templates/admin_panel", 'index.html')
 
 					# Copy the HTML file
 					shutil.copy2(source_path, destination_path)
