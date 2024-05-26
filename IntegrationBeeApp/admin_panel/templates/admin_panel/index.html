@@ -1,14 +1,24 @@
-{% load static %}
+{% load static %} 
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Integration Bee</title>
-</head>
-<body>
-    <div id="#app"></div>
-</body>
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="icon" type="image/x-icon" href = "{% static 'assets/favicon.ico' %}" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"
+			integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww"
+			crossorigin="anonymous"
+		/>
+		<title>Integration Bee Admin Panel</title>
+		<script type="module" crossorigin src = "{% static 'js/index-BgvUBTuU.js' %}"></script>
+		<link rel="stylesheet" crossorigin href = "{% static 'css/index-Dqx3o1mu.css' %}">
+	</head>
+	<body>
+		<div id="app"></div>
+		<noscript>
+			This web page is build with javascript. please enable it to continue.
+		</noscript>
+	</body>
 </html>

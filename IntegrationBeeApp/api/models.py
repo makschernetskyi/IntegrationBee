@@ -62,7 +62,7 @@ class User(AbstractUser):
         (USER, "User")
     )
 
-    role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, blank=True, null=True)
+    role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, default=USER)
 
     profile_picture = models.ImageField(upload_to="user_pictures/profile_pictures/", blank=True, null=True)
 
@@ -103,5 +103,27 @@ class ForgotPasswordToken(models.Model):
     User = models.ForeignKey(User, on_delete=models.CASCADE)
     token = models.CharField(max_length=300, null=False)
     date_created = models.DateTimeField(auto_now_add=True, blank=False, null=False)
+
+
+
+class IntegralsSeries(models.Model):
+    objects = None
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=200, null=False, blank=False)
+    time_per_integral = models.IntegerField(null=False, blank=False, default=180)
+
+class IntegralSolution(models.Model):
+    id = models.AutoField(primary_key=True)
+    solution = models.TextField()
+
+class Integral(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=200, null=False, blank=False)
+    position = models.IntegerField(null=False, blank=False)
+    integral = models.TextField(null=False, blank=False)
+    Series = models.ForeignKey(IntegralsSeries, on_delete=models.CASCADE, related_name="integrals")
+    solution = models.ForeignKey(IntegralSolution, on_delete=models.SET_NULL, null=True)
+    difficulty = models.IntegerField(blank=True, null=True)
+    author = models.TextField(null=True, blank=True)
 
 

@@ -10,11 +10,16 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import ValidationError
 
-from .serializers import UserSerializer, CompetitionSerializer, EmailVerificationTokenSerializer
-from .models import Competition, User, EmailVerificationToken
+from .permissions import IsAdminUser
+from .serializers import UserSerializer, CompetitionSerializer, EmailVerificationTokenSerializer, \
+    IntegralSeriesSerializer, IntegralSerializer, IntegralSolutionSerializer
+from api.models import Competition, User, EmailVerificationToken, IntegralsSeries, IntegralSolution, Integral
 
 from home.models import Competition as CompetitionPage
 from api.services.send_email import send_email
+
+# idk why is needed
+from django.views.decorators.csrf import csrf_exempt
 
 
 
@@ -109,6 +114,15 @@ class UserDataView(APIView):
                 competition_data['public_name'] = competition_page.competition.header if competition_page else None
                 competition_data['date'] = competition_page.event_date if competition_page else None
 
+
+            roles = {
+                1: "ADMIN",
+                2: "MODERATOR",
+                3: "EDITOR",
+                4: "USER"
+            }
+
+
             return Response({
                 'email': user_serializer.data.get('email'),
                 'first_name': user_serializer.data.get('first_name'),
@@ -117,7 +131,8 @@ class UserDataView(APIView):
                 'profile_picture': user_serializer.data.get('profile_picture'),
                 'date_joined': user_serializer.data.get('date_joined'),
                 'is_admin': user_serializer.data.get('is_admin'),
-                'competitions': competitions_data
+                'competitions': competitions_data,
+                'role': roles[user_serializer.data.get('role')]
             })
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -252,3 +267,121 @@ class CompetitionsView(APIView):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+class AllIntegralSeriesView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def get(self, request):
+        series = IntegralsSeries.objects.all().values('pk', 'name')
+        return Response(series)
+
+
+
+class IntegralSeriesView(APIView):
+    permission_classes = [IsAdminUser]
+    def get(self, request, pk=None):
+        if pk:
+            try:
+                series = IntegralsSeries.objects.get(pk=pk)
+                serializer = IntegralSeriesSerializer(series)
+                return Response(serializer.data)
+            except IntegralsSeries.DoesNotExist:
+                return Response({'error': 'Integral series not found'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            series = IntegralsSeries.objects.all()
+            serializer = IntegralSeriesSerializer(series, many=True)
+            return Response(serializer.data)
+
+
+    def post(self, request):
+        serializer = IntegralSeriesSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def patch(self, request, pk):
+        series = IntegralsSeries.objects.get(pk=pk)
+        serializer = IntegralSeriesSerializer(series, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def delete(self, request, pk):
+        series = IntegralsSeries.objects.get(pk=pk)
+        series.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class IntegralView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def get(self, request, pk=None):
+        if pk:
+            integral = Integral.objects.get(pk=pk)
+            serializer = IntegralSerializer(integral)
+        else:
+            integrals = Integral.objects.all()
+            serializer = IntegralSerializer(integrals, many=True)
+        return Response(serializer.data)
+
+
+    def post(self, request):
+        serializer = IntegralSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def patch(self, request, pk):
+        integral = Integral.objects.get(pk=pk)
+        serializer = IntegralSerializer(integral, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def delete(self, request, pk):
+        integral = Integral.objects.get(pk=pk)
+        integral.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class IntegralSolutionView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def get(self, request, pk=None):
+        if pk:
+            solution = IntegralSolution.objects.get(pk=pk)
+            serializer = IntegralSolutionSerializer(solution)
+        else:
+            solutions = IntegralSolution.objects.all()
+            serializer = IntegralSolutionSerializer(solutions, many=True)
+        return Response(serializer.data)
+
+
+    def post(self, request):
+        serializer = IntegralSolutionSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def patch(self, request, pk):
+        solution = IntegralSolution.objects.get(pk=pk)
+        serializer = IntegralSolutionSerializer(solution, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def delete(self, request, pk):
+        solution = IntegralSolution.objects.get(pk=pk)
+        solution.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
