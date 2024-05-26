@@ -12,12 +12,17 @@
 	},
 	"dependencies": {
 		"@eslint/js": "^9.2.0",
+		"@types/js-cookie": "^3.0.6",
+		"axios": "^1.6.8",
+		"data-structure-typed": "^1.52.0",
 		"eslint": "^9.2.0",
+		"js-cookie": "^3.0.5",
 		"path": "^0.12.7",
 		"pinia": "^2.1.7",
 		"prettier": "^3.2.5",
 		"primevue": "^3.52.0",
 		"vue": "^3.4.21",
+		"vue-katex-auto-render": "^0.2.0",
 		"vue-router": "^4.3.2"
 	},
 	"devDependencies": {
@@ -27,6 +32,7 @@
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-vue": "^9.26.0",
 		"postcss": "^8.4.38",
+		"prettier-plugin-tailwindcss": "^0.5.14",
 		"tailwindcss": "^3.4.3",
 		"typescript": "^5.2.2",
 		"typescript-eslint": "^7.8.0",

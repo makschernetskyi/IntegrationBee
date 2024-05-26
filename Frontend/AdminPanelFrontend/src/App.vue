@@ -1,8 +1,5 @@
-<script setup lang="ts">
-import Message from 'primevue/message';
-</script>
+<script setup lang="ts"></script>
 
 <template>
-	Hello Admin Page
-	<Message>Hello World</Message>
+	<router-view> </router-view>
 </template>
