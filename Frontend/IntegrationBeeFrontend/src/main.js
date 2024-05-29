@@ -20,6 +20,7 @@ import AdminPage from "@/components/AdminPage/AdminPage.vue";
 import HomePage from "@/components/HomePage/Homepage.vue"
 import SignUpPage from "@/components/SignUpPage/SignUpPage.vue"
 import ErrorMessage from "@/components/ErrorMessage/ErrorMessage.vue";
+import SuccessMessage from "@/components/SuccessMessage/SuccessMessage.vue"
 import ContactsPage from "@/components/ContactsPage/ContactsPage.vue";
 import CookieBanner from "@/components/CookieBanner/CookieBanner.vue";
 
@@ -32,7 +33,11 @@ const pinia = createPinia();
 
 //store
 import {useStore} from "@/store/index.js";
+import {defineComponent} from "vue";
 
+export default defineComponent({
+    components: {SuccessMessage}
+})
 
 
 //placeholders for future pages
@@ -126,6 +131,7 @@ const App = {
         SocialLinks,
         MenuContainer,
         ErrorMessage,
+        SuccessMessage,
         CookieBanner,
     },
     setup(){
@@ -162,10 +168,15 @@ const App = {
         //stores
         const authStore = useStore().auth;
         const errorStore = useStore().error;
+        const successMessagesStore = useStore().successMessages;
 
         //error message visibility
         const isErrorVisible = computed(()=>Boolean(errorStore.errors.length) )
         const userError = computed(()=>errorStore.errors.length ? errorStore.errors[0] : null)
+
+        //success message visibility
+        const isSuccessVisible = computed(()=>Boolean(successMessagesStore.messages.length))
+        const userSuccessMessage = computed(()=>successMessagesStore.messages.length ? successMessagesStore.messages[0] : null)
 
         //menu visibility
         const isMenuVisible = ref(false)
@@ -181,10 +192,12 @@ const App = {
             isMenuContentShown,
             isErrorVisible,
             removeError: errorStore.removeError,
+            removeSuccess: successMessagesStore.removeMessage,
             userError,
             setCookieConsent,
             isCookieConsent,
-
+            isSuccessVisible,
+            userSuccessMessage
         }
     },
     methods:{
@@ -222,6 +235,9 @@ const App = {
           </router-view>
         </main>
         <SocialLinks/>
+        <transition>
+          <SuccessMessage v-if="isSuccessVisible" @success-message:close="removeSuccess" :text="userSuccessMessage?.text"/>
+        </transition>
         <transition>
           <ErrorMessage v-if="isErrorVisible" @error-message:close="removeError" :text="userError?.text"/>
         </transition>

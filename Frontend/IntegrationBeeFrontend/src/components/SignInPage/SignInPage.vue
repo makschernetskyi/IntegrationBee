@@ -1,7 +1,7 @@
 <script setup>
     import {useStore} from "@/store/index.js";
 
-    import {ref, computed} from 'vue'
+    import {ref, computed, onMounted} from 'vue'
 
     import {useRouter} from 'vue-router'
 
@@ -17,6 +17,13 @@
 
     const self = this;
     const router = useRouter();
+
+
+    onMounted(()=>{
+        if(Boolean(router.currentRoute.value.query.emailVerified)){
+            useStore().successMessages.addMessage({text:"Your Email was successfully verified."})
+        }
+    })
 
     const handleSubmit = async (event) =>{
         event.preventDefault()
