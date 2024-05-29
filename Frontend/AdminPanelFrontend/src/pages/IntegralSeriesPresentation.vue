@@ -259,7 +259,7 @@ const showSolution = () => {
 		</div>
 		<div class="flex h-[70%] w-full flex-row items-center justify-center">
 			<div
-				class="flex h-[45%] min-h-[20rem] w-[60%] min-w-[50rem] items-center justify-center bg-white"
+				class="flex h-[45%] min-h-[20rem] w-[75%] min-w-[60rem] items-center justify-center bg-white"
 			>
 				<div class="text-5xl" v-katex>
 					{{ presentationState.currentIntegral?.value.integral }}
@@ -296,7 +296,7 @@ const showSolution = () => {
 		</div>
 		<div class="flex h-full w-full flex-row items-center justify-center">
 			<div
-				class="flex h-[40%] min-h-[20rem] w-[60%] min-w-[50rem] items-center justify-center bg-white"
+				class="flex h-[40%] min-h-[20rem] w-[75%] min-w-[60rem] items-center justify-center bg-white"
 			>
 				<div class="text-5xl" v-katex>
 					{{ presentationState.currentIntegral?.value.solution?.solution }}

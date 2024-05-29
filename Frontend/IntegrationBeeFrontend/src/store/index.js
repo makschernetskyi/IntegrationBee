@@ -7,6 +7,7 @@ import {useAdminStore} from "./modules/admin.js";
 import {useSignUpPageStore} from "./modules/signUpPage.js"
 import {useErrorStore} from "@/store/modules/error.js";
 import {useContactsPageStore} from "@/store/modules/contactsPage.js";
+import {useSuccessMessagesStore} from "@/store/modules/successMessages.js";
 
 
 export function useStore(){
@@ -20,6 +21,7 @@ export function useStore(){
         signUpPage: useSignUpPageStore(),
         error: useErrorStore(),
         contactsPage: useContactsPageStore(),
+        successMessages: useSuccessMessagesStore(),
     }
 }
 

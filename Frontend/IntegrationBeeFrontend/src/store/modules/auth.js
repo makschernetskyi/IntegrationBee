@@ -57,6 +57,14 @@ export const useAuthStore = defineStore('auth', {
         requestSignIn,
         requestRegister,
         getUserData,
+        resetRegisterRequestInfo(){
+            this.registerRequest = {
+                status: null,
+                code: null,
+                error: null,
+                errorMSG: null,
+            }
+        },
         logout(){
             Cookies.remove('access')
             Cookies.set('refresh', "null")
