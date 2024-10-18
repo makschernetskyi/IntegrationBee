@@ -1,0 +1,333 @@
+\documentclass{article}
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{enumitem} % Required for customizing lists
+\usepackage{titlesec} % Required for custom section formatting
+\geometry{a4paper, margin=1in}
+
+% Redefine the standard \hrule to extend to the desired width and thickness
+\renewcommand{\hrulefill}{\leavevmode\leaders\hrule height 0.5pt depth 0pt \hfill\kern 0pt}
+
+% Redefine \rule to extend with custom width and thickness
+\renewcommand{\rule}[2]{\leavevmode\leaders\hrule height #2 \hfill \kern 0pt}
+
+% Customize itemize to remove bullets and indentation
+\setlist[itemize]{label={},left=0pt}
+
+% Tighten the list spacing without causing errors
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+% Customize section heading sizes
+\titleformat{\section}
+  {\normalfont\LARGE\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}
+  {\normalfont\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+  {\normalfont\large\bfseries}{\thesubsubsection}{1em}{}
+
+\begin{document}
+
+\title{Contest Report: \textbf{ Autumn Integration Bee Contest }}
+\author{Integration Bee}
+\date{ 2024-10-18 15:54:32 }
+\maketitle
+
+% Insert dynamic body content here
+\section{Participants (25 max):}\label{participants-25-max}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{admin admin} None
+\item
+  \textbf{test test} None
+\end{itemize}
+
+\section{preliminary}\label{preliminary}
+
+\begin{itemize}
+\item ~
+  \subsection{Integral}\label{integral}
+
+  \textbf{(difficulty 5)}\\
+  \[
+  I = \int_1^2 x e^x \, dx
+  \]\\
+
+  \subsection{Solution:}\label{solution}
+
+  \hfill\break
+  Step 1: Apply the formula for integration by parts \[
+  \int u \, dv = uv - \int v \, du
+  \] Step 2: Choose \(u\) and \(dv\) \[
+  u = x \quad \text{and} \quad dv = e^x \, dx
+  \] Step 3: Differentiate \(u\) and integrate \(dv\) \[
+  du = dx \quad \text{and} \quad v = e^x
+  \] Step 4: Apply the formula for integration by parts \[
+  I = \int_1^2 x e^x \, dx = \left[ x e^x \right]_1^2 - \int_1^2 e^x \, dx
+  \] Step 5: Compute the remaining integral \[
+  I = \left[ x e^x \right]_1^2 - \left[ e^x \right]_1^2
+  \] Step 6: Substitute the limits of integration \[
+  I = \left( 2e^2 - e^1 \right) - \left( e^2 - e^1 \right)
+  \] Step 7: Simplify the expression \[
+  I = 2e^2 - e - e^2 + e
+  \] Step 8: Final result \[
+  I = e^2
+  \]\\
+
+  \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+  \subsection{Integral}\label{integral-1}
+
+  \textbf{(difficulty 5)}\\
+  \[
+  I = \int_1^2 x e^x \, dx
+  \]\\
+
+  \subsection{Solution:}\label{solution-1}
+
+  \hfill\break
+  Step 1: Apply the formula for integration by parts \[
+  \int u \, dv = uv - \int v \, du
+  \] Step 2: Choose \(u\) and \(dv\) \[
+  u = x \quad \text{and} \quad dv = e^x \, dx
+  \] Step 3: Differentiate \(u\) and integrate \(dv\) \[
+  du = dx \quad \text{and} \quad v = e^x
+  \] Step 4: Apply the formula for integration by parts \[
+  I = \int_1^2 x e^x \, dx = \left[ x e^x \right]_1^2 - \int_1^2 e^x \, dx
+  \] Step 5: Compute the remaining integral \[
+  I = \left[ x e^x \right]_1^2 - \left[ e^x \right]_1^2
+  \] Step 6: Substitute the limits of integration \[
+  I = \left( 2e^2 - e^1 \right) - \left( e^2 - e^1 \right)
+  \] Step 7: Simplify the expression \[
+  I = 2e^2 - e - e^2 + e
+  \] Step 8: Final result \[
+  I = e^2
+  \]\\
+
+  \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+  \subsection{Integral}\label{integral-2}
+
+  \textbf{(difficulty 5)}\\
+  \[
+  I = \int_1^2 x e^x \, dx
+  \]\\
+
+  \subsection{Solution:}\label{solution-2}
+
+  \hfill\break
+  Step 1: Apply the formula for integration by parts \[
+  \int u \, dv = uv - \int v \, du
+  \] Step 2: Choose \(u\) and \(dv\) \[
+  u = x \quad \text{and} \quad dv = e^x \, dx
+  \] Step 3: Differentiate \(u\) and integrate \(dv\) \[
+  du = dx \quad \text{and} \quad v = e^x
+  \] Step 4: Apply the formula for integration by parts \[
+  I = \int_1^2 x e^x \, dx = \left[ x e^x \right]_1^2 - \int_1^2 e^x \, dx
+  \] Step 5: Compute the remaining integral \[
+  I = \left[ x e^x \right]_1^2 - \left[ e^x \right]_1^2
+  \] Step 6: Substitute the limits of integration \[
+  I = \left( 2e^2 - e^1 \right) - \left( e^2 - e^1 \right)
+  \] Step 7: Simplify the expression \[
+  I = 2e^2 - e - e^2 + e
+  \] Step 8: Final result \[
+  I = e^2
+  \]\\
+
+  \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+\end{itemize}
+
+\section{semifinals}\label{semifinals}
+
+\begin{itemize}
+\item ~
+  \subsection{Integral}\label{integral-3}
+
+  \textbf{(difficulty 5)}\\
+  \[
+  I = \int_1^2 x e^x \, dx
+  \]\\
+
+  \subsection{Solution:}\label{solution-3}
+
+  \hfill\break
+  Step 1: Apply the formula for integration by parts \[
+  \int u \, dv = uv - \int v \, du
+  \] Step 2: Choose \(u\) and \(dv\) \[
+  u = x \quad \text{and} \quad dv = e^x \, dx
+  \] Step 3: Differentiate \(u\) and integrate \(dv\) \[
+  du = dx \quad \text{and} \quad v = e^x
+  \] Step 4: Apply the formula for integration by parts \[
+  I = \int_1^2 x e^x \, dx = \left[ x e^x \right]_1^2 - \int_1^2 e^x \, dx
+  \] Step 5: Compute the remaining integral \[
+  I = \left[ x e^x \right]_1^2 - \left[ e^x \right]_1^2
+  \] Step 6: Substitute the limits of integration \[
+  I = \left( 2e^2 - e^1 \right) - \left( e^2 - e^1 \right)
+  \] Step 7: Simplify the expression \[
+  I = 2e^2 - e - e^2 + e
+  \] Step 8: Final result \[
+  I = e^2
+  \]\\
+
+  \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+  \subsection{Integral}\label{integral-4}
+
+  \textbf{(difficulty 5)}\\
+  \[
+  I = \int_1^2 x e^x \, dx
+  \]\\
+
+  \subsection{Solution:}\label{solution-4}
+
+  \hfill\break
+  Step 1: Apply the formula for integration by parts \[
+  \int u \, dv = uv - \int v \, du
+  \] Step 2: Choose \(u\) and \(dv\) \[
+  u = x \quad \text{and} \quad dv = e^x \, dx
+  \] Step 3: Differentiate \(u\) and integrate \(dv\) \[
+  du = dx \quad \text{and} \quad v = e^x
+  \] Step 4: Apply the formula for integration by parts \[
+  I = \int_1^2 x e^x \, dx = \left[ x e^x \right]_1^2 - \int_1^2 e^x \, dx
+  \] Step 5: Compute the remaining integral \[
+  I = \left[ x e^x \right]_1^2 - \left[ e^x \right]_1^2
+  \] Step 6: Substitute the limits of integration \[
+  I = \left( 2e^2 - e^1 \right) - \left( e^2 - e^1 \right)
+  \] Step 7: Simplify the expression \[
+  I = 2e^2 - e - e^2 + e
+  \] Step 8: Final result \[
+  I = e^2
+  \]\\
+
+  \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+  \subsection{Integral}\label{integral-5}
+
+  \textbf{(difficulty 5)}\\
+  \[
+  I = \int_1^2 x e^x \, dx
+  \]\\
+
+  \subsection{Solution:}\label{solution-5}
+
+  \hfill\break
+  Step 1: Apply the formula for integration by parts \[
+  \int u \, dv = uv - \int v \, du
+  \] Step 2: Choose \(u\) and \(dv\) \[
+  u = x \quad \text{and} \quad dv = e^x \, dx
+  \] Step 3: Differentiate \(u\) and integrate \(dv\) \[
+  du = dx \quad \text{and} \quad v = e^x
+  \] Step 4: Apply the formula for integration by parts \[
+  I = \int_1^2 x e^x \, dx = \left[ x e^x \right]_1^2 - \int_1^2 e^x \, dx
+  \] Step 5: Compute the remaining integral \[
+  I = \left[ x e^x \right]_1^2 - \left[ e^x \right]_1^2
+  \] Step 6: Substitute the limits of integration \[
+  I = \left( 2e^2 - e^1 \right) - \left( e^2 - e^1 \right)
+  \] Step 7: Simplify the expression \[
+  I = 2e^2 - e - e^2 + e
+  \] Step 8: Final result \[
+  I = e^2
+  \]\\
+
+  \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+\end{itemize}
+
+\section{finals}\label{finals}
+
+\begin{itemize}
+\item ~
+  \subsection{Integral}\label{integral-6}
+
+  \textbf{(difficulty 5)}\\
+  \[
+  I = \int_1^2 x e^x \, dx
+  \]\\
+
+  \subsection{Solution:}\label{solution-6}
+
+  \hfill\break
+  Step 1: Apply the formula for integration by parts \[
+  \int u \, dv = uv - \int v \, du
+  \] Step 2: Choose \(u\) and \(dv\) \[
+  u = x \quad \text{and} \quad dv = e^x \, dx
+  \] Step 3: Differentiate \(u\) and integrate \(dv\) \[
+  du = dx \quad \text{and} \quad v = e^x
+  \] Step 4: Apply the formula for integration by parts \[
+  I = \int_1^2 x e^x \, dx = \left[ x e^x \right]_1^2 - \int_1^2 e^x \, dx
+  \] Step 5: Compute the remaining integral \[
+  I = \left[ x e^x \right]_1^2 - \left[ e^x \right]_1^2
+  \] Step 6: Substitute the limits of integration \[
+  I = \left( 2e^2 - e^1 \right) - \left( e^2 - e^1 \right)
+  \] Step 7: Simplify the expression \[
+  I = 2e^2 - e - e^2 + e
+  \] Step 8: Final result \[
+  I = e^2
+  \]\\
+
+  \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+  \subsection{Integral}\label{integral-7}
+
+  \textbf{(difficulty 5)}\\
+  \[
+  I = \int_1^2 x e^x \, dx
+  \]\\
+
+  \subsection{Solution:}\label{solution-7}
+
+  \hfill\break
+  Step 1: Apply the formula for integration by parts \[
+  \int u \, dv = uv - \int v \, du
+  \] Step 2: Choose \(u\) and \(dv\) \[
+  u = x \quad \text{and} \quad dv = e^x \, dx
+  \] Step 3: Differentiate \(u\) and integrate \(dv\) \[
+  du = dx \quad \text{and} \quad v = e^x
+  \] Step 4: Apply the formula for integration by parts \[
+  I = \int_1^2 x e^x \, dx = \left[ x e^x \right]_1^2 - \int_1^2 e^x \, dx
+  \] Step 5: Compute the remaining integral \[
+  I = \left[ x e^x \right]_1^2 - \left[ e^x \right]_1^2
+  \] Step 6: Substitute the limits of integration \[
+  I = \left( 2e^2 - e^1 \right) - \left( e^2 - e^1 \right)
+  \] Step 7: Simplify the expression \[
+  I = 2e^2 - e - e^2 + e
+  \] Step 8: Final result \[
+  I = e^2
+  \]\\
+
+  \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+  \subsection{Integral}\label{integral-8}
+
+  \textbf{(difficulty 5)}\\
+  \[
+  I = \int_1^2 x e^x \, dx
+  \]\\
+
+  \subsection{Solution:}\label{solution-8}
+
+  \hfill\break
+  Step 1: Apply the formula for integration by parts \[
+  \int u \, dv = uv - \int v \, du
+  \] Step 2: Choose \(u\) and \(dv\) \[
+  u = x \quad \text{and} \quad dv = e^x \, dx
+  \] Step 3: Differentiate \(u\) and integrate \(dv\) \[
+  du = dx \quad \text{and} \quad v = e^x
+  \] Step 4: Apply the formula for integration by parts \[
+  I = \int_1^2 x e^x \, dx = \left[ x e^x \right]_1^2 - \int_1^2 e^x \, dx
+  \] Step 5: Compute the remaining integral \[
+  I = \left[ x e^x \right]_1^2 - \left[ e^x \right]_1^2
+  \] Step 6: Substitute the limits of integration \[
+  I = \left( 2e^2 - e^1 \right) - \left( e^2 - e^1 \right)
+  \] Step 7: Simplify the expression \[
+  I = 2e^2 - e - e^2 + e
+  \] Step 8: Final result \[
+  I = e^2
+  \]\\
+
+  \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+\end{itemize}
+
+
+\end{document}

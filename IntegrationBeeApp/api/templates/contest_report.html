@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ competition.name }} Report</title>
+
+</head>
+<body>
+
+<h1>Participants ({{ competition.max_participants }} max):</h1>
+<ul>
+    {% for participant in participants %}
+        <li>
+            <strong>{{ participant.user.first_name }} {{ participant.user.last_name }}</strong> {{ participant.user.phone_number }}
+        </li>
+    {% endfor %}
+</ul>
+
+{% for block in series %}
+    {% if block.block_type == 'series' %}
+        <h1>{{ block.value.series_name }}</h1>
+        <ul>
+            <li style="list-style-type: none;">
+                {% for integral_block in block.value.integrals %}
+                    {% if integral_block.block_type == 'integral' %}
+                            <h2>Integral</h2>
+                            <strong>(difficulty {{ integral_block.value.difficulty_level }})</strong><br>
+                            {{ integral_block.value.integral }}<br>
+                            {% if integral_block.value.integral_solution %}
+                                <h2>Solution:</h2><br>
+                                {{ integral_block.value.integral_solution }}<br>
+                            {% endif %}
+                            <hr>
+                    {% endif %}
+                {% endfor %}
+            </li>
+
+        </ul>
+    {% endif %}
+{% endfor %}
+</body>
+</html>

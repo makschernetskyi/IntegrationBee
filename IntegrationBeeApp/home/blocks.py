@@ -1,7 +1,10 @@
+from random import randint
 
-
+from PIL.ImagePalette import random
 from wagtail import blocks
+from wagtail.api import APIField
 from wagtail.images.blocks import ImageChooserBlock
+from wagtailmath.blocks import MathBlock
 
 
 class HomeBulletPointBlock(blocks.StructBlock):
@@ -14,15 +17,6 @@ class HomeBulletPointBlock(blocks.StructBlock):
         label = "Bullet Point"
 
 
-class HomeSponsorBlock(blocks.StructBlock):
-    """sponsor_picture"""
-
-    sponsor_picture = ImageChooserBlock()
-
-    class Meta:
-        label = "sponsor"
-
-
 class HomeAcknowledgementBlock(blocks.StructBlock):
     """header and text"""
 
@@ -30,20 +24,6 @@ class HomeAcknowledgementBlock(blocks.StructBlock):
 
     class Meta:
         label = "name"
-
-
-
-
-class NewsBlock(blocks.StructBlock):
-    """header and text"""
-
-    header = blocks.CharBlock(required=True, help_text="add header")
-    text = blocks.TextBlock(required=True, help_text="add text")
-    picture = blocks.TextBlock(required=False, help_text="add image")
-
-
-    class Meta:
-        label = "News"
 
 
 class TeamMemberBlock(blocks.StructBlock):
@@ -54,6 +34,26 @@ class TeamMemberBlock(blocks.StructBlock):
     contacts = blocks.TextBlock(required=True, help_text="add contacts")
     picture = ImageChooserBlock()
 
-
     class Meta:
         label = "team_member"
+
+
+class SponsorBlock(blocks.StructBlock):
+    sponsor_name = blocks.CharBlock(required=True, max_length=100)
+    sponsor_logo = ImageChooserBlock(required=True)
+    sponsor_tier = blocks.ChoiceBlock(
+        choices=[
+            ('gold', 'Gold'),
+            ('silver', 'Silver'),
+            ('bronze', 'Bronze'),
+            ('partner', 'Partner'),
+            ('supporter', 'Supporter')
+        ],
+        default='supporter',
+        required=True
+    )
+    sponsor_description = blocks.RichTextBlock(required=False, features=["bold", "link"])
+
+    class Meta:
+        icon = "user"
+        label = "Sponsor"

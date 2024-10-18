@@ -15,13 +15,8 @@ from .serializers import UserSerializer, CompetitionSerializer, EmailVerificatio
     IntegralSeriesSerializer, IntegralSerializer, IntegralSolutionSerializer
 from api.models import Competition, User, EmailVerificationToken, IntegralsSeries, IntegralSolution, Integral
 
-from home.models import Competition as CompetitionPage
+from home.models import CompetitionPost as CompetitionPage
 from api.services.send_email import send_email
-
-# idk why is needed
-from django.views.decorators.csrf import csrf_exempt
-
-
 
 
 class RegisterView(APIView):
@@ -67,23 +62,21 @@ class VerifyEmailView(APIView):
             return Response({"error": "Token is required."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            # Using select_related to fetch related user data in the same query for efficiency
             token = EmailVerificationToken.objects.select_related('User').get(token=request_verification_token)
         except EmailVerificationToken.DoesNotExist:
             return Response({"error": "Invalid token."}, status=status.HTTP_404_NOT_FOUND)
 
-        # Activate the user in a transaction to ensure data integrity
         try:
             with transaction.atomic():
                 user = token.User
-                if not user.is_active:
-                    user.is_active = True
+                if not user.is_confirmed:
+                    user.is_confirmed = True
                     user.save()
                     token.delete()
                 else:
                     return Response({"error": "User is already active."}, status=status.HTTP_409_CONFLICT)
         except IntegrityError:
-            # Handle specific database errors related to the integrity of the database
+
             return Response({"error": "Database integrity error during user activation."},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -94,45 +87,39 @@ class VerifyEmailView(APIView):
 class UserDataView(APIView):
     permission_classes = [IsAuthenticated]
 
-
     def get(self, request):
         try:
-            user_serializer = UserSerializer(request.user)
-            competition_serializer = CompetitionSerializer(request.user.competitions.all(), many=True)
+            user = request.user  # Access the User instance directly
 
+            competitions = user.competitions.all()
+            competition_serializer = CompetitionSerializer(competitions, many=True)
             competitions_data = competition_serializer.data
 
             for competition_data in competitions_data:
-                # Get the competition ID from the serialized data
                 competition_id = competition_data.get('id')
-
-                # Query the CompetitionPage model to get the page_id associated with the competition
                 competition_page = CompetitionPage.objects.filter(related_competition_id=competition_id).first()
 
-                # Add the page_id field to the competition data
                 competition_data['page_id'] = competition_page.page_ptr_id if competition_page else None
                 competition_data['public_name'] = competition_page.competition.header if competition_page else None
                 competition_data['date'] = competition_page.event_date if competition_page else None
 
-
-            roles = {
-                1: "ADMIN",
-                2: "MODERATOR",
-                3: "EDITOR",
-                4: "USER"
-            }
-
-
             return Response({
-                'email': user_serializer.data.get('email'),
-                'first_name': user_serializer.data.get('first_name'),
-                'second_name': user_serializer.data.get('second_name'),
-                'school': user_serializer.data.get('school'),
-                'profile_picture': user_serializer.data.get('profile_picture'),
-                'date_joined': user_serializer.data.get('date_joined'),
-                'is_admin': user_serializer.data.get('is_admin'),
-                'competitions': competitions_data,
-                'role': roles[user_serializer.data.get('role')]
+                'email': user.email,
+                'first_name': user.first_name,
+                'second_name': user.last_name,
+                'institution': user.institution,
+                'phone_number': user.phone_number,
+                'emergency_phone_number': user.emergency_phone_number,
+                'program_of_study': user.program_of_study,
+                'date_of_birth': user.date_of_birth,
+                'name_pronunciation': user.name_pronunciation,
+                'additional_info': user.additional_info,
+                'profile_picture': user.profile_picture.url if user.profile_picture else None,
+                'registration_date': user.registration_date,
+                'last_login_date': user.last_login_date,
+                'is_verified': user.is_verified,
+                'role': user.get_role(),  # Get the user's role
+                'competitions': competitions_data
             })
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -143,7 +130,7 @@ class UsersView(APIView):
 
     def get(self, request):
         try:
-            if not request.user.is_admin:
+            if not request.user.is_admin():
                 return Response({"error": "Only admin users are authorized to view users."},
                                 status=status.HTTP_401_UNAUTHORIZED)
 
@@ -163,7 +150,6 @@ class UsersView(APIView):
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-
 class PublicCompetitionView(APIView):
     def get(self, request):
         id = request.query_params.get('id')
@@ -181,9 +167,10 @@ class PublicCompetitionView(APIView):
 
 
 class CompetitionView(APIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
-    def get(self, request):
+    @staticmethod
+    def get(request):
         id = request.query_params.get('id')
         if id is None:
             return Response({"error": "ID parameter is required"}, status=status.HTTP_400_BAD_REQUEST)
@@ -193,11 +180,11 @@ class CompetitionView(APIView):
         serializer = CompetitionSerializer(competition, many=False)
         return Response(serializer.data)
 
-
-    def patch(self, request):
+    @staticmethod
+    def patch(request):
         competition_id = request.data.get('id')
         if competition_id is None:
-            return Response({"error": "Competition ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "CompetitionPost ID is required"}, status=status.HTTP_400_BAD_REQUEST)
 
         action = request.data.get('action')
         if action not in ("add", "remove"):
@@ -206,23 +193,25 @@ class CompetitionView(APIView):
         competition = get_object_or_404(Competition, id=competition_id)
         user = request.user
 
-        # todo: or because idk if it's object or a dictionary and it's 1am, so it needs to be fixed
-        if (hasattr(competition, 'max_participants') or 'max_participants' in competition) and competition.max_participants and competition.participants.count()>=competition.max_participants:
+        if competition.max_participants and competition.participants.count() >= competition.max_participants:
             return Response({"error": "Maximum number of participants reached."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             if action == "add":
                 competition.participants.add(user)
+                UserSerializer(user, request.data)
+
             elif action == "remove":
                 competition.participants.remove(user)
+
             return Response({"success": f"User {action}ed successfully {'from' if action=='remove' else 'to'} competition"}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    @staticmethod
+    def delete(request):
 
-    def delete(self, request):
-
-        if not request.user.is_admin:
+        if not request.user.is_admin():
             return Response({"error": "Only admin users are authorized to delete competitions"},
                             status=status.HTTP_401_UNAUTHORIZED)
 
@@ -233,13 +222,14 @@ class CompetitionView(APIView):
 
             competition = get_object_or_404(Competition, id=id)
             competition.delete()
-            return Response({"message": "Competition deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+            return Response({"message": "CompetitionPost deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    def post(self, request):
-        # Check if the user is an admin
-        if not request.user.is_admin:
+    @staticmethod
+    def post(request):
+
+        if not request.user.is_admin():
             return Response({"error": "Only admin users are authorized to create competitions"},
                             status=status.HTTP_401_UNAUTHORIZED)
 
@@ -250,13 +240,13 @@ class CompetitionView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
 class CompetitionsView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
+    @staticmethod
+    def get(request):
 
-        if not request.user.is_admin:
+        if not request.user.is_admin():
             return Response({"error": "Only admin users are authorized to see all competitions"},
                             status=status.HTTP_401_UNAUTHORIZED)
 
@@ -268,120 +258,6 @@ class CompetitionsView(APIView):
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class AllIntegralSeriesView(APIView):
-    permission_classes = [IsAdminUser]
-
-    def get(self, request):
-        series = IntegralsSeries.objects.all().values('pk', 'name')
-        return Response(series)
-
-
-
-class IntegralSeriesView(APIView):
-    permission_classes = [IsAdminUser]
-    def get(self, request, pk=None):
-        if pk:
-            try:
-                series = IntegralsSeries.objects.get(pk=pk)
-                serializer = IntegralSeriesSerializer(series)
-                return Response(serializer.data)
-            except IntegralsSeries.DoesNotExist:
-                return Response({'error': 'Integral series not found'}, status=status.HTTP_404_NOT_FOUND)
-        else:
-            series = IntegralsSeries.objects.all()
-            serializer = IntegralSeriesSerializer(series, many=True)
-            return Response(serializer.data)
-
-
-    def post(self, request):
-        serializer = IntegralSeriesSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-    def patch(self, request, pk):
-        series = IntegralsSeries.objects.get(pk=pk)
-        serializer = IntegralSeriesSerializer(series, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-    def delete(self, request, pk):
-        series = IntegralsSeries.objects.get(pk=pk)
-        series.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class IntegralView(APIView):
-    permission_classes = [IsAdminUser]
-
-    def get(self, request, pk=None):
-        if pk:
-            integral = Integral.objects.get(pk=pk)
-            serializer = IntegralSerializer(integral)
-        else:
-            integrals = Integral.objects.all()
-            serializer = IntegralSerializer(integrals, many=True)
-        return Response(serializer.data)
-
-
-    def post(self, request):
-        serializer = IntegralSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-    def patch(self, request, pk):
-        integral = Integral.objects.get(pk=pk)
-        serializer = IntegralSerializer(integral, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-    def delete(self, request, pk):
-        integral = Integral.objects.get(pk=pk)
-        integral.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-class IntegralSolutionView(APIView):
-    permission_classes = [IsAdminUser]
-
-    def get(self, request, pk=None):
-        if pk:
-            solution = IntegralSolution.objects.get(pk=pk)
-            serializer = IntegralSolutionSerializer(solution)
-        else:
-            solutions = IntegralSolution.objects.all()
-            serializer = IntegralSolutionSerializer(solutions, many=True)
-        return Response(serializer.data)
-
-
-    def post(self, request):
-        serializer = IntegralSolutionSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-    def patch(self, request, pk):
-        solution = IntegralSolution.objects.get(pk=pk)
-        serializer = IntegralSolutionSerializer(solution, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-    def delete(self, request, pk):
-        solution = IntegralSolution.objects.get(pk=pk)
-        solution.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+def download_pdf_view(request, pk):
+    competition = get_object_or_404(Competition, pk=pk)
+    return competition.generate_latex_report()

@@ -7,7 +7,7 @@ from rest_framework_simplejwt.views import (
 )
 
 from .views import RegisterView, UserDataView, CompetitionView, CompetitionsView, PublicCompetitionView, UsersView, \
-    VerifyEmailView, AllIntegralSeriesView, IntegralSeriesView, IntegralView, IntegralSolutionView
+    VerifyEmailView, download_pdf_view
 
 urlpatterns = [
     path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -19,10 +19,5 @@ urlpatterns = [
     path('allCompetitions/', CompetitionsView.as_view(), name="all_competitions"),
     path('allUsers/', UsersView.as_view(), name="all_users"),
     path('verifyemail/', VerifyEmailView.as_view(), name="verify_email"),
-    path('integralSeriesList/', AllIntegralSeriesView.as_view(), name="integral_series_list"),
-    path('integralSeries/', IntegralSeriesView.as_view(), name='integral_series_no_pk'),
-    path('integralSeries/<int:pk>/', IntegralSeriesView.as_view(), name="integral_series"),
-    path('integral/', IntegralView.as_view(), name="integral"),
-    path('integral/<int:pk>/', IntegralView.as_view(), name="integral"),
-    path('integralSolution/<int:pk>/', IntegralSolutionView.as_view(), name="integral_solution"),
+    path('contestReport/<int:pk>/download/', download_pdf_view, name='download_pdf'),
 ]
