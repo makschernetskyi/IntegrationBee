@@ -123,7 +123,7 @@ class Competition(ClusterableModel):
             latex_file_template = 'contest_report.tex'
             latex_file = 'competition_report.tex'
             full_latex_file = 'full_competition_report.tex'
-            pdf_file = 'competition_report.pdf'
+            pdf_file = 'competition_report'
 
             with open(html_file, 'w') as f:
                 f.write(report_html)
@@ -147,17 +147,10 @@ class Competition(ClusterableModel):
             with open(full_latex_file, 'w') as f:
                 f.write(latex_content)
 
-            lualatex_pdf_command = [
-                'pandoc',
-                '-f', 'latex',
-                '--pdf-engine=lualatex',
-                '-o', pdf_file,
-                full_latex_file
-            ]
+            lualatex_pdf_command = f"lualatex -jobname={pdf_file} {full_latex_file}"
+            subprocess.run(lualatex_pdf_command, shell=True)
 
-            subprocess.run(lualatex_pdf_command, stdout=subprocess.PIPE, check=True)
-
-            return HttpResponse(open(pdf_file, 'rb').read(), content_type='application/pdf')
+            return HttpResponse(open(f"{pdf_file}.pdf", 'rb').read(), content_type='application/pdf')
 
         except Exception  as e:
             print(e)
