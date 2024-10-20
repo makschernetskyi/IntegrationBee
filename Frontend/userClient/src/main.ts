@@ -17,6 +17,7 @@ import Events from './pages/Events.vue'
 import News from './pages/News.vue'
 import Contact from "./pages/Contact.vue"
 import Event from './pages/Event.vue'
+import Profile from './pages/Profile.vue'
 
 //set up pinia store manager
 const pinia = createPinia();
@@ -31,7 +32,8 @@ const router = createRouter({
         {path: '/events', component: Events, name: "events"},
         {path: '/news', component: News, name: 'news'},
         {path: '/contact', component: Contact, name: 'contact'},
-        {path: '/event/:id', component: Event, name: 'event'}
+        {path: '/event/:id', component: Event, name: 'event'},
+        {path: '/myProfile', component: Profile, name: 'profile'}
 	],
 })
 
