@@ -18,6 +18,7 @@ import News from './pages/News.vue'
 import Contact from "./pages/Contact.vue"
 import Event from './pages/Event.vue'
 import Profile from './pages/Profile.vue'
+import SignUp from './pages/SignUp.vue'
 
 //set up pinia store manager
 const pinia = createPinia();
@@ -33,7 +34,8 @@ const router = createRouter({
         {path: '/news', component: News, name: 'news'},
         {path: '/contact', component: Contact, name: 'contact'},
         {path: '/event/:id', component: Event, name: 'event'},
-        {path: '/myProfile', component: Profile, name: 'profile'}
+        {path: '/myProfile', component: Profile, name: 'profile'},
+        {path: '/sign_up', component: SignUp, name: "sign_up"}
 	],
 })
 
@@ -60,7 +62,7 @@ router.beforeEach(async (to, from, next) => {
 	// if user data was requested and user is not logged in
 	// and wants to see a protected route - redirect to login page
     if( protectedRoutes.includes(to.name as string) && !isAuthenticated && to.name !== 'sign_in'){
-        next('/signIn') 
+        next('/sign_in') 
         return
     }
 

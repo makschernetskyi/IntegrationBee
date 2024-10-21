@@ -18,7 +18,7 @@ export async function getProfileDataRequestResolver(this: any) {
         this.userDataRequest.errorMSG = null;
 
         const data = response.data;
-        this.isAuthenticated = true;
+        this.isAuthenticated = false;
         this.email = data.email;
         this.firstName = data.first_name;
         this.lastName = data.second_name;

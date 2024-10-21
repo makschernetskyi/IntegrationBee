@@ -49,10 +49,10 @@ const emit = defineEmits(['switchMenuVisibility'])
 				<div class="hidden lg:flex absolute right-0 items-center gap-[2rem] text-body">
 					<!-- sign in and sign up buttons -->
 						<a href="" class="px-[2.4rem] py-[1rem] rounded-2xl text-pearl-white bg-primary font-semibold">Sign in</a>
-						<a href="" class="px-[2.4rem] py-[1rem] h-max w-max hover:bg-screenBlack-400 hover:bg-opacity-15 rounded-2xl signUpBtn">
+						<RouterLink to="/sign_up" class="px-[2.4rem] py-[1rem] h-max w-max hover:bg-screenBlack-400 hover:bg-opacity-15 rounded-2xl signUpBtn">
 							<p class="relative">Sign up</p>
 							<!--<div class="signUpBtn_Bg bg-pearl-white"/>-->
-						</a>
+						</RouterLink>
 				</div>
 
 				<!-- mobile login btn-->
