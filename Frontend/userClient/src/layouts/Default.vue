@@ -1,17 +1,16 @@
 <script setup lang="ts">
 import Header from "@/components/Header.vue"
 import Footer from "@/components/Footer.vue"
-import MobileMenu from "@/components/MobileMenu.vue";
+import { useUiStore } from "@/stores/uiStore/uiStore";
+import { storeToRefs } from "pinia";
 
-
-import {ref} from 'vue';
-
-const shouldMenuBeVisible = ref(false)
-const isMenuVisible = ref(false)
+const UiStore = useUiStore()
+const {shouldMobileMenuBeVisible, isMobileMenuVisible} = storeToRefs(UiStore)
 
 function toggleShouldMenuBeVisible(){
-	if(shouldMenuBeVisible.value === isMenuVisible.value){
-		shouldMenuBeVisible.value = !shouldMenuBeVisible.value
+	if(shouldMobileMenuBeVisible.value === isMobileMenuVisible.value){
+		UiStore.shouldMobileMenuBeVisible = !shouldMobileMenuBeVisible.value
+		shouldMobileMenuBeVisible.value && (document.getElementsByTagName('body')[0].style.overflowY = 'hidden');
 	}
 }
 
@@ -21,28 +20,11 @@ function toggleShouldMenuBeVisible(){
 	<div>
 		<!-- button works better if we pass is-menu-visible="shouldMenuBeVisible"--> 
 		<Header
-			:is-menu-visible="shouldMenuBeVisible"
+			:is-menu-visible="shouldMobileMenuBeVisible"
 			@switch-menu-visibility="toggleShouldMenuBeVisible"
 		/>
 		<slot></slot>
 		<Footer></Footer>
-		<teleport to='body'>
-			<transition
-				enter-from-class="opacity-0"
-				enter-active-class="transition-all duration-200"
-				enter-to-class="opacity-1"
-				leave-from-class="opacity-1"
-				leave-active-class="transition-all duration-200"
-				leave-to-class="opacity-0"
-			>
-				<MobileMenu
-					v-if="isMenuVisible || shouldMenuBeVisible" 
-					:should-menu-be-visible="shouldMenuBeVisible"
-					@end-action="()=>{isMenuVisible = shouldMenuBeVisible}"
-					@close-menu="toggleShouldMenuBeVisible"
-				/>
-			</transition>
-			
-		</teleport>
+		
 	</div>
 </template>

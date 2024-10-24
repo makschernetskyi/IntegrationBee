@@ -59,13 +59,13 @@ const fullViewNews = ref<{title:string, content:string, date:string, pictureSrc:
 
 const hidefullViewNews = () =>{
 	fullViewNews.value = null
-	document.getElementsByTagName('body')[0].style.overflow='auto'
+	document.getElementsByTagName('body')[0].style.overflowY='auto'
 	document.removeEventListener('click', hidefullViewNews)
 }
 
 const showFullNews = (newsItem:any) =>{
 	fullViewNews.value = newsItem
-	document.getElementsByTagName('body')[0].style.overflow='hidden'
+	document.getElementsByTagName('body')[0].style.overflowY='hidden'
 	document.removeEventListener('click', hidefullViewNews)
 	document.addEventListener('click', hidefullViewNews)
 }

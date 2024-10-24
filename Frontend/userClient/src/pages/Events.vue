@@ -52,14 +52,14 @@ const events = [
 				</div>
 			</div>
 
-			<ul class="w-full grid grid-cols-1 lg:grid-cols-3 auto-rows-auto gap-x-[4rem] px-[1rem] py-[5rem]">
+			<div class="w-full grid grid-cols-1 lg:grid-cols-3 auto-rows-auto gap-y-[2rem] lg:gap-x-[2rem] px-[2rem] py-[5rem] overflow-x-hidden">
 				<RouterLink to="/" v-for="event in events">
-					<li class="w-full flex flex-col gap-[1rem] text-screenBlack">
+					<div class="w-full flex flex-col gap-[1rem] text-screenBlack p-4" data-aos="fade-left">
 						<div class="w-full aspect-[8/5] overflow-hidden rounded-3xl relative">
 							<img :src="event.pictureSrc" alt="" :class="`w-full h-full object-cover`">
 							<div  v-if="event.status == 'past'" class="w-full h-full flex justify-end items-end absolute top-0 left-0 z-[10]">
 								<div class="w-full bg-white-100 bg-opacity-70 backdrop-blur-sm flex justify-center items-center px-[2rem]">
-									<span class="font-heading text-title text-screenBlack">
+									<span class="font-heading text-subtitle lg:text-title text-screenBlack">
 										PAST
 									</span>
 								</div>
@@ -67,14 +67,14 @@ const events = [
 							</div>
 						</div>
 						<div class="flex flex-col w-full px-[1rem]">
-							<h2 class="font-heading text-title relative w-max">
+							<h2 class="font-heading text-subtitle lg:text-title relative w-max">
 								{{event.name}}
-								<span v-if="event.status === 'ongoing'" class="absolute top-0 right-0 translate-x-[100%] text-subtitle text-[#EE1100]">
+								<span v-if="event.status === 'ongoing'" class="absolute top-0 right-0 translate-x-[100%] text-body lg:text-subtitle text-[#EE1100]">
 									LIVE!
 								</span>
 							</h2>
 							<h3 
-								:class="`font-heading text-title relative
+								:class="`font-heading text-subtitle lg:text-title relative
 								${event.status == 'past' ? 'text-gray-300 ' : 'text-primary'}` "
 								>
 								{{event.edition}}
@@ -109,9 +109,9 @@ const events = [
 							</div>
 						</div>
 						
-					</li>
+					</div>
 				</RouterLink>
-			</ul>
+			</div>
 
 			<!--<div>
 				pagination here
@@ -125,7 +125,7 @@ const events = [
 			</div>
 
 		</div>
-		<div class="w-full flex items-end p-0 h-[6rem] bg-pearl-white">
+		<div class="w-full flex items-end p-0 h-[7rem] bg-pearl-white">
 			<div class="w-full h-[6rem] bottom-0 bg-screenBlack [clip-path:polygon(0_5rem,100%_0,100%_100%,0%_100%)]"/>
 		</div>
 		

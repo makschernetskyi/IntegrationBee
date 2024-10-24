@@ -6,9 +6,11 @@ import "leaflet/dist/leaflet.css";
 const zoom = ref(12);
 const coordinates = [48.2192066, 16.3673771]
 
-const isRegistrationOpen = false;
+const isRegistrationOpen = true;
 const participantsCount = 53;
 const reasonRegistrationClosed = "registration opens 20.11"
+
+const emit = defineEmits(['showParticipationForm'])
 
 </script>
 <template>
@@ -72,6 +74,7 @@ const reasonRegistrationClosed = "registration opens 20.11"
 					'bg-primary border-primary border-4 text-screenBlack after:absolute after:w-full after:h-full after:top-0 after:left-0 after:hidden lg:after:flex after:bg-pearl-white lg:hover:after:scale-y-0 after:transition-transform after:duration-200 after:will-change-transform after:origin-top' : isRegistrationOpen,
 				}"
 				:title="isRegistrationOpen ? 'take part' : 'registration isn\'t open'"
+				@click="()=>isRegistrationOpen && emit('showParticipationForm')"
 			>
 				<span class="relative z-[2]">
 					Participate

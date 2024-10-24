@@ -93,17 +93,17 @@ export default {
           900: '#080808',
         },
         red: {
-          DEFAULT: '#D35454',
-          50: '#F9E7E7',
-          100: '#F3CFCF',
-          200: '#E89E9E',
-          300: '#DC6C6C',
-          400: '#D35454',
-          500: '#B94343',
-          600: '#992C2C',
-          700: '#7A1E1E',
-          800: '#5A1212',
-          900: '#3A0808',
+          DEFAULT: '#D14F4F',
+          50: '#F8E3E3',
+          100: '#F1C4C4',
+          200: '#E39292',
+          300: '#D86161',
+          400: '#D14F4F',
+          500: '#B83B3B',
+          600: '#9E2F2F',
+          700: '#802424',
+          800: '#601818',
+          900: '#410E0E',
         },
         green: {
           DEFAULT: '#4CAF60',
@@ -213,10 +213,11 @@ export default {
 
       },
       screens:{
-        sm: '640px',  // Tablet
-        md: '768px',  // Small PCs
-        lg: '1024px', // Larger PCs
-        xl: '1280px', // Large screens
+        sm: '640px',  // Small phone
+        md: '768px',  // Tablet
+        lg: '1024px', // Small PC
+        xl: '1280px', // Usual PC
+        '2xl': '1536px', // Large PC
       },
       backgroundImage: {
         'home-bg': "url('https://i.postimg.cc/GtDknN7Z/homebg.png')"

@@ -33,7 +33,7 @@
 	<DefaultLayout>
 		<div class="top-0 h-max bg-screenBlack overflow-x-hidden">
 			<!-- first welcome section -->
-			<section class="top-0 flex justify-start items-center lg:min-h-[40rem] h-[111vh] bg-home-bg px-[2rem] lg:px-[12rem] bg-no-repeat bg-cover [clip-path:polygon(0_0,100%_0,100%_90%,0%_100%)] relative">
+			<section class="top-0 flex justify-start pt-[30vh] md:pt-0 md:items-center lg:min-h-[40rem] h-[111vh] bg-home-bg px-[2rem] lg:px-[12rem] bg-no-repeat bg-cover [clip-path:polygon(0_0,100%_0,100%_90%,0%_100%)] relative">
 				<div class="flex flex-col font-body text-pearl-white gap-[3rem] w-full">
 					<div class="flex flex-col gap-0" data-aos="fade-right" data-aos-offset="0">
 						<h1 class="font-heading text-title lg:text-heading">INTEGRATION BEE</h1>

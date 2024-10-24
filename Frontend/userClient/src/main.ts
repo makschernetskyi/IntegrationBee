@@ -19,6 +19,7 @@ import Contact from "./pages/Contact.vue"
 import Event from './pages/Event.vue'
 import Profile from './pages/Profile.vue'
 import SignUp from './pages/SignUp.vue'
+import SignIn from './pages/SignIn.vue'
 
 //set up pinia store manager
 const pinia = createPinia();
@@ -35,7 +36,8 @@ const router = createRouter({
         {path: '/contact', component: Contact, name: 'contact'},
         {path: '/event/:id', component: Event, name: 'event'},
         {path: '/myProfile', component: Profile, name: 'profile'},
-        {path: '/sign_up', component: SignUp, name: "sign_up"}
+        {path: '/sign_up', component: SignUp, name: "sign_up"},
+        {path: '/sign_in', component: SignIn, name: "sign_in"}
 	],
 })
 

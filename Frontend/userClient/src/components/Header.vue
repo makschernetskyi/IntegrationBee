@@ -13,7 +13,7 @@ const emit = defineEmits(['switchMenuVisibility'])
 
 </script>
 <template>
-	<div class="fixed top-0 w-full lg:px-[12rem] font-body z-30 h-[6rem] lg:h-[10rem] text-secondary lg:py-4">
+	<div class="fixed top-0 w-full lg:px-[2rem] xl:px-[12rem] font-body z-30 h-[6rem] lg:h-[10rem] text-secondary lg:py-4">
 		<div class="w-full h-full bg-screenBlack lg:bg-pearl-white lg:bg-opacity-90 lg:backdrop-blur-sm overflow-hidden lg:rounded-3xl shadow-md px-8 lg:px-6">
 			<div class="relative h-full flex justify-center items-center ">
 				
@@ -48,7 +48,9 @@ const emit = defineEmits(['switchMenuVisibility'])
 				<!-- invisible on mobile-->
 				<div class="hidden lg:flex absolute right-0 items-center gap-[2rem] text-body">
 					<!-- sign in and sign up buttons -->
-						<a href="" class="px-[2.4rem] py-[1rem] rounded-2xl text-pearl-white bg-primary font-semibold">Sign in</a>
+						<RouterLink to="/sign_in" class="px-[2.4rem] py-[1rem] rounded-2xl text-pearl-white bg-primary font-semibold">
+							Sign in
+						</RouterLink>
 						<RouterLink to="/sign_up" class="px-[2.4rem] py-[1rem] h-max w-max hover:bg-screenBlack-400 hover:bg-opacity-15 rounded-2xl signUpBtn">
 							<p class="relative">Sign up</p>
 							<!--<div class="signUpBtn_Bg bg-pearl-white"/>-->
@@ -58,13 +60,11 @@ const emit = defineEmits(['switchMenuVisibility'])
 				<!-- mobile login btn-->
 				<div class="flex lg:hidden absolute right-0 items-center gap-[2rem] text-body">
 
-					<div class="relative h-[6rem] aspect-square">
-						<svg width="63" height="62" viewBox="0 0 63 62" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" class="h-full w-full">
-							<path d="M32.2333 18.3248L38.065 21.6917V28.4255L32.2333 31.7924L26.4017 28.4255V21.6917L32.2333 18.3248Z" fill="#FBC151"/>
-							<path fill-rule="evenodd" clip-rule="evenodd" d="M46.1086 45.9774L45.079 48.421L22.7695 51.2203L18.3579 45.3981V39.8033L32.2333 31.7924L46.1086 39.8033V45.9774Z" fill="#FBC151"/>
-							<path d="M10.2965 33.1605L18.5942 13.4675L39.7977 10.807L52.7035 27.8395L44.4058 47.5325L23.2023 50.193L10.2965 33.1605Z" stroke="#FBC151" stroke-width="1.93077"/>
+					<RouterLink to="/sign_in" class="relative h-[4rem] aspect-square">
+						<svg width="45" height="43" viewBox="0 0 45 43" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+							<path fill-rule="evenodd" clip-rule="evenodd" d="M2.40254 24.0217L10.2674 5.35599L30.3648 2.83425L42.5974 18.9783L37.1086 32.005V31.958C37.1086 31.2435 36.7274 30.5833 36.1086 30.226L24.2332 23.3698C23.6144 23.0125 22.852 23.0125 22.2332 23.3698L10.3579 30.226C9.73907 30.5833 9.35787 31.2435 9.35787 31.958V33.201L2.40254 24.0217ZM9.75597 36.9234L0.539109 24.7595C0.323346 24.4747 0.275887 24.0965 0.414609 23.7673L8.69674 4.11108C8.83547 3.78185 9.1393 3.55163 9.49378 3.50715L30.6576 0.851605C31.0121 0.807124 31.3634 0.955141 31.5791 1.23989L44.4608 18.2405C44.6766 18.5253 44.724 18.9035 44.5853 19.2327L36.9516 37.3498L36.5273 38.3569L36.3032 38.8889C36.1645 39.2181 35.8606 39.4484 35.5061 39.4928L34.9398 39.5639C34.9376 39.5642 34.9354 39.5645 34.9332 39.5647L14.9151 42.0765C14.9127 42.0768 14.9102 42.0771 14.9077 42.0775L14.3423 42.1484C13.9878 42.1929 13.6366 42.0449 13.4208 41.7601L13.0799 41.3102C13.0773 41.3068 13.0747 41.3034 13.0721 41.2999L9.76379 36.9338C9.76117 36.9304 9.75856 36.9269 9.75597 36.9234ZM22.2333 9.90211C22.8521 9.54484 23.6145 9.54484 24.2333 9.90211L28.065 12.1143C28.6838 12.4716 29.065 13.1318 29.065 13.8464V18.2708C29.065 18.9853 28.6838 19.6456 28.065 20.0028L24.2333 22.2151C23.6145 22.5723 22.8521 22.5723 22.2333 22.2151L18.4016 20.0028C17.7828 19.6456 17.4016 18.9853 17.4016 18.2708V13.8464C17.4016 13.1318 17.7828 12.4716 18.4016 12.1143L22.2333 9.90211Z" fill="#FBC151"/>
 						</svg>
-					</div>
+					</RouterLink>
 
 
 				</div>
