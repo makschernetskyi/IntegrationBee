@@ -21,7 +21,7 @@ const toggleInternalVisibility = ()=>{
 			clearInterval(t)
 			emit('endAction')
 		}
-	},200)
+	}, 100 + 100*(Number(shouldMenuBeVisible.value)))
 }
 
 onMounted(toggleInternalVisibility)

@@ -1,33 +1,20 @@
 <script setup lang="ts">
 import DefaultLayout from '@/layouts/Default.vue';
+import { useEventsPageStore } from '@/stores/eventsPageStore/eventsPageStore';
+import { onMounted } from 'vue';
+import { storeToRefs } from 'pinia';
 
 
-const events = [
-	{
-		name: "Vienna 2024",
-		edition: "Autumn Edition",
-		location: "Universität Wien",
-		date: "12. Nov 2024",
-		pictureSrc: "https://imgix.bustle.com/uploads/shutterstock/2022/1/10/a336ba51-3cc8-4f5e-935b-9ac7f7b05271-shutterstock-2008512365.jpg?w=400&h=300&fit=crop&crop=faces&q=50&dpr=2",
-		status: "upcoming"
-	},
-	{
-		name: "Prague 2024",
-		edition: "Spring Edition",
-		location: "Prague university",
-		date: "12. Nov 2024",
-		pictureSrc: "https://imgix.bustle.com/uploads/shutterstock/2022/1/10/a336ba51-3cc8-4f5e-935b-9ac7f7b05271-shutterstock-2008512365.jpg?w=400&h=300&fit=crop&crop=faces&q=50&dpr=2",
-		status: "ongoing"
-	},
-	{
-		name: "Bucuresti 2023",
-		edition: "Spring Edition",
-		location: "universitatea Bucuresti",
-		date: "12. Nov 2024",
-		pictureSrc: "https://imgix.bustle.com/uploads/shutterstock/2022/1/10/a336ba51-3cc8-4f5e-935b-9ac7f7b05271-shutterstock-2008512365.jpg?w=400&h=300&fit=crop&crop=faces&q=50&dpr=2",
-		status: "past"
-	}
-]
+const store = useEventsPageStore()
+const {searchQuery} = storeToRefs(store)
+
+onMounted(()=>{
+	(async()=>await store.fetchEvents())()
+})
+
+const handleSearchClick = async () =>{
+	store.fetchEvents(1, searchQuery.value)
+}
 
 
 </script>
@@ -35,15 +22,15 @@ const events = [
 	<DefaultLayout>
 		<div class="w-full px-[2rem] lg:px-[12rem] bg-screenBlack flex justify-center pt-[8rem] pb-[2rem] lg:pt-[16rem]">
 			<h1 class="font-heading text-subtitle lg:text-title text-center text-pearl-white">
-				events of integration bee austria
+				{{store.title}}
 			</h1>
 		</div>
 		<div class="w-full px-[2rem] lg:px-[12rem] bg-pearl-white flex flex-col justify-center py-[5rem]">
 			<!-- searchbar -->
 			<div class="w-full">
 				<div class="w-full h-[5rem] rounded-3xl bg-white-100 grid grid-cols-[1fr_5rem]">
-					<input type="text" placeholder="Find Compeition you are looking for..." class="font-body text-body px-[2rem] rounded-l-3xl w-full h-full bg-white-100 outline-none"/>
-					<button class="w-full h-full aspect-square p-3">
+					<input v-model="searchQuery" type="text" placeholder="Find Compeition you are looking for..." class="font-body text-body px-[2rem] rounded-l-3xl w-full h-full bg-white-100 outline-none"/>
+					<button @click="handleSearchClick" class="w-full h-full aspect-square p-3">
 						<svg width="45" height="45" viewBox="0 0 45 45" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
 							<circle cx="17.2961" cy="17.2961" r="15.7961" stroke="#242424" stroke-width="3"/>
 							<path d="M27.5071 30.454L30.4541 27.507L43.598 40.651C43.9886 41.0415 43.9886 41.6746 43.5981 42.0652L42.0652 43.598C41.6747 43.9885 41.0415 43.9885 40.651 43.598L27.5071 30.454Z" fill="#242424"/>
@@ -53,7 +40,7 @@ const events = [
 			</div>
 
 			<div class="w-full grid grid-cols-1 lg:grid-cols-3 auto-rows-auto gap-y-[2rem] lg:gap-x-[2rem] px-[2rem] py-[5rem] overflow-x-hidden">
-				<RouterLink to="/" v-for="event in events">
+				<RouterLink to="/" v-for="event in store.events">
 					<div class="w-full flex flex-col gap-[1rem] text-screenBlack p-4" data-aos="fade-left">
 						<div class="w-full aspect-[8/5] overflow-hidden rounded-3xl relative">
 							<img :src="event.pictureSrc" alt="" :class="`w-full h-full object-cover`">
@@ -126,7 +113,7 @@ const events = [
 
 		</div>
 		<div class="w-full flex items-end p-0 h-[7rem] bg-pearl-white">
-			<div class="w-full h-[6rem] bottom-0 bg-screenBlack [clip-path:polygon(0_5rem,100%_0,100%_100%,0%_100%)]"/>
+			<div class="w-full h-[6rem] bottom-0 bg-screenBlack [clip-path:polygon(0_5rem,100%_0,100%_100%,0%_100%)] pb-[8rem] -mb-[1rem]"/>
 		</div>
 		
 	</DefaultLayout>

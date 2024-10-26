@@ -4,11 +4,12 @@ import {LinguaRecorder, AudioRecord} from 'lingua-recorder'
 import { toRefs, ref } from 'vue';
 
 const props = defineProps({
-	label: {type: String}
+	label: {type: String},
+	modelValue: {type: Blob},
 })
-const {label} = toRefs(props)
+const {label, modelValue} = toRefs(props)
 
-
+const emit = defineEmits(['update:modelValue'])
 
 const recorder = new LinguaRecorder()
 
@@ -30,6 +31,8 @@ recorder.on('stopped', (audioRecord: AudioRecord)=>{
 	recordAudio.value.addEventListener('loadedmetadata', () => {
 		recordDuration.value = recordAudio.value.duration;
 	})
+	//@ts-ignore
+	emit('update:modelValue', audioRecord.getBlob())
 })
 
 function displayAudioProgress() {
@@ -68,6 +71,7 @@ const restartRecording = ()=>{
 	record.value = null;
 	playingAudioProgress.value = 0;
 	recordDuration.value = 0;
+	emit('update:modelValue', null)
 }
 
 </script>

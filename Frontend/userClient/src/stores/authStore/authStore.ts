@@ -16,6 +16,7 @@ export const useAuthStore = defineStore('auth', {
         school: null,
         isAdmin: null,
         profilePicture: null,
+        phoneNumber: null,
         competitions: [],
         userDataRequest: {
             status: null,

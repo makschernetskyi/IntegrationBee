@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import './style.css'
 import App from './App.vue'
 import { createPinia } from 'pinia'
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHashHistory, createWebHistory  } from 'vue-router'
 import { useAuthStore } from './stores/authStore/authStore.ts'
 
 //animation on scroll
@@ -28,7 +28,18 @@ app.use(pinia)
 
 //vue router configuration
 const router = createRouter({
-	history: createWebHashHistory(),
+	history: createWebHistory(),
+    scrollBehavior(to, from, savedPosition) {
+        if (to.hash) {
+            return {
+            el: to.hash,
+            behavior: 'smooth', // Optional: Adds smooth scrolling effect
+            top: 100 
+            };
+        } else {
+            return { top: 0, left: 0 };
+        }
+    },
 	routes: [
 		{path: '/', component: Home, name: "home"},
         {path: '/events', component: Events, name: "events"},

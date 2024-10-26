@@ -1,9 +1,16 @@
 <script setup lang="ts">
-import {ref} from 'vue'
+import {ref, toRefs} from 'vue'
+import { TeamMember } from '@/stores/contactPageStore/contactPageStore';
 
 
 const itemsNumber = 2
 const itemShown = ref(0)
+
+const props = defineProps<{
+	teamMembers: TeamMember[]
+}>()
+
+const {teamMembers} = toRefs(props)
 
 const showNextCard = () =>{
 	if(itemShown.value < itemsNumber-1){
@@ -27,46 +34,26 @@ const showPrevCard = () =>{
 				</svg>
 			</button>
 		</div>
-		<div class="w-[80vw] h-full overflow-x-hidden flex">
-			<div class="h-full w-max flex transition-transform duration-300" :style="{'transform': `translateX(-${itemShown*80}vw)`}">
-				<div class="w-[80vw] flex flex-col items-center gap-[2rem]">
+		<div class="w-[70vw] h-full overflow-x-hidden flex">
+			<div class="h-full w-max flex transition-transform duration-300" :style="{'transform': `translateX(-${itemShown*70}vw)`}">
+				<div v-for="(member, i) in teamMembers" :key="i" class="w-[70vw] flex flex-col items-center gap-[2rem]">
 					<div class="h-[20rem] aspect-square overflow-hidden rounded-full">
-						<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuHm1FQ4-XKwrkURvfPNdc6863X3ua8gGYnw&s" alt="" class="w-full h-full">
+						<img :src="member.imageSrc" alt="" class="w-full h-full">
 					</div>
 					<div class="w-full text-center flex justify-center font-heading text-subtitle">
-						<p>Maksym Czarniecki</p>
+						<p>{{ member.name }}</p>
 					</div>
-					<div class="w-full text-center flex flex-col items-center font-body text-text-sm font-semibold">
+					<div v-if="member.tel" class="w-full text-center flex flex-col items-center font-body text-text-sm font-semibold">
 						<p>tel.</p>
-						<a href="">+436787900063</a>
+						<a :href="'tel:'+member.tel">{{ member.tel }}</a>
 					</div>
 					<div class="w-full text-center flex flex-col items-center font-body text-text-sm font-semibold">
 						<p>email</p>
-						<a href="">maksym_czarniecki@integrationbee.at</a>
+						<a :href="'mailto:'+member.email">{{ member.email?.split('@').splice(1,0,'@').join(' ') }}</a>
 					</div>
-					<div class="w-full text-center flex flex-col items-center font-body text-text-sm font-semibold">
+					<div v-if="member.linkedin" class="w-full text-center flex flex-col items-center font-body text-text-sm font-semibold">
 						<p>linkedin</p>
-						<a href="">in/maksym-czarniecki</a>
-					</div>
-				</div>
-				<div class="w-[80vw] flex flex-col items-center gap-[2rem]">
-					<div class="h-[20rem] aspect-square overflow-hidden rounded-full">
-						<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuHm1FQ4-XKwrkURvfPNdc6863X3ua8gGYnw&s" alt="" class="w-full h-full">
-					</div>
-					<div class="w-full text-center flex justify-center font-heading text-subtitle">
-						<p>Maksym Czarniecki</p>
-					</div>
-					<div class="w-full text-center flex flex-col items-center font-body text-text-sm font-semibold">
-						<p>tel.</p>
-						<a href="">+436787900063</a>
-					</div>
-					<div class="w-full text-center flex flex-col items-center font-body text-text-sm font-semibold">
-						<p>email</p>
-						<a href="">maksym_czarniecki@integrationbee.at</a>
-					</div>
-					<div class="w-full text-center flex flex-col items-center font-body text-text-sm font-semibold">
-						<p>linkedin</p>
-						<a href="">in/maksym-czarniecki</a>
+						<a :href="'www.linkedin.com/'+member.linkedin">{{member.linkedin}}</a>
 					</div>
 				</div>
 			</div>

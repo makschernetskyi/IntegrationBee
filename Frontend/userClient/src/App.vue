@@ -2,6 +2,7 @@
 import { storeToRefs } from "pinia";
 import { useUiStore } from "./stores/uiStore/uiStore";
 import MobileMenu from "@/components/MobileMenu.vue"
+import Toast from "./components/Toast.vue";
 
 const UiStore = useUiStore()
 const {shouldMobileMenuBeVisible, isMobileMenuVisible} = storeToRefs(UiStore)
@@ -23,7 +24,7 @@ function endMenuAction(){
 <template>
 <router-view>
 </router-view>
-<!--<teleport to='body'>-->
+<teleport to='body'>
 	<transition
 		enter-from-class="opacity-0"
 		enter-active-class="transition-all duration-200"
@@ -39,6 +40,8 @@ function endMenuAction(){
 			@close-menu="toggleShouldMenuBeVisible"
 		/>
 	</transition>
-	
-<!--</teleport>-->
+</teleport>
+
+<Toast/>
+
 </template>

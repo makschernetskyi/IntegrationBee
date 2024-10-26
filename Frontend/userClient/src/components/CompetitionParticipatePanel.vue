@@ -1,14 +1,20 @@
 <script setup lang="ts">
-import {ref} from "vue"
+import {toRefs, ref} from "vue"
 import { LMap, LTileLayer, LMarker, LIcon } from "@vue-leaflet/vue-leaflet";
 import "leaflet/dist/leaflet.css";
 
-const zoom = ref(12);
-const coordinates = [48.2192066, 16.3673771]
+import { ParticipatePanelData } from "@/stores/eventPageStore/eventPageStore";
+import { sanitizeHtml } from "@/utils/htmlSanitizers";
 
-const isRegistrationOpen = true;
-const participantsCount = 53;
-const reasonRegistrationClosed = "registration opens 20.11"
+const props = defineProps<{
+	data: ParticipatePanelData
+}>()
+
+const {data} = toRefs(props)
+
+
+const zoom = ref(data.value.zoom)
+
 
 const emit = defineEmits(['showParticipationForm'])
 
@@ -17,13 +23,13 @@ const emit = defineEmits(['showParticipationForm'])
 	<div class="flex flex-col gap-[2rem]">
 		<!-- map -->
 		<div class="w-full h-[20rem] overflow-hidden rounded-xl hidden lg:flex z-[2]">
-			<l-map :use-global-leaflet="false" class="h-full w-full" ref="map" v-model="zoom" v-model:zoom="zoom" :center="[48.2192066, 16.3673771]">
+			<l-map :use-global-leaflet="false" class="h-full w-full" ref="map" v-model="zoom" v-model:zoom="zoom" :center="data.coordinates">
 				<l-tile-layer
 					url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 					layer-type="base"
 					name="OpenStreetMap"
 				></l-tile-layer>
-				<l-marker :lat-lng="coordinates">
+				<l-marker :lat-lng="data.coordinates">
 					<l-icon :icon-size="[0,0]" :icon-anchor="[25,50]" class="bg-transparent">
 						<img src="https://i.postimg.cc/3RJGQqj2/location-Marker.png">
 					</l-icon>
@@ -40,11 +46,7 @@ const emit = defineEmits(['showParticipationForm'])
 					</svg>
 				</div>
 			</div>
-			<p class="font-body text-body lg:text-text-sm text-gray">
-				25. Nov 2024 18:30
-				<br>
-				26. Nov 2024 17:45 
-			</p>
+			<p class="font-body text-body lg:text-text-sm text-gray" :v-html="sanitizeHtml(data.date)"/>
 		</div>
 
 		<!--location-->
@@ -57,24 +59,22 @@ const emit = defineEmits(['showParticipationForm'])
 					</svg>
 				</div>
 			</div>
-			<a href="" target="_blank" class="font-body text-body lg:text-text-sm text-gray max-w-full lg:hover:underline">
-				Oskar-morgenstern platz 1, 1200 Vienna - University of Vienna, Faculty of Mathematics
-			</a>
+			<a :href="data.locationMapsUrl" target="_blank" class="font-body text-body lg:text-text-sm text-gray max-w-full lg:hover:underline" v-html="sanitizeHtml(data.location)"/>
 		</div>
-		<div v-if="!isRegistrationOpen" class="w-full flex justify-center items-center">
+		<div v-if="!data.isRegistrationOpen" class="w-full flex justify-center items-center">
 			<p class="text-body font-body text-gray-400">
-				{{ reasonRegistrationClosed }}
+				{{ data.reasonRegistrationClosed }}
 			</p>
 		</div>
 		<div class="w-full flex justify-center items-center">
 			<button 
 				:class="{
 					'overflow-hidden rounded-[20px] font-heading text-title  px-[4rem] pt-[0.6rem] pb-[0.4rem] relative ' : true,
-					'bg-gray-100 text-gray-400 cursor-default' : !isRegistrationOpen,
-					'bg-primary border-primary border-4 text-screenBlack after:absolute after:w-full after:h-full after:top-0 after:left-0 after:hidden lg:after:flex after:bg-pearl-white lg:hover:after:scale-y-0 after:transition-transform after:duration-200 after:will-change-transform after:origin-top' : isRegistrationOpen,
+					'bg-gray-100 text-gray-400 cursor-default' : !data.isRegistrationOpen,
+					'bg-primary border-primary border-4 text-screenBlack after:absolute after:w-full after:h-full after:top-0 after:left-0 after:hidden lg:after:flex after:bg-pearl-white lg:hover:after:scale-y-0 after:transition-transform after:duration-200 after:will-change-transform after:origin-top' : data.isRegistrationOpen,
 				}"
-				:title="isRegistrationOpen ? 'take part' : 'registration isn\'t open'"
-				@click="()=>isRegistrationOpen && emit('showParticipationForm')"
+				:title="data.isRegistrationOpen ? 'take part' : 'registration isn\'t open'"
+				@click="()=>data.isRegistrationOpen && emit('showParticipationForm')"
 			>
 				<span class="relative z-[2]">
 					Participate
@@ -83,7 +83,7 @@ const emit = defineEmits(['showParticipationForm'])
 		</div>
 		<div class="w-full flex justify-center items-center">
 			<p class="text-body font-body">
-				Participants: {{ participantsCount }}
+				Participants: {{ data.participantsCount }}
 			</p>
 		</div>
 	</div>

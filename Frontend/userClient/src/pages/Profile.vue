@@ -201,7 +201,7 @@ import DefaultLayout from '@/layouts/Default.vue';
 
 		</div>
 		<div class="w-full flex items-end p-0 h-[6rem] bg-pearl-white">
-			<div class="w-full h-[6rem] bottom-0 bg-screenBlack [clip-path:polygon(0_5rem,100%_0,100%_100%,0%_100%)]"/>
+			<div class="w-full h-[6rem] bottom-0 bg-screenBlack [clip-path:polygon(0_5rem,100%_0,100%_100%,0%_100%)] pb-[8rem] -mb-[1rem]"/>
 		</div>
 	</DefaultLayout>
 </template>

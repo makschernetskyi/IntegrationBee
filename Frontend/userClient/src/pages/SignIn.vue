@@ -4,7 +4,19 @@ import DefaultLayout from '@/layouts/Default.vue';
 
 import {ref} from "vue";
 
-const testInputModel = ref('')
+import { useSignInPageStore } from '@/stores/signInPage.vue/signInPageStore';
+import { storeToRefs } from 'pinia';
+
+const store = useSignInPageStore()
+const {email, password, errors} = storeToRefs(store)
+
+const handleSubmit = (e:any)=>{
+	e.preventDefault();
+	if(store.validateForm()){
+		store.initializeAuth()
+	}
+	
+}
 
 </script>
 <template>
@@ -20,10 +32,15 @@ const testInputModel = ref('')
 			</div>
 			<!--Form-->
 			<div class="w-full flex justify-center">
-				<form @submit="(event)=>event.preventDefault()" class="w-full lg:w-[30%] px-[2rem] flex flex-col gap-[2rem]">
-					<FormInput v-model="testInputModel" class="w-full" type="text" label="E-mail" name="email"/>
-					<FormInput v-model="testInputModel" class="w-full" type="password" label="Password" name="password"/>
-					
+				<form @submit="handleSubmit" class="w-full lg:w-[30%] px-[2rem] flex flex-col gap-[2rem]">
+					<div class="flex flex-col w-full">
+						<FormInput :v-model="email" class="w-full" type="text" label="E-mail" name="email"/>
+						<div v-if="errors.email" class="text-text-sm font-body text-red pl-[0rem]">{{errors.email}}</div>
+					</div>
+					<div class="flex flex-col w-full">
+						<FormInput :v-model="password" class="w-full" type="password" label="Password" name="password"/>
+						<div v-if="errors.password" class="text-text-sm font-body text-red pl-[0rem]">{{errors.password}}</div>
+					</div>
 					
 					<div class="w-full flex justify-center mt-[5rem]">
 						<button 
@@ -49,7 +66,7 @@ const testInputModel = ref('')
 			</div>
 		</div>
 		<div class="w-full flex items-end p-0 h-[6rem] bg-pearl-white">
-			<div class="w-full h-[6rem] bottom-0 bg-screenBlack [clip-path:polygon(0_5rem,100%_0,100%_100%,0%_100%)]"/>
+			<div class="w-full h-[6rem] bottom-0 bg-screenBlack [clip-path:polygon(0_5rem,100%_0,100%_100%,0%_100%)] pb-[8rem] -mb-[1rem]"/>
 		</div>
 	</DefaultLayout>
 </template>

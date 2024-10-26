@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import ContactsCarousel from '@/components/ContactsCarousel.vue';
 import DefaultLayout from '@/layouts/Default.vue';
+import { useContactPageStore } from '@/stores/contactPageStore/contactPageStore';
+
+const store = useContactPageStore()
 
 </script>
 <template>
 	<DefaultLayout>
 		<div class="w-full px-[2rem] lg:px-[12rem] bg-screenBlack flex justify-center pt-[8rem] pb-[2rem] lg:pt-[16rem]">
 			<h1 class="font-heading text-subtitle lg:text-title text-center text-pearl-white">
-				Contact to our team
+				{{ store.title }}
 			</h1>
 		</div>
 
@@ -15,7 +18,7 @@ import DefaultLayout from '@/layouts/Default.vue';
 			<section class="w-full px-[2rem] lg:px-[12rem] flex flex-col gap-[2rem]">
 				<h2 class="font-heading text-title flex justify-center lg:justify-start w-full">About us</h2>
 				<p class="text-center lg:text-left w-full text-body">
-					Our project began as an idea of a team of Austrian Students, who had nothing better to do than organizing these events. We are helped by a great team of volunteers. If you feel you want to engage with our community, visit our events, participate or even help or sponsor us, feel free to do so!
+					{{ store.aboutUsText }}
 				</p>
 			</section>
 			<section class="w-full px-[2rem] lg:px-[12rem] flex flex-col gap-[2rem]">
@@ -24,53 +27,53 @@ import DefaultLayout from '@/layouts/Default.vue';
 				</h2>
 				<div class="text-center lg:text-left w-full text-body flex flex-col items-center lg:items-start">
 					<p>General Inqueries:</p>
-					<div class="flex gap-[1rem]">
+					<div class="flex flex-col md:flex-row gap-[1rem]">
 						<p class="font-semibold">
 							email:
 						</p>
-						<a href="mailto:info@integrationbee.at" class="underline">
-							info@integrationbee.at
+						<a :href="`mailto:${store.generalInqueriesEmail}`" class="underline">
+							{{ store.generalInqueriesEmail }}
 						</a>
 					</div>
 				</div>
 			</section>
 			<section class="w-full px-[2rem] lg:px-[12rem] hidden lg:flex flex-col gap-[2rem]">
-				<div class="w-full h-[22rem] bg-white-100 overflow-hidden rounded-3xl flex flex-row">
+				<div v-for="(member, i) in store.teamMembers" :key="i" class="w-full h-[22rem] bg-white-100 overflow-hidden rounded-3xl flex flex-row">
 					<div class="h-full aspect-square">
-						<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuHm1FQ4-XKwrkURvfPNdc6863X3ua8gGYnw&s" alt="" class="w-full h-full">
+						<img :src="member.imageSrc" :alt="`photo of ${member.name}`" class="w-full h-full">
 					</div>
 					<div class="h-full flex-1 flex flex-col justify-between p-[2rem] text-screenBlack text-body">
 						<div class="flex flex-col">
 							<p class="font-heading text-subtitle">
-								Maksym Czarniecki
+								{{ member.name }}
 							</p>
 							<p class="font-heading text-primary">
-								Founder • Organization & technical information
+								{{ member.role }}
 							</p>
 						</div>
 						<div class="flex flex-col">
-							<div class="flex gap-[1rem]">
+							<div v-if="member.tel" class="flex gap-[1rem]">
 								<p class="font-semibold">
 									tel:
 								</p>
-								<a href="" class="">
-									+436877900063
+								<a :href="'tel:'+member.tel" class="">
+									{{ member.tel }}
 								</a>
 							</div>
-							<div class="flex gap-[1rem]">
+							<div v-if="member.email" class="flex gap-[1rem]">
 								<p class="font-semibold">
 									email:
 								</p>
-								<a href="mailto:maksym_czarniecki@integrationbee.at">
-									maksym_czarniecki@integrationbee.at
+								<a :href="'mailto:' + member.email">
+									{{ member.email }}
 								</a>
 							</div>
-							<div class="flex gap-[1rem]">
+							<div v-if="member.linkedin" class="flex gap-[1rem]">
 								<p class="font-semibold">
 									linkedin:
 								</p>
-								<a href="mailto:maksym_czarniecki@integrationbee.at">
-									in/maksym-czarniecki
+								<a :href="'www.linkedin.com/' + member.linkedin">
+									{{ member.linkedin }}
 								</a>
 							</div>
 						</div>
@@ -78,12 +81,12 @@ import DefaultLayout from '@/layouts/Default.vue';
 				</div>
 			</section>
 			<section class="w-full h-max px-[2rem] lg:px-[12rem] flex lg:hidden gap-[2rem]">
-				<ContactsCarousel/>
+				<ContactsCarousel :teamMembers="store.teamMembers"/>
 			</section>
 		</div>
 
-		<div class="w-full flex items-end p-0 h-[8rem] bg-pearl-white">
-			<div class="w-full h-[5rem] bottom-0 bg-screenBlack [clip-path:polygon(0_5rem,100%_0,100%_100%,0%_100%)]"/>
+		<div class="w-full flex items-end leading-[0] p-0 h-[7rem] bg-pearl-white border-b-screenBlack">
+			<div class="w-full h-[5rem] bottom-0 bg-screenBlack [clip-path:polygon(0_5rem,100%_0,100%_100%,0%_100%)] pb-[8rem] -mb-[1rem]"/>
 		</div>
 	</DefaultLayout>
 </template>
