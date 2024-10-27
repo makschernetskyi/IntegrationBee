@@ -87,8 +87,8 @@ const {isAuthenticated} = useAuthStore()
 							</h2>
 							<div class="w-full flex justify-start">
 								<div class="w-auto h-auto">
-									<svg width="752" height="82" viewBox="0 0 752 82" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full -scale-x-[1]">
-										<path d="M752 0H0L106.578 82H752V0Z" fill="#FBC151"/>
+									<svg width="749" height="82" viewBox="0 0 749 82" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full -scale-x-[1]">
+										<path d="M749 0H2.8793C0.9697 0 0.146249 2.42068 1.65973 3.58513L103.039 81.5851C103.389 81.8541 103.818 82 104.259 82H749V0Z" fill="#FBC151"/>
 									</svg>
 								</div>
 							</div>
@@ -166,8 +166,8 @@ const {isAuthenticated} = useAuthStore()
 							</h2>
 							<div class="w-full flex justify-start">
 								<div>
-									<svg width="752" height="82" viewBox="0 0 752 82" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full -scale-x-[1]">
-										<path d="M752 0H0L106.578 82H752V0Z" fill="#FBC151"/>
+									<svg width="469" height="82" viewBox="0 0 469 82" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+										<path d="M0 0H466.793C468.478 0 469.408 1.95593 468.344 3.26264L404.847 81.2626C404.467 81.7292 403.898 82 403.296 82H0V0Z" fill="#FBC151"/>
 									</svg>
 								</div>
 							</div>
@@ -220,11 +220,11 @@ const {isAuthenticated} = useAuthStore()
 			<section class="w-full h-max bg-screenBlack">
 				<div class="w-full h-max relative flex justify-center items-center py-[10rem]">
 					<div class="relative h-[10rem] w-full flex justify-center items-center">
-						<!--TODO: change svg so vors on mobile-->
+						<!--TODO: change svg so works on mobile-->
 						<div class="w-full absolute top-[2rem] left-0 hidden xl:flex">
-							<svg width="1439" height="46" viewBox="0 0 1439 46" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" class="aspect-auto w-full">
-								<path fill-rule="evenodd" clip-rule="evenodd" d="M1439 0.80957L1212.78 9.48034L1190.78 30.8006L1439 21.2865V0.80957Z" fill="#FBC151"/>
-								<path fill-rule="evenodd" clip-rule="evenodd" d="M0 45.4956L266.639 35.2754L287.471 14L0 25.0186V45.4956Z" fill="#FBC151"/>
+							<svg width="1439" height="46" viewBox="0 0 1439 46" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+								<path fill-rule="evenodd" clip-rule="evenodd" d="M1439 0.809456L1213.55 9.45089C1213.06 9.46978 1212.59 9.67003 1212.23 10.0132L1194.53 27.1656C1193.22 28.4422 1194.17 30.6707 1196 30.6004L1439 21.2864V0.809456Z" fill="#FBC151"/>
+								<path fill-rule="evenodd" clip-rule="evenodd" d="M0 45.4958L265.844 35.3061C266.355 35.2866 266.839 35.0721 267.196 34.7068L283.956 17.5904C285.221 16.2981 284.257 14.1234 282.45 14.1927L0 25.0188V45.4958Z" fill="#FBC151"/>
 							</svg>
 						</div>
 						<h3 class="font-heading text-center text-subtitle lg:text-heading text-pearl-white">
@@ -255,8 +255,8 @@ const {isAuthenticated} = useAuthStore()
 					<!-- if there is no silver or bronze sponsors then golden sponsors are just sponsors-->
 					<div v-if="store.silverSponsors.length || store.bronzeSponsors.length || store.mainSponsorExists" class="relative w-full h-max py-[12rem]">
 						<div class="absolute left-[70%] md:left-[50%] lg:left-[70%] xl:left-[50%] 2xl:left-auto 2xl:right-0 xl:right-0 top-[43%]">
-							<svg width="790" height="31" viewBox="0 0 790 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<path fill-rule="evenodd" clip-rule="evenodd" d="M790 0.926633L52.7448 9.80979L0.246527 30.9058L790 21.3901V0.926633Z" fill="#FBC151"/>
+							<svg width="782" height="31" viewBox="0 0 782 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path fill-rule="evenodd" clip-rule="evenodd" d="M782 0.926632L45.1191 9.80528C44.8717 9.80826 44.627 9.85712 44.3974 9.94936L2.16181 26.9214C0.107586 27.7469 0.717887 30.8037 2.9316 30.777L782 21.3901V0.926632Z" fill="#FBC151"/>
 							</svg>
 						</div>
 						<div class="pl-[2rem] lg:pl-[12rem]">
@@ -299,18 +299,11 @@ const {isAuthenticated} = useAuthStore()
 				</template>
 				<!-- silver sponsors -->
 
-				<template>
+				<template v-if="store.silverSponsors.length">
 					<div class="relative w-full h-max py-[12rem] flex justify-end">
 						<div class="absolute right-[70%] md:right-[50%] lg:right-[70%] xl:right-[60%] 2xl:left-0 top-[43%]">
-							<svg width="709" height="29" viewBox="0 0 709 29" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<g clip-path="url(#clip0_399_315)">
-								<path fill-rule="evenodd" clip-rule="evenodd" d="M0 29.005L659.114 21.0634L708.908 0L0 8.5416V29.005Z" fill="#FBC151"/>
-								</g>
-								<defs>
-								<clipPath id="clip0_399_315">
-								<rect width="709" height="29" fill="white"/>
-								</clipPath>
-								</defs>
+							<svg width="701" height="29" viewBox="0 0 701 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path fill-rule="evenodd" clip-rule="evenodd" d="M0 29.005L658.721 21.0681C658.981 21.065 659.237 21.0114 659.476 20.9102L699.536 3.9644C701.556 3.10981 700.926 0.0961456 698.733 0.122574L0 8.54158V29.005Z" fill="#FBC151"/>
 							</svg>
 						</div>
 						<div class="pr-[2rem] lg:pr-[12rem]">
@@ -353,11 +346,11 @@ const {isAuthenticated} = useAuthStore()
 				</template>
 				<!-- bronze sponsors -->
 				
-				<template>
+				<template v-if="store.bronzeSponsors.length">
 					<div class="relative w-full h-max py-[12rem] overflow-x-hidden">
 						<div class="absolute left-[70%] md:left-[50%] lg:left-[70%] xl:left-[50%] 2xl:left-auto 2xl:right-0 xl:right-0 top-[43%]">
-							<svg width="790" height="31" viewBox="0 0 790 31" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" >
-								<path fill-rule="evenodd" clip-rule="evenodd" d="M790 0.926633L52.7448 9.80979L0.246527 30.9058L790 21.3901V0.926633Z" fill="#FBC151"/>
+							<svg width="782" height="31" viewBox="0 0 782 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path fill-rule="evenodd" clip-rule="evenodd" d="M782 0.926632L45.1191 9.80528C44.8717 9.80826 44.627 9.85712 44.3974 9.94936L2.16181 26.9214C0.107586 27.7469 0.717887 30.8037 2.9316 30.777L782 21.3901V0.926632Z" fill="#FBC151"/>
 							</svg>
 						</div>
 						<div class="pl-[2rem] lg:pl-[12rem]">

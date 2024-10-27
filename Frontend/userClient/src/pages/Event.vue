@@ -87,9 +87,9 @@ const closeParticipationForm = () =>{
 						<div class="relative h-[10rem] w-full flex justify-center items-center">
 							<!--TODO: change svg so vors on mobile-->
 							<div class="w-full absolute top-[2rem] left-0 hidden lg:flex">
-								<svg width="1439" height="46" viewBox="0 0 1439 46" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" class="aspect-auto w-full">
-									<path fill-rule="evenodd" clip-rule="evenodd" d="M1439 0.80957L1212.78 9.48034L1190.78 30.8006L1439 21.2865V0.80957Z" fill="#FBC151"/>
-									<path fill-rule="evenodd" clip-rule="evenodd" d="M0 45.4956L266.639 35.2754L287.471 14L0 25.0186V45.4956Z" fill="#FBC151"/>
+								<svg width="1439" height="46" viewBox="0 0 1439 46" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+									<path fill-rule="evenodd" clip-rule="evenodd" d="M1439 0.809456L1213.55 9.45089C1213.06 9.46978 1212.59 9.67003 1212.23 10.0132L1194.53 27.1656C1193.22 28.4422 1194.17 30.6707 1196 30.6004L1439 21.2864V0.809456Z" fill="#FBC151"/>
+									<path fill-rule="evenodd" clip-rule="evenodd" d="M0 45.4958L265.844 35.3061C266.355 35.2866 266.839 35.0721 267.196 34.7068L283.956 17.5904C285.221 16.2981 284.257 14.1234 282.45 14.1927L0 25.0188V45.4958Z" fill="#FBC151"/>
 								</svg>
 							</div>
 							<h3 class="font-heading text-center text-title lg:text-heading text-screenBlack">
@@ -116,78 +116,75 @@ const closeParticipationForm = () =>{
 						</div>
 					</div>
 					<!-- Gold sponsors -->
-					<div class="relative w-full h-max py-[12rem]">
-						<div class="absolute left-[70%] md:left-[50%] lg:left-[70%] xl:left-[50%] 2xl:left-auto 2xl:right-0 xl:right-0 top-[43%]">
-							<svg width="790" height="31" viewBox="0 0 790 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<path fill-rule="evenodd" clip-rule="evenodd" d="M790 0.926633L52.7448 9.80979L0.246527 30.9058L790 21.3901V0.926633Z" fill="#FBC151"/>
-							</svg>
-						</div>
-						<div class="pl-[2rem] lg:pl-[12rem]">
-							<h3 class="font-heading text-subtitle lg:text-heading text-pearl-white">
-								Gold Sponsors
-							</h3>
-						</div>
-					</div>
-					<div class="px-[2rem] lg:px-[12rem]">
-						<div class="flex flex-row justify-center lg:justify-between flex-wrap ">
-							<GoldSponsorLogo v-for="(sponsor, i) in store.goldSponsors" :key="i" :logo-src="sponsor.logoSrc" :sponsor-name="sponsor.sponsorName" :index="i" :logo-size="sponsor.logoSize"/>
-							<div class="h-[35rem] min-w-[35rem] flex items-center justify-center">
-								<p class="font-heading text-subtitle lg:text-subtitle text-pearl-white text-center">Here could <br> be your logo</p>
+					<template v-if="store.goldSponsors.length">
+						<div v-if="store.silverSponsors.length || store.bronzeSponsors.length || store.mainSponsorExists" class="relative w-full h-max py-[12rem]">
+							<div class="absolute left-[70%] md:left-[50%] lg:left-[70%] xl:left-[50%] 2xl:left-auto 2xl:right-0 xl:right-0 top-[43%]">
+								<svg width="782" height="31" viewBox="0 0 782 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path fill-rule="evenodd" clip-rule="evenodd" d="M782 0.926632L45.1191 9.80528C44.8717 9.80826 44.627 9.85712 44.3974 9.94936L2.16181 26.9214C0.107586 27.7469 0.717887 30.8037 2.9316 30.777L782 21.3901V0.926632Z" fill="#FBC151"/>
+								</svg>
+							</div>
+							<div class="pl-[2rem] lg:pl-[12rem]">
+								<h3 class="font-heading text-subtitle lg:text-heading text-pearl-white">
+									Gold Sponsors
+								</h3>
 							</div>
 						</div>
-					</div>
+						<div class="px-[2rem] lg:px-[12rem]">
+							<div class="flex flex-row justify-center lg:justify-between flex-wrap ">
+								<GoldSponsorLogo v-for="(sponsor, i) in store.goldSponsors" :key="i" :logo-src="sponsor.logoSrc" :sponsor-name="sponsor.sponsorName" :index="i" :logo-size="sponsor.logoSize"/>
+								<div class="h-[35rem] min-w-[35rem] flex items-center justify-center">
+									<p class="font-heading text-subtitle lg:text-subtitle text-pearl-white text-center">Here could <br> be your logo</p>
+								</div>
+							</div>
+						</div>
+					</template>
 					<!-- silver sponsors -->
-
-					<div class="relative w-full h-max py-[12rem] flex justify-end">
-						<div class="absolute right-[70%] md:right-[50%] lg:right-[70%] xl:right-[60%] 2xl:left-0 top-[43%]">
-							<svg width="709" height="29" viewBox="0 0 709 29" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<g clip-path="url(#clip0_399_315)">
-								<path fill-rule="evenodd" clip-rule="evenodd" d="M0 29.005L659.114 21.0634L708.908 0L0 8.5416V29.005Z" fill="#FBC151"/>
-								</g>
-								<defs>
-								<clipPath id="clip0_399_315">
-								<rect width="709" height="29" fill="white"/>
-								</clipPath>
-								</defs>
+					<template v-if="store.silverSponsors.length">
+						<div class="relative w-full h-max py-[12rem] flex justify-end">
+							<div class="absolute right-[70%] md:right-[50%] lg:right-[70%] xl:right-[60%] 2xl:left-0 top-[43%]">
+								<svg width="701" height="29" viewBox="0 0 701 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path fill-rule="evenodd" clip-rule="evenodd" d="M0 29.005L658.721 21.0681C658.981 21.065 659.237 21.0114 659.476 20.9102L699.536 3.9644C701.556 3.10981 700.926 0.0961456 698.733 0.122574L0 8.54158V29.005Z" fill="#FBC151"/>
 							</svg>
-						</div>
-						<div class="pr-[2rem] lg:pr-[12rem]">
-							<h3 class="font-heading text-subtitle lg:text-heading text-pearl-white">
-								Silver Sponsors
-							</h3>
-						</div>
-					</div>
-					<div class="px-[2rem] lg:px-[12rem]">
-						<div class="flex flex-row-reverse justify-center lg:justify-between flex-wrap ">
-							<SilverSponsorLogo v-for="(sponsor, i) in store.silverSponsors" :key="i" :logo-src="sponsor.logoSrc" :sponsor-name="sponsor.sponsorName" :index="i" :logo-size="sponsor.logoSize"/>
-							<div class="h-[30rem] min-w-[30rem] flex items-center justify-center">
-								<p class="font-heading text-subtitle lg:text-subtitle text-pearl-white text-center">Here could <br> be your logo</p>
+							</div>
+							<div class="pr-[2rem] lg:pr-[12rem]">
+								<h3 class="font-heading text-subtitle lg:text-heading text-pearl-white">
+									Silver Sponsors
+								</h3>
 							</div>
 						</div>
-					</div>
+						<div class="px-[2rem] lg:px-[12rem]">
+							<div class="flex flex-row-reverse justify-center lg:justify-between flex-wrap ">
+								<SilverSponsorLogo v-for="(sponsor, i) in store.silverSponsors" :key="i" :logo-src="sponsor.logoSrc" :sponsor-name="sponsor.sponsorName" :index="i" :logo-size="sponsor.logoSize"/>
+								<div class="h-[30rem] min-w-[30rem] flex items-center justify-center">
+									<p class="font-heading text-subtitle lg:text-subtitle text-pearl-white text-center">Here could <br> be your logo</p>
+								</div>
+							</div>
+						</div>
+					</template>
 
 					<!-- bronze sponsors -->
-					
-					<div class="relative w-full h-max py-[12rem]">
-						<div class="absolute left-[70%] md:left-[50%] lg:left-[70%] xl:left-[50%] 2xl:left-auto 2xl:right-0 xl:right-0 top-[43%]">
-							<svg width="790" height="31" viewBox="0 0 790 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<path fill-rule="evenodd" clip-rule="evenodd" d="M790 0.926633L52.7448 9.80979L0.246527 30.9058L790 21.3901V0.926633Z" fill="#FBC151"/>
-							</svg>
-						</div>
-						<div class="pl-[2rem] lg:pl-[12rem]">
-							<h3 class="font-heading text-subtitle lg:text-heading text-pearl-white">
-								Bronze Sponsors
-							</h3>
-						</div>
-					</div>
-					<div class="px-[2rem] lg:px-[12rem]">
-						<div class="flex justify-center lg:justify-between flex-wrap ">
-							<BronzeSponsorLogo v-for="(sponsor, i) in store.bronzeSponsors" :key="i" :logo-src="sponsor.logoSrc" :sponsor-name="sponsor.sponsorName" :index="i" :logo-size="sponsor.logoSize"/>
-							<div class="h-[25rem] min-w-[25rem] flex items-center justify-center">
-								<p class="font-heading text-subtitle lg:text-subtitle text-pearl-white text-center ">Here could <br> be your logo</p>
+					<template v-if="store.bronzeSponsors.length">
+						<div class="relative w-full h-max py-[12rem]">
+							<div class="absolute left-[70%] md:left-[50%] lg:left-[70%] xl:left-[50%] 2xl:left-auto 2xl:right-0 xl:right-0 top-[43%]">
+								<svg width="782" height="31" viewBox="0 0 782 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path fill-rule="evenodd" clip-rule="evenodd" d="M782 0.926632L45.1191 9.80528C44.8717 9.80826 44.627 9.85712 44.3974 9.94936L2.16181 26.9214C0.107586 27.7469 0.717887 30.8037 2.9316 30.777L782 21.3901V0.926632Z" fill="#FBC151"/>
+								</svg>
+							</div>
+							<div class="pl-[2rem] lg:pl-[12rem]">
+								<h3 class="font-heading text-subtitle lg:text-heading text-pearl-white">
+									Bronze Sponsors
+								</h3>
 							</div>
 						</div>
-					</div>
+						<div class="px-[2rem] lg:px-[12rem]">
+							<div class="flex justify-center lg:justify-between flex-wrap ">
+								<BronzeSponsorLogo v-for="(sponsor, i) in store.bronzeSponsors" :key="i" :logo-src="sponsor.logoSrc" :sponsor-name="sponsor.sponsorName" :index="i" :logo-size="sponsor.logoSize"/>
+								<div class="h-[25rem] min-w-[25rem] flex items-center justify-center">
+									<p class="font-heading text-subtitle lg:text-subtitle text-pearl-white text-center ">Here could <br> be your logo</p>
+								</div>
+							</div>
+						</div>
+					</template>
 			</section>
 		</main>
 

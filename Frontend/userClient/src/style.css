@@ -33,3 +33,47 @@ html, body, #app{
   background: rgba(251, 193, 81, 1);
   color: white;
 }
+
+
+::-webkit-scrollbar {
+	width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+	background: #242424;
+	border-top: 0;
+}
+
+body::-webkit-scrollbar-track {
+	border-top: 3.5px solid #242424;
+}
+
+body::-webkit-scrollbar {
+	width: 12px;
+}
+
+body::-webkit-scrollbar-thumb {
+	border-radius: 4px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: rgba(251, 193, 81, 1);
+	cursor: pointer;
+  border-radius: 100px;
+}
+
+/* firefox */
+@-moz-document url-prefix() {
+	* {
+		scrollbar-width: thin;
+		scrollbar-color: rgba(251, 193, 81, 1) #242424;
+	}
+
+	html,
+	body {
+		scrollbar-width: auto;
+	}
+}
+
