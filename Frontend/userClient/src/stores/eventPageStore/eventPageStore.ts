@@ -76,7 +76,7 @@ export const useEventPageStore = defineStore('eventPageStore', {
     edition: '',
     description: '',
     eventPictureSrc: '',
-	mainSponsorExists: false as boolean,
+    mainSponsorExists: false as boolean,
     mainSponsor: {
       sponsorName: '',
       description: '',
@@ -89,7 +89,7 @@ export const useEventPageStore = defineStore('eventPageStore', {
     participatePanel: {
       zoom: 12,
       coordinates: [0, 0],
-      isRegistrationOpen: false,
+      isRegistrationOpen: true,
       participantsCount: 0,
 	  location: '',
 	  locationMapsUrl: '',

@@ -12,6 +12,7 @@ import { ref } from 'vue';
 import { useAuthStore } from '@/stores/authStore/authStore';
 import { useEventPageStore } from '@/stores/eventPageStore/eventPageStore';
 import { sanitizeHtml } from '@/utils/htmlSanitizers';
+import { storeToRefs } from 'pinia';
 
 
 const store = useEventPageStore()
@@ -19,9 +20,10 @@ const store = useEventPageStore()
 
 const isParticipationFormShown = ref(false)
 
-const {isAuthenticated} = useAuthStore()
+const {isAuthenticated} = storeToRefs(useAuthStore())
 
 const showParticipationForm = () =>{
+	console.log(isAuthenticated.value)
 	isParticipationFormShown.value = true
 	//uncomment for production
 	isAuthenticated || (window.onbeforeunload = function() {

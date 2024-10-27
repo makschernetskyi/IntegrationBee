@@ -19,21 +19,6 @@ export const useParticipationFormStore = defineStore('participationFormStore', {
     loading: false,
   }),
 
-  // Getters (if needed)
-  getters: {
-    // Example getter to check if the form is valid without displaying errors
-    isFormValid(state): boolean {
-      return (
-        state.firstName.trim() !== '' &&
-        state.lastName.trim() !== '' &&
-        /^\+?[0-9\s\-()]{7,}$/.test(state.phoneNumber) &&
-        /^\+?[0-9\s\-()]{7,}$/.test(state.emergencyPhoneNumber) &&
-        state.studyProgram.trim() !== '' &&
-        state.acceptedRules
-      );
-    },
-  },
-
   // Actions
   actions: {
     // Validate form fields and populate errors
@@ -64,9 +49,13 @@ export const useParticipationFormStore = defineStore('participationFormStore', {
         this.errors.studyProgram = 'Study Program is required.';
       }
 
-      if (!this.acceptedRules) {
-        this.errors.acceptedRules = 'You must accept the rules of participation.';
+      if(!this.namePronunciation){
+        this.errors.namePronunciation = 'Name pronunciation is required';
       }
+
+      //if (!this.acceptedRules) {
+      //  this.errors.acceptedRules = 'You must accept the rules of participation.';
+      //}
 
       // Return true if there are no errors
       return Object.keys(this.errors).length === 0;

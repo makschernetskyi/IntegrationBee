@@ -1,13 +1,15 @@
 <script setup lang="ts">
 //types for lingua recorder in src/lingua-recorder.d.ts
+import { checkMicrophonePermission } from '@/utils/permissionCheckers';
 import {LinguaRecorder, AudioRecord} from 'lingua-recorder'
 import { toRefs, ref } from 'vue';
 
 const props = defineProps({
 	label: {type: String},
 	modelValue: {type: Blob},
+	invalid: {type: Boolean}
 })
-const {label, modelValue} = toRefs(props)
+const {label, modelValue, invalid} = toRefs(props)
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -41,7 +43,11 @@ function displayAudioProgress() {
   }
 }
 
-const startRecording = ()=>{
+const startRecording = async () =>{
+	if(!await checkMicrophonePermission()){
+		alert('allow access to the microphone first. It may require you to reload the page')
+		return
+	}
 	recorder.start()
 	isRecording.value = true
 }
@@ -78,10 +84,11 @@ const restartRecording = ()=>{
 <template>
 	<div class="w-full h-[8rem] flex items-end">
 		<div class="h-[50%] w-full bg-white-100 rounded-[10px] flex justify-between items-center px-[2rem] relative text-screenBlack">
-			<p :class="
-				{
-					'absolute left-[2rem] text-body font-heading text-screenBlack h-[100%] flex items-center will-change-transform transition-transform duration-100': true,
-					'-translate-y-[100%]': isRecorded || isRecording
+			<p :class="{
+					'absolute left-[2rem] text-body font-heading h-[100%] flex items-center will-change-transform transition-transform duration-100': true,
+					'-translate-y-[100%]': isRecorded || isRecording,
+					'text-red': invalid,
+					'text-screenBlack': !invalid,
 				}">
 				{{ label }}
 			</p>
@@ -107,6 +114,7 @@ const restartRecording = ()=>{
 				<!--record button-->
 				<div v-if="!isRecording && !isRecorded" class="h-full aspect-square p-1">
 					<button
+						type="button"
 						title="record"
 						@click="startRecording" 
 						class="h-full aspect-square flex rounded-full bg-gray-50 fill-screenBlack lg:hover:fill-primary">
@@ -118,6 +126,7 @@ const restartRecording = ()=>{
 				<!--stop button-->
 				<div v-if="isRecording && !isRecorded" class="h-full aspect-square p-1">
 					<button
+						type="button"
 						title="end recording"
 						@click="stopRecording" 
 						class="h-full aspect-square flex rounded-full bg-gray-50 stroke-screenBlack lg:hover:stroke-primary">
@@ -129,6 +138,7 @@ const restartRecording = ()=>{
 				<!--play button-->
 				<div v-if="!isRecording && isRecorded && !isPlaying" class="h-full aspect-square p-1">
 					<button
+						type="button"
 						title="play"
 						@click="playRecording" 
 						class="h-full aspect-square flex rounded-full bg-gray-50 stroke-screenBlack lg:hover:stroke-primary">
@@ -141,6 +151,7 @@ const restartRecording = ()=>{
 				<!--pause playing-->
 				<div v-if="!isRecording && isRecorded && isPlaying" class="h-full aspect-square p-1">
 					<button
+						type="button"
 						title="pause"
 						@click="pauseRecording" 
 						class="h-full aspect-square flex rounded-full bg-gray-50 stroke-screenBlack lg:hover:stroke-primary">
@@ -153,6 +164,7 @@ const restartRecording = ()=>{
 				<!--restart recording-->
 				<div v-if="!isRecording && isRecorded" class="h-full aspect-square p-1">
 					<button
+						type="button"
 						title="record again"
 						@click="restartRecording" 
 						class="h-full aspect-square flex rounded-full bg-gray-50 stroke-screenBlack lg:hover:stroke-primary">

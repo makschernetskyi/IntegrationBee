@@ -1,10 +1,22 @@
 <script setup lang="ts">
 import FormInput from '@/components/FormInput.vue';
 import DefaultLayout from '@/layouts/Default.vue';
+import { useSignUpPageStore } from '@/stores/signUpPageStore/signUpPageStore';
 
 import {ref} from "vue";
+import { storeToRefs } from 'pinia';
 
 const testInputModel = ref('')
+
+const store = useSignUpPageStore()
+const {email, password, firstName, lastName, institution, errors} = storeToRefs(store)
+
+const handleSubmit = (e:any) =>{
+	e.preventDefault();
+	if(store.validateForm()){
+		store.initializeSignUp()
+	}
+}
 
 </script>
 <template>
@@ -20,12 +32,27 @@ const testInputModel = ref('')
 			</div>
 			<!--Form-->
 			<div class="w-full flex justify-center">
-				<form @submit="(event)=>event.preventDefault()" class="w-full lg:w-[30%] px-[2rem] flex flex-col gap-[2rem]">
-					<FormInput v-model="testInputModel" class="w-full" type="text" label="E-mail" name="email"/>
-					<FormInput v-model="testInputModel" class="w-full" type="text" label="First Name" name="first name"/>
-					<FormInput v-model="testInputModel" class="w-full" type="text" label="Last Name" name="last name"/>
-					<FormInput v-model="testInputModel" class="w-full" type="text" label="Institution" name="password"/>
-					<FormInput v-model="testInputModel" class="w-full" type="password" label="Password" name="password"/>
+				<form @submit="handleSubmit" class="w-full lg:w-[30%] px-[2rem] flex flex-col gap-[2rem]">
+					<div class="flex flex-col w-full">
+						<FormInput v-model="email" class="w-full" type="text" label="E-mail" name="email" :invalid="Boolean(errors.email)"/>
+						<div v-if="errors.email" class="text-text-sm font-body text-red pl-[0rem]">{{errors.email}}</div>
+					</div>
+					<div class="flex flex-col w-full">
+						<FormInput v-model="firstName" class="w-full" type="text" label="First Name" name="first name" :invalid="Boolean(errors.firstName)"/>
+						<div v-if="errors.firstName" class="text-text-sm font-body text-red pl-[0rem]">{{errors.firstName}}</div>
+					</div>
+					<div class="flex flex-col w-full">
+						<FormInput v-model="lastName" class="w-full" type="text" label="Last Name" name="last name" :invalid="Boolean(errors.lastName)"/>
+						<div v-if="errors.lastName" class="text-text-sm font-body text-red pl-[0rem]">{{errors.lastName}}</div>
+					</div>
+					<div class="flex flex-col w-full">
+						<FormInput v-model="institution" class="w-full" type="text" label="Institution" name="institution" :invalid="Boolean(errors.institution)"/>
+						<div v-if="errors.institution" class="text-text-sm font-body text-red pl-[0rem]">{{errors.institution}}</div>
+					</div>
+					<div class="flex flex-col w-full">
+						<FormInput v-model="password" class="w-full" type="password" label="Password" name="password" :invalid="Boolean(errors.password)"/>
+						<div v-if="errors.password" class="text-text-sm font-body text-red pl-[0rem]">{{errors.password}}</div>
+					</div>
 					<div class="w-full flex justify-center mt-[4rem]">
 						<button 
 							class="overflow-hidden w-[90%] rounded-3xl font-heading text-subtitle pt-[0.8rem] pb-[0.6rem] relative bg-primary border-primary border-2 text-screenBlack after:absolute after:w-full after:h-full after:top-0 after:left-0 after:bg-pearl-white after:transition-transform after:duration-200 after:will-change-transform after:origin-top after:scale-y-0 hover:after:scale-y-100"

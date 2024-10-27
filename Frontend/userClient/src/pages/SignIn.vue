@@ -34,18 +34,18 @@ const handleSubmit = (e:any)=>{
 			<div class="w-full flex justify-center">
 				<form @submit="handleSubmit" class="w-full lg:w-[30%] px-[2rem] flex flex-col gap-[2rem]">
 					<div class="flex flex-col w-full">
-						<FormInput :v-model="email" class="w-full" type="text" label="E-mail" name="email"/>
+						<FormInput :v-model="email" class="w-full" type="text" label="E-mail" name="email" :invalid="Boolean(errors.email)"/>
 						<div v-if="errors.email" class="text-text-sm font-body text-red pl-[0rem]">{{errors.email}}</div>
 					</div>
 					<div class="flex flex-col w-full">
-						<FormInput :v-model="password" class="w-full" type="password" label="Password" name="password"/>
+						<FormInput :v-model="password" class="w-full" type="password" label="Password" name="password" :invalid="Boolean(errors.password)"/>
 						<div v-if="errors.password" class="text-text-sm font-body text-red pl-[0rem]">{{errors.password}}</div>
 					</div>
 					
 					<div class="w-full flex justify-center mt-[5rem]">
 						<button 
 							class="overflow-hidden w-[90%] rounded-3xl font-heading text-subtitle pt-[0.8rem] pb-[0.6rem] relative bg-primary border-primary border-2 text-screenBlack after:absolute after:w-full after:h-full after:top-0 after:left-0 after:bg-pearl-white after:transition-transform after:duration-200 after:will-change-transform after:origin-top after:scale-y-0 hover:after:scale-y-100"
-							title="sign up"
+							title="sign in"
 							type="submit"
 						>
 							<span class="relative z-[2]">
