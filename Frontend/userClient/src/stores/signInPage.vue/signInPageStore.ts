@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
-
+import {useAuthStore} from "@/stores/authStore/authStore"
+import {router} from "@/router"
 
 
 export const useSignInPageStore = defineStore('useSignInPageStore', {
@@ -11,7 +12,6 @@ export const useSignInPageStore = defineStore('useSignInPageStore', {
     errors: {} as Record<string, string>,
   }),
 
-  // Actions
   actions: {
     // Validate form fields
     validateForm() {
@@ -32,8 +32,15 @@ export const useSignInPageStore = defineStore('useSignInPageStore', {
 
 
     // Initialize authentication (e.g., on app startup)
-    initializeAuth() {
-      
+    async initializeAuth(next:string='/') {
+      const authStore = useAuthStore()
+      try{
+        await authStore.requestLogin(this.email, this.password)
+        authStore.getProfileData()
+        router.push(next)
+      }catch(e){
+        //nothing to do here
+      }
     },
   },
 });

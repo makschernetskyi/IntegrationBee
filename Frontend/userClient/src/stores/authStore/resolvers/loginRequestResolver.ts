@@ -1,5 +1,6 @@
 import Cookies from "js-cookie";
 import {noAuthApi} from "@/api";
+import {useToastStore} from "@/stores/toastStore/toastStore"
 
 const API_SIGN_IN_URL = "/login/"
 
@@ -25,23 +26,40 @@ export async function loginRequestResolver(this:any, email:string, password:stri
 
         this.signInRequest.status = 'resolved';
         this.signInRequest.code = response.status; // Status code
+
+        useToastStore().addToast({
+            type:'success',
+            title: "Successfully logged in!",
+            message: ''
+        })
+
         return response.data;
-    } catch (error) {
+    } catch (error:any) {
 
-        //const errorStore = useErrorStore()
-        //if(error.response.data.detail === "No active account found with the given credentials"){
-        //    errorStore.addError({text:"Wrong email or password."})
-        //}else{
-        //    errorStore.addError({text:"Error during signing in. try later."})
-        //}
+        const toastStore = useToastStore()
+        if(error.response.data.detail === "No active account found with the given credentials"){
+            
+            toastStore.addToast({
+                type:'error',
+                title: "Wrong e-mail or password",
+                message: 'try again'
+            })
+
+        }else{
+            toastStore.addToast({
+                type:'error',
+                title: "Could not sign in",
+                message: 'try again later.'
+            })
+        }
 
 
-        //this.signInRequest.status = 'rejected';
-        //this.signInRequest.code = error.response ? error.response.status : null; // Status code if available
-        //this.signInRequest.error = error;
-        //this.signInRequest.errorMSG = error.message;
+        this.signInRequest.status = 'rejected';
+        this.signInRequest.code = error.response ? error.response.status : null; // Status code if available
+        this.signInRequest.error = error;
+        this.signInRequest.errorMSG = error.message;
 
 
-        //throw error;
+        throw error;
     }
 }

@@ -25,6 +25,7 @@
 	// Lifecycle hooks
 	onMounted(() => {
 		if (videoPlayer.value) {
+			//@ts-expect-error - copied from documentation
 			player = videojs(videoPlayer.value, props.options, function() {
 				this.log('onPlayerReady', this);
 			});

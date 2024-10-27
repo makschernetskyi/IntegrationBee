@@ -37,27 +37,27 @@ const handleSubmit = (e: any) =>{
 			</h4>
 			<div class="w-full grid grid-cols-1 lg:grid-cols-2 gap-x-[2rem] gap-y-[2rem]">
 				<div class="flex flex-col">
-					<FormInput :v-model="firstName" label="First Name*" :invalid="Boolean(errors.firstName)"/>
+					<FormInput v-model="firstName" label="First Name*" :invalid="Boolean(errors.firstName)"/>
 					<div v-if="errors.firstName" class="text-text-sm font-body text-red pl-[0rem]">{{ errors.firstName }}</div>
 				</div>
 				<div class="flex flex-col">
-					<FormInput :v-model="lastName" label="Last Name*" :invalid="Boolean(errors.lastName)"/>
+					<FormInput v-model="lastName" label="Last Name*" :invalid="Boolean(errors.lastName)"/>
 					<div v-if="errors.lastName" class="text-text-sm font-body text-red pl-[0rem]">{{errors.lastName}}</div>
 				</div>
 				<div class="flex flex-col">
-					<FormInput :v-model="phoneNumber" label="Phone Number*" :invalid="Boolean(errors.phoneNumber)"/>
+					<FormInput v-model="phoneNumber" label="Phone Number*" :invalid="Boolean(errors.phoneNumber)"/>
 					<div v-if="errors.phoneNumber" class="text-text-sm font-body text-red pl-[0rem]">{{errors.phoneNumber}}</div>
 				</div>
 				<div class="flex flex-col">
-					<FormInput :v-model="emergencyPhoneNumber" label="Emergency phone number*" :invalid="Boolean(errors.emergencyPhoneNumber)"/>
+					<FormInput v-model="emergencyPhoneNumber" label="Emergency phone number*" :invalid="Boolean(errors.emergencyPhoneNumber)"/>
 					<div v-if="errors.emergencyPhoneNumber" class="text-text-sm font-body text-red pl-[0rem]">{{errors.emergencyPhoneNumber}}</div>
 				</div>
 				<div class="flex flex-col">
-					<FormInput :v-model="studyProgram" label="Study Program*" :invalid="Boolean(errors.studyProgram)"/>
+					<FormInput v-model="studyProgram" label="Study Program*" :invalid="Boolean(errors.studyProgram)"/>
 					<div v-if="errors.studyProgram" class="text-text-sm font-body text-red pl-[0rem]">{{errors.studyProgram}}</div>
 				</div>
 				<div class="flex flex-col">
-					<VoiceInput :v-model="namePronunciation" label="Name pronunciation" :invalid="Boolean(errors.namePronunciation)"/>
+					<VoiceInput v-model="namePronunciation" label="Name pronunciation" :invalid="Boolean(errors.namePronunciation)"/>
 					<div v-if="errors.namePronunciation" class="text-text-sm font-body text-red pl-[0rem]">{{errors.namePronunciation}}</div>
 				</div>
 				<h5 class="font-heading pl-[2rem] mt-[5rem]">

@@ -5,7 +5,7 @@ import shutil
 import re
 
 
-DEFAULT_BUILD_PATH = r"..\Frontend\IntegrationBeeFrontend\dist"
+DEFAULT_BUILD_PATH = r"..\Frontend\userClient\dist"
 
 
 url_pattern = r'https?://[^\s/$.?#].[^\s]*'

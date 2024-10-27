@@ -77,7 +77,7 @@ const restartRecording = ()=>{
 	record.value = null;
 	playingAudioProgress.value = 0;
 	recordDuration.value = 0;
-	emit('update:modelValue', null)
+	emit('update:modelValue', undefined)
 }
 
 </script>

@@ -1,19 +1,25 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const BASE_URL = "http://localhost:1212/api/v2"
+const BASE_URL = import.meta.env.VITE_API_URL
+console.log("APIURL", BASE_URL)
 
 const api = axios.create({
   baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true
 });
 
 api.interceptors.request.use(config => {
   const accessToken = Cookies.get('access');
+  const csrfToken = Cookies.get('csrftoken')
   if(!Cookies.get("refresh")){
     Cookies.set("refresh", "null")
+  }
+  if (csrfToken) {
+    config.headers['X-CSRFToken'] = csrfToken;
   }
   config.headers.Authorization = accessToken ? `Bearer ${accessToken}` : '';
   return config;

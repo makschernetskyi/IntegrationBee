@@ -12,7 +12,7 @@ export const useParticipationFormStore = defineStore('participationFormStore', {
     phoneNumber: '',
     emergencyPhoneNumber: '',
     studyProgram: '',
-    namePronunciation: null as Blob | null, // Assuming audio is stored as a Blob
+    namePronunciation: undefined as Blob | undefined, // Assuming audio is stored as a Blob
     additionalInfo: '',
     acceptedRules: false,
     errors: {} as Record<string, string>,
@@ -131,7 +131,7 @@ export const useParticipationFormStore = defineStore('participationFormStore', {
       this.phoneNumber = '';
       this.emergencyPhoneNumber = '';
       this.studyProgram = '';
-      this.namePronunciation = null;
+      this.namePronunciation = undefined;
       this.additionalInfo = '';
       this.acceptedRules = false;
       this.errors = {};

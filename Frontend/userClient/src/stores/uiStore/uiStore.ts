@@ -8,9 +8,6 @@ export const useUiStore = defineStore('ui', {
 		isMobileMenuVisible: false,
 		shouldMobileMenuBeVisible: false
 	}),
-	getters: ()=>{
-
-	},
 	actions: ()=>{
 	}
 })

@@ -6,16 +6,23 @@ import {ref} from "vue";
 
 import { useSignInPageStore } from '@/stores/signInPage.vue/signInPageStore';
 import { storeToRefs } from 'pinia';
+import { useRoute } from 'vue-router';
 
 const store = useSignInPageStore()
 const {email, password, errors} = storeToRefs(store)
 
+const route = useRoute()
+const query = route.query
+
 const handleSubmit = (e:any)=>{
 	e.preventDefault();
 	if(store.validateForm()){
-		store.initializeAuth()
+		let next = '/'
+		if('next' in query && query.next?.toString() !== undefined){
+			next = query.next?.toString()
+		}
+		store.initializeAuth(next as string)
 	}
-	
 }
 
 </script>
@@ -34,15 +41,25 @@ const handleSubmit = (e:any)=>{
 			<div class="w-full flex justify-center">
 				<form @submit="handleSubmit" class="w-full lg:w-[30%] px-[2rem] flex flex-col gap-[2rem]">
 					<div class="flex flex-col w-full">
-						<FormInput :v-model="email" class="w-full" type="text" label="E-mail" name="email" :invalid="Boolean(errors.email)"/>
+						<FormInput v-model="email" class="w-full" type="text" label="E-mail" name="email" :invalid="Boolean(errors.email)"/>
 						<div v-if="errors.email" class="text-text-sm font-body text-red pl-[0rem]">{{errors.email}}</div>
 					</div>
 					<div class="flex flex-col w-full">
-						<FormInput :v-model="password" class="w-full" type="password" label="Password" name="password" :invalid="Boolean(errors.password)"/>
+						<FormInput v-model="password" class="w-full" type="password" label="Password" name="password" :invalid="Boolean(errors.password)"/>
 						<div v-if="errors.password" class="text-text-sm font-body text-red pl-[0rem]">{{errors.password}}</div>
 					</div>
 					
-					<div class="w-full flex justify-center mt-[5rem]">
+					<div class="w-full flex justify-center gap-[2rem] mt-[5rem]">
+						<RouterLink 
+							to="/sign_up"
+							class="overflow-hidden w-[90%] rounded-3xl font-heading text-subtitle pt-[0.8rem] pb-[0.6rem] text-primary lg:hidden flex justify-center"
+							title="sign in"
+						>
+							<span class="relative z-[2]">
+								Sign up
+							</span>
+						</RouterLink>
+						
 						<button 
 							class="overflow-hidden w-[90%] rounded-3xl font-heading text-subtitle pt-[0.8rem] pb-[0.6rem] relative bg-primary border-primary border-2 text-screenBlack after:absolute after:w-full after:h-full after:top-0 after:left-0 after:bg-pearl-white after:transition-transform after:duration-200 after:will-change-transform after:origin-top after:scale-y-0 hover:after:scale-y-100"
 							title="sign in"
@@ -52,6 +69,8 @@ const handleSubmit = (e:any)=>{
 								Sign in
 							</span>
 						</button>
+						
+						
 					</div>
 					<div class="flex text-center items-center flex-col text-body font-body gap-2 mt-[1rem]">
 						<RouterLink to="password_recovery" class="lg:hover:underline text-screen-black">

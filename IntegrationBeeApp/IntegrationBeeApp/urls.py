@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.urls import include, path, re_path
 from django.contrib import admin
+from django.views.generic import TemplateView
 
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail import urls as wagtail_urls
@@ -19,6 +20,7 @@ urlpatterns = [
     path("search/", search_views.search, name="search"),
     path("api/v2/", include("api.urls")),
     path("api/v2/cms/", include("home.urls")),
+    re_path(r'^(?!api/v2/|cms/|documents/|search/|django-admin/).*$', TemplateView.as_view(template_name="home/home.html")),
     re_path(r'^', include(wagtail_urls))
 ]
 
