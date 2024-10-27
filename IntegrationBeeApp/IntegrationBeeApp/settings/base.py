@@ -17,7 +17,6 @@ from datetime import timedelta
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -25,7 +24,6 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 # Application definition
 
 INSTALLED_APPS = [
-    "admin_panel",
     "api",
     "home",
     'wagtail.api.v2',
@@ -51,6 +49,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'wagtail.contrib.modeladmin',
+    'django_extensions',
+    'wagtailmath',
 ]
 
 MIDDLEWARE = [
@@ -71,7 +72,6 @@ CSRF_COOKIE_HTTPONLY = False
 
 ROOT_URLCONF = "IntegrationBeeApp.urls"
 
-
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -90,15 +90,10 @@ TEMPLATES = [
     },
 ]
 
-
-
 WSGI_APPLICATION = "IntegrationBeeApp.wsgi.application"
-
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
-
 
 
 # Password validation
@@ -119,7 +114,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -133,7 +127,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
@@ -142,7 +135,6 @@ STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
     # "sass_processor.finders.CssFinder",
 ]
-
 
 STATICFILES_DIRS = [
     os.path.join(PROJECT_DIR, "static"),
@@ -167,14 +159,13 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # ManifestStaticFilesStorage is recommended in production, to prevent outdated
 # JavaScript / CSS assets being served from cache (e.g. after a Wagtail upgrade).
 # See https://docs.djangoproject.com/en/5.0/ref/contrib/staticfiles/#manifeststaticfilesstorage
-#STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
+# STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATIC_URL = "/static/"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
-
 
 # Wagtail settings
 
@@ -190,11 +181,9 @@ WAGTAILSEARCH_BACKENDS = {
 
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
-WAGTAILADMIN_BASE_URL = "http://example.com"
+WAGTAILADMIN_BASE_URL = "http://www.integrationbee.at"
 
-
-
-#Rest framework
+# Rest framework
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -211,7 +200,7 @@ REST_FRAMEWORK = {
 #    ),
 # }
 
-#simple-JWT
+# simple-JWT
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
@@ -222,6 +211,3 @@ SIMPLE_JWT = {
 }
 
 AUTH_USER_MODEL = 'api.User'
-
-
-

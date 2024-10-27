@@ -1,4 +1,12 @@
+import re
+import urllib
+from io import StringIO
+import requests
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db import models
+from django.http import HttpResponse
+from django.shortcuts import redirect
+from wagtail.contrib.routable_page.models import RoutablePageMixin
 
 from wagtail.models import Page
 from wagtail.fields import RichTextField
@@ -10,6 +18,7 @@ from wagtail.search import index
 from . import blocks
 
 from api import models as api_models
+from .blocks import SponsorBlock
 
 
 class HomePage(Page):
@@ -42,20 +51,11 @@ class HomePage(Page):
 
     project_description = RichTextField(features=["bold", "link"], null=True)
 
-    example_youtube_video_link = models.CharField(max_length=150, blank=True, null=True)
-
-    main_sponsor_picture = models.ForeignKey(
-        "wagtailimages.Image",
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-    )
-
-    main_sponsor_description = RichTextField(features=["bold", "link"], null=True)
+    youtube_video_link = models.CharField(max_length=150, blank=True, null=True)
 
     sponsors = StreamField(
         [
-            ("sponsor", blocks.HomeSponsorBlock())
+            ("sponsor", SponsorBlock()),
         ],
         use_json_field=True,
         null=True,
@@ -71,7 +71,6 @@ class HomePage(Page):
         blank=True
     )
 
-
     content_panels = Page.content_panels + [
         FieldPanel("title_section_header"),
         FieldPanel("title_section_description"),
@@ -81,10 +80,7 @@ class HomePage(Page):
         FieldPanel("sponsors"),
         FieldPanel("acknowledgements"),
         FieldPanel("project_description"),
-        FieldPanel("example_youtube_video_link"),
-        FieldPanel("main_sponsor_picture"),
-        FieldPanel("main_sponsor_description"),
-
+        FieldPanel("youtube_video_link")
     ]
 
     api_fields = [
@@ -96,9 +92,7 @@ class HomePage(Page):
         APIField("sponsors"),
         APIField("acknowledgements"),
         APIField("project_description"),
-        APIField("example_youtube_video_link"),
-        APIField("main_sponsor_picture"),
-        APIField("main_sponsor_description"),
+        APIField("youtube_video_link"),
     ]
 
     search_fields = Page.search_fields + [
@@ -106,48 +100,29 @@ class HomePage(Page):
         index.SearchField('title_section_description', partial_match=True),
         index.SearchField('bullet_points_section_header', partial_match=True),
         index.SearchField('project_description', partial_match=True),
-        index.SearchField('example_youtube_video_link', partial_match=True),
-        index.SearchField('main_sponsor_description', partial_match=True),
+        index.SearchField('youtube_video_link', partial_match=True),
     ]
 
     subpage_types = ["home.NewsPage", "home.CompetitionsPage", "home.ContactsPage"]
 
 
-
-
-
-
-
 class NewsPage(Page):
-    """News Page Model"""
-
-    template = "home/home.html"
-
-    page_title = models.CharField(max_length=50, blank=False, null=True)
-
-
-    content_panels = Page.content_panels + [
-        FieldPanel("page_title"),
-    ]
 
     api_fields = [
-        APIField("page_title"),
+        APIField("title"),
     ]
 
     search_fields = Page.search_fields + [
-        index.SearchField('page_title', partial_match=True),
+        index.SearchField('title', partial_match=True),
     ]
 
     subpage_types = ["home.NewsPost"]
 
-    def get_url_parts(self, request=None):
-        return self.get_parent().get_url_parts()
-
-
+    def serve(self, request, *args, **kwargs):
+        return redirect('/')
 
 
 class NewsPost(Page):
-
 
     header = models.CharField(max_length=100, blank=False, null=False)
     text = RichTextField(features=["bold", "link", "italic"], null=True)
@@ -176,34 +151,27 @@ class NewsPost(Page):
         index.SearchField('text', partial_match=True),
     ]
 
-    def get_url_parts(self, request=None):
-        return self.get_parent().get_url_parts()
+    def serve(self, request, *args, **kwargs):
+        return redirect('/')
 
 
 class CompetitionsPage(Page):
 
-    header = models.CharField(max_length=50, null=False, blank=False)
-
-    content_panels = Page.content_panels + [
-        FieldPanel("header"),
-    ]
-
     api_fields = [
-        APIField("header"),
+        APIField("title"),
     ]
 
     search_fields = Page.search_fields + [
-        index.SearchField('header', partial_match=True),
+        index.SearchField('title', partial_match=True),
     ]
 
-    subpage_types = ["home.Competition"]
+    subpage_types = ["home.CompetitionPost"]
 
-    def get_url_parts(self, request=None):
-        return self.get_parent().get_url_parts()
+    def serve(self, request, *args, **kwargs):
+        return redirect('/')
 
 
-class Competition(Page):
-
+class CompetitionPost(Page):
 
     header = models.CharField(max_length=100, blank=False, null=False)
     short_description = RichTextField(features=["bold", "link"], null=True)
@@ -211,15 +179,15 @@ class Competition(Page):
     event_date = models.DateTimeField(blank=True, null=True)
     place = models.CharField(max_length=100, blank=False, null=False)
     place_maps_url = models.CharField(max_length=100, blank=True, null=True)
+    rules = RichTextField(features=["bold", "link", "italic", "ol", "ul"], null=True)
 
-    related_competition_id = models.IntegerField(blank=True, null=True)
-    related_competition_test = models.ForeignKey(
+    competition = models.ForeignKey(
         api_models.Competition,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
         related_name='+',
-        verbose_name='api_competition'
+        verbose_name='competition'
     )
 
     picture = models.ForeignKey(
@@ -238,12 +206,11 @@ class Competition(Page):
         FieldPanel("place"),
         FieldPanel("place_maps_url"),
         FieldPanel("picture"),
-        FieldPanel("related_competition_id"),
-        FieldPanel("related_competition_test"),
+        FieldPanel("competition"),
+        FieldPanel("rules"),
     ]
 
     api_fields = [
-        APIField("header"),
         APIField("header"),
         APIField("short_description"),
         APIField("description"),
@@ -251,8 +218,8 @@ class Competition(Page):
         APIField("place"),
         APIField("place_maps_url"),
         APIField("picture"),
-        APIField("related_competition_id"),
-        APIField("related_competition_test"),
+        APIField("competition"),
+        APIField("rules"),
     ]
 
     search_fields = Page.search_fields + [
@@ -261,21 +228,18 @@ class Competition(Page):
         index.SearchField('description', partial_match=True),
         index.SearchField('event_date'),
         index.SearchField('place', partial_match=True),
+        index.SearchField('rules', partial_match=True),
     ]
 
-    def get_url_parts(self, request=None):
-        return None, None, None, None
+    def serve(self, request, *args, **kwargs):
+        return redirect('/')
 
 
 class ContactsPage(Page):
-    """Contacts Page Model"""
-
-    # template = "home/home.html"
 
     about_us = models.TextField(blank=False, null=True)
     contacts = models.TextField(blank=False, null=True)
     socials = models.TextField (blank=True, null=True)
-
 
     our_team = StreamField(
         [
@@ -285,7 +249,6 @@ class ContactsPage(Page):
         blank=True,
         use_json_field=True
     )
-
 
     content_panels = Page.content_panels + [
         FieldPanel("about_us"),
@@ -307,5 +270,45 @@ class ContactsPage(Page):
         index.SearchField('socials', partial_match=True),
     ]
 
-    def get_url_parts(self, request=None):
-        return None, None, None, None
+    def serve(self, request, *args, **kwargs):
+        return redirect('/')
+
+
+class ImprintPage(Page):
+
+    imprint = RichTextField(features=["bold", "link", "italic", "ol", "ul"], null=True)
+
+    content_panels = Page.content_panels + [
+        FieldPanel("imprint"),
+    ]
+
+    api_fields = [
+        APIField("imprint"),
+    ]
+
+    search_fields = Page.search_fields + [
+        index.SearchField('imprint', partial_match=True),
+    ]
+
+    def serve(self, request, *args, **kwargs):
+        return redirect('/')
+
+
+class TermsOfUsePage(Page):
+
+    terms_of_use = RichTextField(features=["bold", "link", "italic", "ol", "ul"], null=True)
+
+    content_panels = Page.content_panels + [
+        FieldPanel("terms_of_use"),
+    ]
+
+    api_fields = [
+        APIField("terms_of_use"),
+    ]
+
+    search_fields = Page.search_fields + [
+        index.SearchField('terms_of_use', partial_match=True),
+    ]
+
+    def serve(self, request, *args, **kwargs):
+        return redirect('/')
