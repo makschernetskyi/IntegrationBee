@@ -1,19 +1,22 @@
+from xxlimited_35 import error
+
 from django.db import transaction, IntegrityError
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
 from django.shortcuts import redirect
 from rest_framework import status
 from uuid import uuid4
 
+from rest_framework.status import HTTP_200_OK
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import ValidationError
 
 from .permissions import IsAdminUser
-from .serializers import UserSerializer, CompetitionSerializer, EmailVerificationTokenSerializer, \
-    IntegralSeriesSerializer, IntegralSerializer, IntegralSolutionSerializer
-from api.models import Competition, User, EmailVerificationToken, IntegralsSeries, IntegralSolution, Integral
+from .serializers import UserSerializer, CompetitionSerializer, EmailVerificationTokenSerializer
+from api.models import Competition, User, EmailVerificationToken
 
 from home.models import CompetitionPost as CompetitionPage
 from api.services.send_email import send_email
@@ -193,16 +196,16 @@ class CompetitionView(APIView):
         competition = get_object_or_404(Competition, id=competition_id)
         user = request.user
 
-        if competition.max_participants and competition.participants.count() >= competition.max_participants:
+        if competition.max_participants and competition.participants_relationships.count() >= competition.max_participants:
             return Response({"error": "Maximum number of participants reached."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             if action == "add":
-                competition.participants.add(user)
+                competition.participants_relationships.add(user)
                 UserSerializer(user, request.data)
 
             elif action == "remove":
-                competition.participants.remove(user)
+                competition.participants_relationships.remove(user)
 
             return Response({"success": f"User {action}ed successfully {'from' if action=='remove' else 'to'} competition"}, status=status.HTTP_200_OK)
         except Exception as e:
@@ -258,6 +261,25 @@ class CompetitionsView(APIView):
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-def download_pdf_view(request, pk):
+def download_latex_pdf_report_view(request, pk):
     competition = get_object_or_404(Competition, pk=pk)
-    return competition.generate_latex_report()
+    return competition.generate_latex_pdf_report()
+
+
+def download_latex_tex_report_view(request, pk):
+    competition = get_object_or_404(Competition, pk=pk)
+    return competition.generate_latex_tex_report()
+
+
+def generate_bracket_view(request, pk):
+    competition = get_object_or_404(Competition, pk=pk)
+
+    try:
+        competition.generate_bracket()
+
+    except Exception as e:
+        error_message = str(e)
+        print(error_message)
+        return HttpResponse(f"error: {error_message}", status=500)
+
+    return redirect(request.META.get('HTTP_REFERER', '/'))
