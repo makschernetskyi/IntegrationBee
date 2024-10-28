@@ -1,14 +1,18 @@
 import subprocess
 import urllib
 import datetime
+from pathlib import Path
 
 import requests
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.forms import ModelForm
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from modelcluster.fields import ParentalKey
+from wagtail.admin.forms import WagtailAdminModelForm
 from wagtail.admin.panels import FieldPanel, InlinePanel
 from wagtail.fields import StreamField
 from wagtail.models import Orderable
@@ -99,65 +103,145 @@ class Competition(ClusterableModel):
 
     panels = [
         FieldPanel('name'),
-        FieldPanel('max_participants'),
-        InlinePanel('participants_relationships', label="Participants"),
-        FieldPanel("series")
+        FieldPanel('max_participants', classname="collapsed"),
+        InlinePanel('participants_relationships', label="Participants", classname="collapsed"),
+        InlinePanel('rounds', label="Rounds", classname="collapsed"),
+        FieldPanel("series", classname="collapsed")
+    ]
+
+    ROUND_ORDER = [
+        '1/8 Finals',
+        'Quarterfinals',
+        'Semifinals',
+        'Finals',
     ]
 
     def __str__(self):
         return self.name
 
-    def generate_latex_report(self):
-        try:
-            participants = self.participants_relationships.filter(status__in=['R', 'Q', 'E', 'F', 'S', 'T', 'W'])
-            series = self.series
+    def generate_latex(self, full_latex_file):
+        participants = self.participants_relationships.filter(status__in=['R', 'Q', 'E', 'F', 'S', 'T', 'W'])
+        series = self.series
 
-            report_html = render_to_string('contest_report.html', {
-                'competition': self,
-                'participants': participants,
-                'series': series,
+        report_html = render_to_string('contest_report.html', {
+            'competition': self,
+            'participants': participants,
+            'series': series,
+        })
+
+        html_file_template = 'contest_report.html'
+        html_file = 'competition_report.html'
+        latex_file_template = 'contest_report.tex'
+        latex_file = 'competition_report.tex'
+
+        with open(html_file, 'w') as f:
+            f.write(report_html)
+
+        pandoc_latex_command = [
+            'pandoc',
+            '-f', 'html+tex_math_dollars+tex_math_single_backslash',
+            '-t', 'latex',
+            '-o', latex_file,
+            html_file
+        ]
+
+        subprocess.run(pandoc_latex_command, stdout=subprocess.PIPE, check=True)
+
+        latex_content = render_to_string(latex_file_template, {
+                'body': open(latex_file, 'r').read(),
+                'date': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                'name': self.name,
             })
 
-            html_file_template = 'contest_report.html'
-            html_file = 'competition_report.html'
-            latex_file_template = 'contest_report.tex'
-            latex_file = 'competition_report.tex'
-            full_latex_file = 'full_competition_report.tex'
-            pdf_file = 'competition_report'
+        with open(full_latex_file, 'w') as f:
+            f.write(latex_content)
 
-            with open(html_file, 'w') as f:
-                f.write(report_html)
+    def generate_latex_pdf_report(self):
+        try:
+            latex_path = Path(f'competition_{self.pk}_report.tex')
+            pdf_path = Path(f'competition_{self.pk}_report.pdf')
 
-            pandoc_latex_command = [
-                'pandoc',
-                '-f', 'html+tex_math_dollars+tex_math_single_backslash',
-                '-t', 'latex',
-                '-o', latex_file,
-                html_file
-            ]
+            self.generate_latex(latex_path)
 
-            subprocess.run(pandoc_latex_command, stdout=subprocess.PIPE, check=True)
+            pdf_command = f"pdflatex -jobname={pdf_path.stem} {latex_path}"
+            subprocess.run(pdf_command, shell=True)
 
-            latex_content = render_to_string(latex_file_template, {
-                    'body': open(latex_file, 'r').read(),
-                    'date': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    'name': self.name,
-                })
+            response = HttpResponse(open(pdf_path, 'rb').read(), content_type='application/pdf')
+            response['Content-Disposition'] = f'attachment; filename="{pdf_path}"'
 
-            with open(full_latex_file, 'w') as f:
-                f.write(latex_content)
+            return response
 
-            lualatex_pdf_command = f"lualatex -jobname={pdf_file} {full_latex_file}"
-            subprocess.run(lualatex_pdf_command, shell=True)
-
-            return HttpResponse(open(f"{pdf_file}.pdf", 'rb').read(), content_type='application/pdf')
-
-        except Exception  as e:
+        except Exception as e:
             print(e)
             return HttpResponse("Error generating LaTeX report", status=500)
 
+    def generate_latex_tex_report(self):
+        try:
+            latex_path = Path(f'competition_{self.pk}_report.tex')
+            self.generate_latex(latex_path)
 
-class UserToCompetitionRelationship(Orderable, models.Model):
+            response = HttpResponse(open(latex_path, 'rb').read(), content_type='application/tex')
+            response['Content-Disposition'] = f'attachment; filename="{latex_path}"'
+
+            return response
+
+        except Exception as e:
+            print(e)
+            return HttpResponse("Error generating LaTeX report", status=500)
+
+    def generate_bracket(self):
+
+        participants = self.participants_relationships.filter(status__in=['Q', 'E', 'F', 'S', 'V', 'T', 'W'])
+        participants = [rel.user for rel in participants]
+
+        if len(participants) != 16:
+            raise ValueError('Exactly qualified 16 participants are required.')
+
+        if self.rounds.exists():
+            raise ValueError('Bracket already exists for this competition.')
+
+        rounds = {}
+        for round_name in self.ROUND_ORDER:
+            round_instance = self.rounds.create(name=round_name, competition=self)
+            rounds[round_name] = round_instance
+
+        initial_round = rounds['1/8 Finals']
+        for i in range(0, 16, 2):
+            player1 = participants[i]
+            player2 = participants[i + 1]
+
+            initial_round.matches.create(
+                player1=player1,
+                player2=player2,
+                sort_order=i//2,
+            )
+
+            player1_rel = self.participants_relationships.get(user=player1, competition=self)
+            player2_rel = self.participants_relationships.get(user=player2, competition=self)
+            player1_rel.status = "E"
+            player2_rel.status = "E"
+            player1_rel.save()
+            player2_rel.save()
+
+        match_counts = {
+            'Quarterfinals': 4,
+            'Semifinals': 2,
+            'Finals': 1,
+        }
+
+        for round_name, num_matches in match_counts.items():
+            round_instance = rounds[round_name]
+            for i in range(num_matches):
+                round_instance.matches.create(
+                    player1=None,
+                    player2=None,
+                    sort_order=i,
+                )
+
+        self.save()
+
+
+class UserToCompetitionRelationship(Orderable):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     competition = ParentalKey('Competition', on_delete=models.CASCADE, related_name='participants_relationships')
     registration_date = models.DateTimeField(auto_now_add=True)
@@ -170,6 +254,7 @@ class UserToCompetitionRelationship(Orderable, models.Model):
         ('E', '1/8 Finalist'),
         ('F', '1/4 Finalist'),
         ('S', 'Semifinalist'),
+        ('V', 'Finalist'),
         ('T', '2nd Place'),
         ('W', 'Won')
     ]
@@ -185,6 +270,117 @@ class UserToCompetitionRelationship(Orderable, models.Model):
         return f"{self.user.email} - {self.competition.name} - {self.status}"
 
 
+class Round(ClusterableModel):
+    ROUND_PROGRESSION = {
+        '1/8 Finals': 'Quarterfinals',
+        'Quarterfinals': 'Semifinals',
+        'Semifinals': 'Finals',
+    }
+
+    competition = ParentalKey('Competition', on_delete=models.CASCADE, related_name='rounds')
+    name = models.CharField(max_length=20)
+
+    panels = [
+        FieldPanel("name"),
+        InlinePanel('matches', classname="collapsed"),
+    ]
+
+    def __str__(self):
+        return f"{self.name} - {self.competition.name}"
+
+
+class Match(ClusterableModel):
+    WINNER_CHOICES = [
+        ('player1', 'Player 1'),
+        ('player2', 'Player 2'),
+    ]
+
+    round = ParentalKey('Round', on_delete=models.CASCADE, related_name='matches')
+    player1 = models.ForeignKey(User, related_name='+', on_delete=models.CASCADE, null=True, blank=True)
+    player2 = models.ForeignKey(User, related_name='+', on_delete=models.CASCADE, null=True, blank=True)
+    match_winner = models.CharField(max_length=7, choices=WINNER_CHOICES, null=True, blank=True)
+    sort_order = models.IntegerField(default=0, null=False, blank=False)
+
+    panels = [
+        FieldPanel('player1'),
+        FieldPanel('player2'),
+        FieldPanel('match_winner'),
+    ]
+
+    def __str__(self):
+        return f"{self.player1} vs {self.player2} ({self.round})"
+
+    @property
+    def winner(self):
+        if self.match_winner == 'player1':
+            return self.player1
+        elif self.match_winner == 'player2':
+            return self.player2
+        else:
+            return None
+
+    def clean(self):
+        super().clean()
+        if self.winner == 'player1' and not self.player1:
+            raise ValidationError("Cannot select Player 1 as winner when Player 1 is not set.")
+        if self.winner == 'player2' and not self.player2:
+            raise ValidationError("Cannot select Player 2 as winner when Player 2 is not set.")
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        if self.winner:
+            self.update_participant_status()
+
+            if self.round.name != 'Finals':
+                self.propagate_winner()
+            else:
+                second_player = self.player1 if self.player1 != self.winner else self.player2
+                second_player_relationship = UserToCompetitionRelationship.objects.get(
+                    user=second_player,
+                    competition=self.round.competition
+                )
+                second_player_relationship.status = 'T'
+                second_player_relationship.save()
+
+    def update_participant_status(self):
+        try:
+            relationship = UserToCompetitionRelationship.objects.get(
+                user=self.winner,
+                competition=self.round.competition
+            )
+            status_map = {
+                '1/8 Finals': 'F',
+                'Quarterfinals': 'S',
+                'Semifinals': 'V',
+                'Finals': 'W',
+            }
+            new_status = status_map.get(self.round.name)
+            if new_status:
+                relationship.status = new_status
+                relationship.save()
+        except UserToCompetitionRelationship.DoesNotExist:
+            raise ValidationError('Winner is not a participant in the competition.')
+
+    def propagate_winner(self):
+
+        try:
+            next_round_name = self.round.ROUND_PROGRESSION[self.round.name]
+            next_round = self.round.competition.rounds.get(name=next_round_name)
+        except (ValueError, Round.DoesNotExist):
+            raise ValidationError('Invalid round progression.')
+
+        next_match_index = self.sort_order // 2
+        next_match = next_round.matches.order_by('sort_order')[next_match_index]
+
+        if self.sort_order % 2 == 0:
+            next_match.player1 = self.winner
+        else:
+            next_match.player2 = self.winner
+
+        next_match.save()
+
+
 class EmailVerificationToken(models.Model):
     User = models.ForeignKey(User, on_delete=models.CASCADE)
     token = models.CharField(max_length=300, null=False)
@@ -195,28 +391,4 @@ class ForgotPasswordToken(models.Model):
     User = models.ForeignKey(User, on_delete=models.CASCADE)
     token = models.CharField(max_length=300, null=False)
     date_created = models.DateTimeField(auto_now_add=True, blank=False, null=False)
-
-
-class IntegralsSeries(models.Model):
-    objects = None
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=200, null=False, blank=False)
-    time_per_integral = models.IntegerField(null=False, blank=False, default=180)
-
-
-class IntegralSolution(models.Model):
-    id = models.AutoField(primary_key=True)
-    solution = models.TextField()
-
-
-class Integral(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=200, null=False, blank=False)
-    position = models.IntegerField(null=False, blank=False)
-    integral = models.TextField(null=False, blank=False)
-    Series = models.ForeignKey(IntegralsSeries, on_delete=models.CASCADE, related_name="integrals")
-    solution = models.ForeignKey(IntegralSolution, on_delete=models.SET_NULL, null=True)
-    difficulty = models.IntegerField(blank=True, null=True)
-    author = models.TextField(null=True, blank=True)
-
 
