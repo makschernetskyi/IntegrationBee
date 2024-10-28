@@ -1,8 +1,4 @@
-import re
-import urllib
-from io import StringIO
-import requests
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+
 from django.db import models
 from django.http import HttpResponse
 from django.shortcuts import redirect
@@ -10,7 +6,7 @@ from wagtail.contrib.routable_page.models import RoutablePageMixin
 
 from wagtail.models import Page
 from wagtail.fields import RichTextField
-from wagtail.admin.panels import FieldPanel
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.fields import StreamField
 from wagtail.api import APIField
 from wagtail.search import index
@@ -27,29 +23,14 @@ class HomePage(Page):
     template = "home/home.html"
     max_count = 1
 
-    title_section_header = models.CharField(max_length=50, blank=False, null=True)
-    title_section_description = RichTextField(features=["bold", "link"], null=True)
-
-    bullet_points_section_header = models.CharField(max_length=50, blank=False, null=True)
-
-    bullet_points = StreamField(
-        [
-            ("home_bullet_point", blocks.HomeBulletPointBlock())
-        ],
-        use_json_field=True,
-        null=True,
-        blank=True
-    )
-
-    homepage_picture = models.ForeignKey(
-        "wagtailimages.Image",
+    competition = models.ForeignKey(
+        api_models.Competition,
+        on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        on_delete=models.SET_NULL,
-        related_name="+"
+        related_name='+',
+        verbose_name='competition',
     )
-
-    project_description = RichTextField(features=["bold", "link"], null=True)
 
     youtube_video_link = models.CharField(max_length=150, blank=True, null=True)
 
@@ -62,45 +43,74 @@ class HomePage(Page):
         blank=True
     )
 
-    acknowledgements = StreamField(
+    steps_to_participate = StreamField(
         [
-            ("thanks_to", blocks.HomeAcknowledgementBlock())
+            ("step_to_participate", blocks.StepToParticipateBlock()),
         ],
         use_json_field=True,
         null=True,
         blank=True
     )
 
+    social_media_links = StreamField(
+        [
+            ("social_media_link", blocks.SocialMediaLinkBlock())
+        ],
+        use_json_field=True,
+        null=True,
+        blank=True
+    )
+
+    why_participate_header = models.CharField(max_length=100, blank=False, null=True)
+    why_participate_content = models.CharField(max_length=500, blank=False, null=True)
+    slogan = models.CharField(max_length=500, blank=False, null=True)
+    what_is_it_content = models.CharField(max_length=500, blank=False, null=True)
+
+    title_background_image = models.ForeignKey(
+        'wagtailimages.Image',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='+',
+        verbose_name="Title Background Image"
+    )
+
     content_panels = Page.content_panels + [
-        FieldPanel("title_section_header"),
-        FieldPanel("title_section_description"),
-        FieldPanel("bullet_points_section_header"),
-        FieldPanel("bullet_points"),
-        FieldPanel("homepage_picture"),
+        FieldPanel("youtube_video_link"),
         FieldPanel("sponsors"),
-        FieldPanel("acknowledgements"),
-        FieldPanel("project_description"),
-        FieldPanel("youtube_video_link")
+        FieldPanel("competition"),
+        FieldPanel("steps_to_participate"),
+        MultiFieldPanel(
+            [
+                FieldPanel("why_participate_header"),
+                FieldPanel("why_participate_content"),
+            ],
+            heading="Why participate"
+        ),
+        FieldPanel("slogan"),
+        FieldPanel("what_is_it_content"),
+        FieldPanel("title_background_image"),
+        FieldPanel("social_media_links"),
     ]
 
     api_fields = [
-        APIField("title_section_header"),
-        APIField("title_section_description"),
-        APIField("bullet_points_section_header"),
-        APIField("bullet_points"),
-        APIField("homepage_picture"),
         APIField("sponsors"),
-        APIField("acknowledgements"),
-        APIField("project_description"),
         APIField("youtube_video_link"),
+        APIField("competition"),
+        APIField("steps_to_participate"),
+        APIField("why_participate_header"),
+        APIField("why_participate_content"),
+        APIField("slogan"),
+        APIField("what_is_it_content"),
+        APIField("title_background_image"),
+        APIField("social_media_links"),
     ]
 
     search_fields = Page.search_fields + [
-        index.SearchField('title_section_header', partial_match=True),
-        index.SearchField('title_section_description', partial_match=True),
-        index.SearchField('bullet_points_section_header', partial_match=True),
-        index.SearchField('project_description', partial_match=True),
-        index.SearchField('youtube_video_link', partial_match=True),
+        index.SearchField('slogan', partial_match=True),
+        index.SearchField('what_is_it_content', partial_match=True),
+        index.SearchField('why_participate_header', partial_match=True),
+        index.SearchField('why_participate_content', partial_match=True),
     ]
 
     subpage_types = ["home.NewsPage", "home.CompetitionsPage", "home.ContactsPage"]

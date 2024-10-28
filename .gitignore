@@ -9,3 +9,4 @@ IntegrationBeeApp/IntegrationBeeApp/settings/dev.py
 IntegrationBeeApp/backup/
 Frontend/IntegrationBeeFrontend/node_modules/
 Frontend/IntegrationBeeFrontend/dist/
+IntegrationBeeApp/IntegrationBeeApp/media/

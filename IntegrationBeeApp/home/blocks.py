@@ -57,3 +57,22 @@ class SponsorBlock(blocks.StructBlock):
     class Meta:
         icon = "user"
         label = "Sponsor"
+
+
+class StepToParticipateBlock(blocks.StructBlock):
+    step_number = blocks.IntegerBlock(required=True, max_value=3, min_value=1)
+    step_title = blocks.CharBlock(required=True, max_length=100)
+    step_description = blocks.CharBlock(required=True, max_length=500)
+
+    class Meta:
+        icon = "list-ol"
+        label = "Step to participate"
+
+
+class SocialMediaLinkBlock(blocks.StructBlock):
+    social_media_name = blocks.CharBlock(required=True, max_length=100)
+    social_media_link = blocks.URLBlock(required=True,  max_length=100)
+
+    class Meta:
+        icon = "link"
+        label = "Social Media Link"

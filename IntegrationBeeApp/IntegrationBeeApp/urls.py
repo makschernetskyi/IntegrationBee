@@ -7,6 +7,7 @@ from wagtail.admin import urls as wagtailadmin_urls
 from wagtail import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
+
 from search import views as search_views
 
 from .api import api_router
@@ -20,7 +21,7 @@ urlpatterns = [
     path("search/", search_views.search, name="search"),
     path("api/v2/", include("api.urls")),
     path("api/v2/cms/", include("home.urls")),
-    re_path(r'^(?!api/v2/|cms/|documents/|search/|django-admin/).*$', TemplateView.as_view(template_name="home/home.html")),
+    re_path(r'^(?!api/v2/|cms/|documents/|search/|django-admin/|media).*$', TemplateView.as_view(template_name="home/home.html")),
     re_path(r'^', include(wagtail_urls))
 ]
 

@@ -16,7 +16,7 @@ from rest_framework.exceptions import ValidationError
 
 from .permissions import IsAdminUser
 from .serializers import UserSerializer, CompetitionSerializer, EmailVerificationTokenSerializer
-from api.models import Competition, User, EmailVerificationToken
+from api.models import Competition, User, EmailVerificationToken, UserToCompetitionRelationship
 
 from home.models import CompetitionPost as CompetitionPage
 from api.services.send_email import send_email
@@ -92,19 +92,25 @@ class UserDataView(APIView):
 
     def get(self, request):
         try:
-            user = request.user  # Access the User instance directly
+            user = request.user
 
-            competitions = user.competitions.all()
-            competition_serializer = CompetitionSerializer(competitions, many=True)
-            competitions_data = competition_serializer.data
+            competition_relationships = UserToCompetitionRelationship.objects.filter(user=user)
+            competitions_data = []
 
-            for competition_data in competitions_data:
-                competition_id = competition_data.get('id')
-                competition_page = CompetitionPage.objects.filter(related_competition_id=competition_id).first()
+            for relationship in competition_relationships:
+                competition = relationship.competition
+                competition_data = {
+                    'id': competition.id,
+                    'name': competition.name,
+                    'registration_date': relationship.registration_date,
+                    'status': relationship.get_status_display(),
+                    "page_id": None,
+                }
 
-                competition_data['page_id'] = competition_page.page_ptr_id if competition_page else None
-                competition_data['public_name'] = competition_page.competition.header if competition_page else None
-                competition_data['date'] = competition_page.event_date if competition_page else None
+                competition_page = CompetitionPage.objects.filter(competition=competition)
+                competition_data['page_id'] = competition_page.first().id if competition_page else None
+
+                competitions_data.append(competition_data)
 
             return Response({
                 'email': user.email,
