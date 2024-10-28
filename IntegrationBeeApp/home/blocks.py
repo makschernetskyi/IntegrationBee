@@ -41,8 +41,10 @@ class TeamMemberBlock(blocks.StructBlock):
 class SponsorBlock(blocks.StructBlock):
     sponsor_name = blocks.CharBlock(required=True, max_length=100)
     sponsor_logo = ImageChooserBlock(required=True)
+    sponsor_logo_size = blocks.CharBlock(required=True, max_length=3)
     sponsor_tier = blocks.ChoiceBlock(
         choices=[
+            ('main', 'Main'),
             ('gold', 'Gold'),
             ('silver', 'Silver'),
             ('bronze', 'Bronze'),
@@ -67,6 +69,16 @@ class StepToParticipateBlock(blocks.StructBlock):
     class Meta:
         icon = "list-ol"
         label = "Step to participate"
+
+
+class ReasonBlock(blocks.StructBlock):
+    reason_number = blocks.IntegerBlock(required=True, min_value=1)
+    header = blocks.CharBlock(required=True, max_length=100)
+    content = blocks.CharBlock(required=True, max_length=500)
+
+    class Meta:
+        icon = "list-ol"
+        label = "Reason"
 
 
 class SocialMediaLinkBlock(blocks.StructBlock):

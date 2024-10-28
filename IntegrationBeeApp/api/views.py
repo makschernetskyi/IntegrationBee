@@ -1,5 +1,3 @@
-from xxlimited_35 import error
-
 from django.db import transaction, IntegrityError
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404

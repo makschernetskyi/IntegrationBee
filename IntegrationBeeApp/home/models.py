@@ -36,7 +36,7 @@ class HomePage(Page):
 
     sponsors = StreamField(
         [
-            ("sponsor", SponsorBlock()),
+            ("sponsor", blocks.SponsorBlock()),
         ],
         use_json_field=True,
         null=True,
@@ -61,9 +61,17 @@ class HomePage(Page):
         blank=True
     )
 
-    why_participate_header = models.CharField(max_length=100, blank=False, null=True)
-    why_participate_content = models.CharField(max_length=500, blank=False, null=True)
-    slogan = models.CharField(max_length=500, blank=False, null=True)
+    why_participate = StreamField(
+        [
+            ("reason", blocks.ReasonBlock()),
+        ],
+        use_json_field=True,
+        null=True,
+        blank=True
+    )
+
+
+    slogan = RichTextField(features=["italic"], null=False)
     what_is_it_content = models.CharField(max_length=500, blank=False, null=True)
 
     title_background_image = models.ForeignKey(
@@ -80,13 +88,7 @@ class HomePage(Page):
         FieldPanel("sponsors"),
         FieldPanel("competition"),
         FieldPanel("steps_to_participate"),
-        MultiFieldPanel(
-            [
-                FieldPanel("why_participate_header"),
-                FieldPanel("why_participate_content"),
-            ],
-            heading="Why participate"
-        ),
+        FieldPanel("why_participate"),
         FieldPanel("slogan"),
         FieldPanel("what_is_it_content"),
         FieldPanel("title_background_image"),
@@ -98,8 +100,7 @@ class HomePage(Page):
         APIField("youtube_video_link"),
         APIField("competition"),
         APIField("steps_to_participate"),
-        APIField("why_participate_header"),
-        APIField("why_participate_content"),
+        APIField("why_participate"),
         APIField("slogan"),
         APIField("what_is_it_content"),
         APIField("title_background_image"),
@@ -109,8 +110,7 @@ class HomePage(Page):
     search_fields = Page.search_fields + [
         index.SearchField('slogan', partial_match=True),
         index.SearchField('what_is_it_content', partial_match=True),
-        index.SearchField('why_participate_header', partial_match=True),
-        index.SearchField('why_participate_content', partial_match=True),
+        index.SearchField('why_participate', partial_match=True),
     ]
 
     subpage_types = ["home.NewsPage", "home.CompetitionsPage", "home.ContactsPage"]
