@@ -1,7 +1,9 @@
 from rest_framework.permissions import BasePermission
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from home.models import CompetitionPost
 from .models import User
+from rest_framework.authentication import TokenAuthentication
 
 
 class IsAdminUser(BasePermission):
@@ -28,3 +30,25 @@ class IsPublishedCompetitionPost(BasePermission):
                 return is_live
 
         return False
+
+
+class IsAuthenticatedUser(BasePermission):
+    """
+    Custom permission to only allow authenticated users to access the view.
+    """
+    def has_permission(self, request, view):
+        print(request.data)
+
+        return request.user and request.user.is_authenticated
+
+
+class CookieTokenAuthentication(JWTAuthentication):
+    def authenticate(self, request):
+        raw_token = request.COOKIES.get('access')
+        if raw_token is None:
+            return None
+
+        validated_token = self.get_validated_token(raw_token)
+
+        return self.get_user(validated_token), validated_token
+

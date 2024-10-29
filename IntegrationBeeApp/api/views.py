@@ -8,15 +8,16 @@ from rest_framework import status
 from uuid import uuid4
 import base64
 
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.status import HTTP_200_OK
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.exceptions import ValidationError
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from wagtail.api.v2.router import WagtailAPIRouter
 from wagtail.api.v2.views import PagesAPIViewSet
 
-from .permissions import IsAdminUser, IsPublishedCompetitionPost
+from .permissions import IsAdminUser, IsPublishedCompetitionPost, IsAuthenticatedUser
 from .serializers import UserSerializer, CompetitionSerializer, EmailVerificationTokenSerializer
 from api.models import Competition, User, EmailVerificationToken, UserToCompetitionRelationship
 
@@ -90,7 +91,7 @@ class VerifyEmailView(APIView):
 
 
 class UserDataView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedUser]
 
     def get(self, request):
         try:
@@ -137,7 +138,7 @@ class UserDataView(APIView):
 
 
 class UpdateUserView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedUser]
 
     def put(self, request):
         user = request.user
@@ -164,7 +165,7 @@ class UpdateUserView(APIView):
 
 
 class CompetitionView(APIView):
-    permission_classes = [IsPublishedCompetitionPost, IsAuthenticated]
+    permission_classes = [IsPublishedCompetitionPost, IsAuthenticatedUser]
 
     @staticmethod
     def patch(request):
@@ -209,7 +210,7 @@ class CompetitionView(APIView):
 
 
 class DownloadLatexPdfReportView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedUser]
 
     def get(self, request, pk):
         competition = get_object_or_404(Competition, pk=pk)
@@ -220,7 +221,7 @@ class DownloadLatexPdfReportView(APIView):
 
 
 class DownloadLatexTexReportView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedUser]
 
     def get(self, request, pk):
         competition = get_object_or_404(Competition, pk=pk)
@@ -231,6 +232,7 @@ class DownloadLatexTexReportView(APIView):
 
 
 class GenerateBracketView(APIView):
+    # authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
@@ -244,7 +246,7 @@ class GenerateBracketView(APIView):
 
 
 class DownloadParticipantsCsvView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedUser]
 
     def get(self, request, pk):
         competition = get_object_or_404(Competition, pk=pk)
