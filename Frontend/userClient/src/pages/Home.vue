@@ -2,26 +2,37 @@
 import DefaultLayout from "@/layouts/Default.vue"
 import VideoPlayer from "@/components/VideoPlayer.vue";
 import { useAuthStore } from "@/stores/authStore/authStore";
-import {computed, onMounted} from "vue"
+import { onMounted, watchEffect, ref } from "vue"
 import { useHomePageStore } from "@/stores/homePageStore/homePageStore";
 import { sanitizeHtml } from "@/utils/htmlSanitizers";
 
 const store = useHomePageStore()
 
-onMounted(()=>{
-	store.fetchHomePageData()
-})
 
-const videoOptions =  computed(()=>({
-	autoplay: false,
-	controls: true,
-	sources: [
-		{
-			src: store.videoUrl,
-			type: 'video/youtube'
-		}
-	]
-}))
+
+const videoOptions = ref({
+  autoplay: false,
+  controls: true,
+  sources: [
+    {
+      src: store.videoUrl,
+      type: 'video/youtube'
+    }
+  ]
+});
+
+watchEffect(() => {
+  videoOptions.value = {
+    autoplay: false,
+    controls: true,
+    sources: [
+      {
+        src: store.videoUrl,
+        type: 'video/youtube'
+      }
+    ]
+  };
+});
 
 const {isAuthenticated} = useAuthStore()
 
@@ -73,7 +84,7 @@ const {isAuthenticated} = useAuthStore()
 				</div>
 				<!-- video example -->
 				<div class="flex justify-center items-center w-full lg:px-[3rem]">
-					<video-player :options="videoOptions" class=" rounded-[30px] lg:rounded-3xl w-full aspect-video border-pearl-white border-4 box-content"/>
+					<video-player :options="videoOptions" class="rounded-[30px] lg:rounded-3xl w-full aspect-video border-pearl-white border-4 box-content"/>
 				</div>
 			</section>
 			<!-- steps to participate -->

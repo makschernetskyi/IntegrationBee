@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import Defaultlayout from "@/layouts/Default.vue"
 import { useNewsPageStore, NewsItem } from "@/stores/newsPageStore/newsPageStore";
-import {onMounted, ref, useTemplateRef} from 'vue'
+import {onBeforeMount, onMounted, ref, useTemplateRef} from 'vue'
 import { storeToRefs } from "pinia";
+import { sanitizeHtml } from "@/utils/htmlSanitizers";
 
 const store = useNewsPageStore()
 const { commentText } = storeToRefs(store)
 
-onMounted(()=>{
-	(async()=> await store.fetchNews())()
+onBeforeMount(()=>{
+	useNewsPageStore().fetchNews()
 })
 
 const fullViewNews = ref<NewsItem|null>(null)
@@ -66,8 +67,8 @@ function switchFocusToFullScreenInput(newsItem:any){
 							<p class="flex flex-wrap text-right text-body">{{ newsItem.date }}</p>
 						</div>
 						<div>
-							<p>{{newsItem.content.split('').slice(0,300).join('')}}</p>
-							<template v-if="newsItem.content.length > 300">
+							<p v-html="sanitizeHtml(newsItem.content).split(' ').slice(0,50).join(' ')"/>
+							<template v-if="sanitizeHtml(newsItem.content).split(' ').length > 300">
 								<br>
 								<p>
 									Click to see more...
@@ -78,7 +79,7 @@ function switchFocusToFullScreenInput(newsItem:any){
 							<img :src="newsItem.pictureSrc" :alt="newsItem.pictureAlt" class="w-full">
 						</div>
 						<!--comments-->
-						<div class="text-text-sm w-full flex flex-col gap-[2rem]">
+						<!--<div class="text-text-sm w-full flex flex-col gap-[2rem]">
 							<div v-if="newsItem.comments.length" class="w-full bg-pearl-white py-[2rem] px-[1rem] rounded-[1.5rem]">
 								<div>
 									{{newsItem.comments.at(-1)?.author}} : {{newsItem.comments.at(-1)?.text}}
@@ -92,7 +93,7 @@ function switchFocusToFullScreenInput(newsItem:any){
 									</svg>
 								</button>
 							</div>
-						</div>
+						</div>-->
 					</div>
 				</template>
 			</MasonryWall>
@@ -130,13 +131,13 @@ function switchFocusToFullScreenInput(newsItem:any){
 							<p class="flex flex-wrap text-right text-body">{{ fullViewNews.date }}</p>
 						</div>
 						<div>
-							<p>{{fullViewNews.content}}</p>
+							<p v-html="sanitizeHtml(fullViewNews.content)"/>
 						</div>
 						<div v-if="fullViewNews.pictureSrc" class="w-full h-max max-h-[50rem] overflow-hidden rounded-[0.7rem]">
 							<img :src="fullViewNews.pictureSrc" :alt="fullViewNews.pictureAlt" class="w-full">
 						</div>
 						<!--comments-->
-						<div class="text-text-sm w-full flex flex-col gap-[2rem]">
+						<!--<div class="text-text-sm w-full flex flex-col gap-[2rem]">
 							<div v-if="fullViewNews.comments.length" class="w-full bg-pearl-white py-[2rem] px-[1rem] rounded-[1.5rem] max-h-[10rem] overflow-y-auto">
 								<div class="w-full flex flex-col gap-[1rem]">
 									<div v-for="comment in fullViewNews.comments">
@@ -152,7 +153,7 @@ function switchFocusToFullScreenInput(newsItem:any){
 									</svg>
 								</button>
 							</div>
-						</div>
+						</div>-->
 					</div>
 					
 				</div>

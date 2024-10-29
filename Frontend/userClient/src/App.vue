@@ -3,6 +3,19 @@ import { storeToRefs } from "pinia";
 import { useUiStore } from "./stores/uiStore/uiStore";
 import MobileMenu from "@/components/MobileMenu.vue"
 import Toast from "./components/Toast.vue";
+import { onBeforeMount } from "vue";
+import { useHomePageStore } from "./stores/homePageStore/homePageStore";
+import { useNewsPageStore } from "./stores/newsPageStore/newsPageStore";
+
+
+
+onBeforeMount(()=>{
+	useHomePageStore().fetchHomePageData()
+	useNewsPageStore().fetchNewsPage()
+})
+
+
+
 
 const UiStore = useUiStore()
 const {shouldMobileMenuBeVisible, isMobileMenuVisible} = storeToRefs(UiStore)
@@ -16,7 +29,6 @@ function toggleShouldMenuBeVisible(){
 function endMenuAction(){
 	UiStore.isMobileMenuVisible = shouldMobileMenuBeVisible.value;
 	!isMobileMenuVisible.value && (document.getElementsByTagName('body')[0].style.overflowY = 'unset');
-	
 }
 
 

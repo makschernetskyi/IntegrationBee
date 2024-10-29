@@ -89,7 +89,7 @@ export const useEventPageStore = defineStore('eventPageStore', {
     participatePanel: {
       zoom: 12,
       coordinates: [0, 0],
-      isRegistrationOpen: true,
+      isRegistrationOpen: false,
       participantsCount: 0,
 	  location: '',
 	  locationMapsUrl: '',

@@ -7,7 +7,7 @@ from rest_framework_simplejwt.views import (
 )
 
 from .views import RegisterView, UserDataView, CompetitionView, CompetitionsView, PublicCompetitionView, UsersView, \
-    VerifyEmailView, download_latex_pdf_report_view, download_latex_tex_report_view, generate_bracket_view
+    VerifyEmailView, download_latex_pdf_report_view, download_latex_tex_report_view, generate_bracket_view, UpdateUserView
 
 urlpatterns = [
     path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -22,4 +22,5 @@ urlpatterns = [
     path('contestReport/<int:pk>/download_pdf/', download_latex_pdf_report_view, name='download_pdf'),
     path('contestReport/<int:pk>/download_tex/', download_latex_tex_report_view, name='download_tex'),
     path('contestBracket/<int:pk>/generate/', generate_bracket_view, name='generate_bracket'),
+    path('updateUser/', UpdateUserView.as_view(), name="update_user"),
 ]

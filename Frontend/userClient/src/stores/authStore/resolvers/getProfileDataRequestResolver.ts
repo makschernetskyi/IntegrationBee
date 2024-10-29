@@ -23,14 +23,18 @@ export async function getProfileDataRequestResolver(this: any) {
         this.email = data.email;
         this.firstName = data.first_name;
         this.lastName = data.second_name;
-        this.dateJoined = data.date_joined;
-        this.school = data.school;
-        this.isAdmin = data.is_admin;
-        this.profilePicture = data.profilePicture;
+        this.phoneNumber = data.phone_number
+        this.dateJoined = data.registration_date;
+        this.institution = data.institution;
+        this.isAdmin = data.role === "Admin";
+        this.programOfStudy = data.program_of_study
+        this.profilePicture = data.profile_picture;
         this.competitions = data.competitions;
 
         //return data;
-    } catch (error) {
+    } catch (error:any) {
+        this.isAuthenticated = false;
+        console.log(error)
         // Handle errors
 
         const toastStore = useToastStore()

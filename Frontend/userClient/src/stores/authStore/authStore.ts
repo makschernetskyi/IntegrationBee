@@ -13,10 +13,11 @@ export const useAuthStore = defineStore('auth', {
         lastName: null,
         email: null,
         dateJoined: null,
-        school: null,
+        institution: null,
         isAdmin: null,
         profilePicture: null,
         phoneNumber: null,
+        programOfStudy: null,
         competitions: [],
         userDataRequest: {
             status: null,
@@ -44,10 +45,11 @@ export const useAuthStore = defineStore('auth', {
               lastName: state.lastName,
               email: state.email,
               dateJoined: state.dateJoined,
-              school: state.school,
+              institution: state.institution,
               isAdmin: state.isAdmin,
               profilePicture: state.profilePicture,
-              competitions: state.competitions
+              competitions: state.competitions,
+              programOfStudy: state.programOfStudy
           }
       )
     },

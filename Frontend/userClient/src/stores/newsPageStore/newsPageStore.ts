@@ -1,8 +1,9 @@
-// src/stores/newsStore.ts
-
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import { useToastStore } from '../toastStore/toastStore';
+import { noAuthApi } from '@/api';
+import { formatDateToLocal } from '@/utils/formatDateToLocal';
+import { sanitizeHtml } from '@/utils/htmlSanitizers';
 
 export interface Comment {
   author: string;
@@ -19,12 +20,7 @@ export interface NewsItem {
   comments: Comment[];
 }
 
-export interface NewsResponse {
-  data: NewsItem[];
-  currentPage: number;
-  totalPages: number;
-  totalNews: number;
-}
+
 
 export const useNewsPageStore = defineStore('newsPageStore', {
   state: () => ({
@@ -32,39 +28,57 @@ export const useNewsPageStore = defineStore('newsPageStore', {
     newsItems: [] as NewsItem[],
     currentPage: 1 as number,
     totalPages: 1 as number,
-    totalNews: 0 as number,
     loading: false as boolean,
     error: null as string | null,
     commentText: '' as string
   }),
   actions: {
-    async fetchTitle() {
+    async fetchNewsPage() {
       try {
-        const response = await axios.get('/api/news/title'); // Replace with your API endpoint
-        this.title = response.data.title;
+        const response = await noAuthApi.get('/cms/pages/', {
+          params: {
+            type: "home.NewsPage",
+            fields: "title"
+          }
+        });
+        this.title = response.data.items["0"].title;
       } catch (error) {
-        console.error('Error fetching title:', error);
-        this.error = 'Failed to fetch title.';
+        useToastStore().addToast({
+          type: "error",
+          title: "Error has occured",
+          message: "Could not fetch news page, try again later."
+        })
       }
     },
-    async fetchNews(page = 1) {
+    async fetchNews(page:number = 0) {
       this.loading = true;
+      const NEWS_PER_PAGE = 10
       try {
-        const response = await axios.get('/api/news', {
+        const response = await noAuthApi.get('/cms/pages/', {
           params: {
-            page: page,
-          },
-        }); // Replace with your API endpoint
+            type: "home.NewsPost",
+            fields: "title,id,text,picture",
+            offset: page*NEWS_PER_PAGE
+          }
+        })
+        console.log(response)
+        const data = response.data.items;
+        this.newsItems = data.map((newsItem: any)=>({
+          id: newsItem.id,
+          title: newsItem.title,
+          content: newsItem.text,
+          pictureSrc: newsItem.picture?.meta.download_url,
+          date: formatDateToLocal(newsItem.meta.first_published_at)
+        }))
+        
+        console.log("STTTTTTATIEST STATE", this.$state)
 
-        const data: NewsResponse = response.data;
-        this.newsItems = data.data;
-        this.currentPage = data.currentPage;
-        this.totalPages = data.totalPages;
-        this.totalNews = data.totalNews;
-        this.error = null;
+        //this.newsItems = data.;
+        //this.currentPage = page
+        //this.totalPages = data.totalPages;
+        //this.error = null;
       } catch (error) {
-        console.error('Error fetching news:', error);
-        this.error = 'Failed to fetch news.';
+        
       } finally {
         this.loading = false;
       }

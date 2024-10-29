@@ -2,9 +2,11 @@ from django.db import transaction, IntegrityError
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
+from django.core.files.base import ContentFile
 from django.shortcuts import redirect
 from rest_framework import status
 from uuid import uuid4
+import base64
 
 from rest_framework.status import HTTP_200_OK
 from rest_framework.views import APIView
@@ -155,6 +157,38 @@ class UsersView(APIView):
 
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class UpdateUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request):
+        user = request.user
+        data = request.data
+
+        # Update only specified fields if they are provided
+        if 'phone_number' in data:
+            user.phone_number = data['phone_number']
+        if 'program_of_study' in data:
+            user.program_of_study = data['program_of_study']
+        if 'institution' in data:
+            user.institution = data['institution']
+
+        # Handle Base64-encoded profile picture with prefix
+        if 'profile_picture' in data and data['profile_picture']:
+            try:
+                # Split the format and Base64 content
+                format_str, imgstr = data['profile_picture'].split(';base64,')
+
+                # Decode the Base64 image data and save it
+                image_data = base64.b64decode(imgstr)
+                user.profile_picture.save("profile_picture.png", ContentFile(image_data), save=False)
+            except Exception as e:
+                # Print the exception message for more insight
+                return Response({"error": "Invalid image data"}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.save()
+        return Response({"message": "User updated successfully"}, status=status.HTTP_200_OK)
 
 
 class PublicCompetitionView(APIView):

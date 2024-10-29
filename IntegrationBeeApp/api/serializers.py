@@ -8,6 +8,7 @@ from .models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
+    profile_picture = serializers.ImageField(required=False)
 
     class Meta:
         model = User

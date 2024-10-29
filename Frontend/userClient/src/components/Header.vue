@@ -3,6 +3,8 @@ import MenuButton from '@/components/MenuButton.vue';
 import { useAuthStore } from '@/stores/authStore/authStore';
 
 import {toRefs} from "vue"
+import { storeToRefs } from 'pinia';
+import { useRouter } from 'vue-router';
 
 const props = defineProps({
 	isMenuVisible: Boolean,
@@ -12,7 +14,17 @@ const {isMenuVisible} = toRefs(props)
 
 const emit = defineEmits(['switchMenuVisibility'])
 
-const {isAuthenticated, profilePicture, logout} = useAuthStore()
+const authStore = useAuthStore()
+const {logout, getProfileData} = authStore
+const {isAuthenticated, profilePicture} = storeToRefs(authStore)
+
+const router = useRouter()
+
+const handleLogout = async () => {
+	await logout()
+	await getProfileData()
+	router.push('/')
+}
 
 </script>
 <template>
@@ -79,7 +91,7 @@ const {isAuthenticated, profilePicture, logout} = useAuthStore()
 						<RouterLink to="/myprofile" class="px-[2.4rem] py-[1rem] h-max w-max hover:bg-screenBlack-400 hover:bg-opacity-15 rounded-2xl signUpBtn">
 							<p class="relative">profile</p>
 						</RouterLink>
-						<button @click="logout" class="px-[2.4rem] py-[1rem] h-max w-max hover:bg-screenBlack-400 hover:bg-opacity-15 rounded-2xl signUpBtn">
+						<button @click="handleLogout " class="px-[2.4rem] py-[1rem] h-max w-max hover:bg-screenBlack-400 hover:bg-opacity-15 rounded-2xl signUpBtn">
 							<p class="relative">log out</p>
 						</button>
 					</div>
@@ -100,7 +112,7 @@ const {isAuthenticated, profilePicture, logout} = useAuthStore()
 							</div>
 						</RouterLink>
 						<!--logout mobile-->
-						<button @click="logout" class="relative h-[4rem] aspect-square">
+						<button @click="handleLogout" class="relative h-[4rem] aspect-square">
 							<svg width="42" height="43" viewBox="0 0 42 43" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
 								<path fill-rule="evenodd" clip-rule="evenodd" d="M2.33362 12.8257L24.7014 1.95364L23.8585 0.21936L1.49067 11.0914C0.500216 11.5728 -0.0546888 12.6492 0.127692 13.7352L4.12639 37.5467C4.30877 38.6327 5.18484 39.4688 6.27821 39.6003L30.9704 42.5694L31.2006 40.6549L6.50842 37.6858C6.26433 37.6564 6.06876 37.4698 6.02804 37.2273L2.02935 13.4159C1.98863 13.1734 2.11251 12.9331 2.33362 12.8257ZM27.2481 13.8903L36.8813 21.7174H11.7123V23.6457H36.8813L27.2481 31.4727L28.464 32.9693L40.2049 23.4298L41.1259 22.6815L40.2049 21.9332L28.464 12.3938L27.2481 13.8903Z" fill="#FBC151"/>
 							</svg>

@@ -1,11 +1,11 @@
 <template>
 	<div class="overflow-hidden">
-	  <video ref="videoPlayer" class="video-js w-full h-full"></video>
+		<video ref="videoPlayer" class="video-js w-full h-full"></video>
 	</div>
-  </template>
+</template>
   
 <script setup lang="ts">
-	import { ref, onMounted, onBeforeUnmount } from 'vue';
+	import { ref, onMounted, onBeforeUnmount, toRefs, watch } from 'vue';
 	import videojs from 'video.js';
 	import "video.js/dist/video-js.css"
 	import 'videojs-youtube';
@@ -17,24 +17,33 @@
 			default: () => ({})
 		}
 	});
+
+	const {options} = toRefs(props)
 	
 	// Refs and player initialization
 	const videoPlayer = ref<HTMLVideoElement | null>(null);
-	let player:any = null;
+	const player = ref<any>(null);
 	
 	// Lifecycle hooks
 	onMounted(() => {
 		if (videoPlayer.value) {
 			//@ts-expect-error - copied from documentation
-			player = videojs(videoPlayer.value, props.options, function() {
+			player.value = videojs(videoPlayer.value, options.value, function() {
 				this.log('onPlayerReady', this);
 			});
 		}
 	});
+
+	watch(options, (newOptions)=>{
+		console.log(newOptions)
+		if (player.value) {
+          player.value.src(newOptions.sources[0]);
+        }
+	})
 	
 	onBeforeUnmount(() => {
-		if (player) {
-			player.dispose();
+		if (player.value) {
+			player.value.dispose();
 		}
 	});
 </script>
