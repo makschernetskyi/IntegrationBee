@@ -2,6 +2,8 @@
 from pprint import pprint
 
 from rest_framework import serializers
+
+from api.serializers import CompetitionSerializer, CompetitionListSerializer
 from .models import NewsPost, CompetitionPost
 
 from rest_framework import serializers
@@ -14,7 +16,7 @@ class NewsPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = NewsPost
-        fields = ['id', 'header', 'text', 'picture']
+        fields = ['id', 'title', 'text', 'picture']
 
     @staticmethod
     def get_picture(obj):
@@ -23,14 +25,14 @@ class NewsPostSerializer(serializers.ModelSerializer):
         return None
 
 
-class CompetitionSerializer(serializers.ModelSerializer):
+class CompetitionPostSerializer(serializers.ModelSerializer):
     picture = serializers.SerializerMethodField()
+    competition = CompetitionListSerializer()
 
     class Meta:
         model = CompetitionPost
-        fields = ['id', 'header', 'short_description', 'description', 'event_date', 'place',
-                  'place_maps_url', 'picture', 'competition',
-                  'rules']
+        fields = ['id', 'title', 'edition', 'short_description', 'place',
+                  'picture', 'competition']
 
     @staticmethod
     def get_picture(obj):

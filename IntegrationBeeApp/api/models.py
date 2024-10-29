@@ -14,6 +14,7 @@ from django.template.loader import render_to_string
 from modelcluster.fields import ParentalKey
 from wagtail.admin.forms import WagtailAdminModelForm
 from wagtail.admin.panels import FieldPanel, InlinePanel
+from wagtail.api import APIField
 from wagtail.fields import StreamField
 from wagtail.models import Orderable
 from django.db import models
@@ -96,6 +97,7 @@ class Competition(ClusterableModel):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, unique=True)
     max_participants = models.IntegerField(null=True, blank=True)
+    event_date = models.DateTimeField(blank=True, null=True)
 
     series = StreamField([
         ('series', SeriesBlock()),
@@ -103,6 +105,7 @@ class Competition(ClusterableModel):
 
     panels = [
         FieldPanel('name'),
+        FieldPanel('event_date'),
         FieldPanel('max_participants', classname="collapsed"),
         InlinePanel('participants_relationships', label="Participants", classname="collapsed"),
         InlinePanel('rounds', label="Rounds", classname="collapsed"),
@@ -241,6 +244,7 @@ class Competition(ClusterableModel):
         self.save()
 
 
+
 class UserToCompetitionRelationship(Orderable):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     competition = ParentalKey('Competition', on_delete=models.CASCADE, related_name='participants_relationships')
@@ -279,9 +283,11 @@ class Round(ClusterableModel):
 
     competition = ParentalKey('Competition', on_delete=models.CASCADE, related_name='rounds')
     name = models.CharField(max_length=20)
+    propagate_winner = models.BooleanField(default=True, null=False, blank=False)
 
     panels = [
         FieldPanel("name"),
+        FieldPanel("propagate_winner"),
         InlinePanel('matches', classname="collapsed"),
     ]
 
@@ -305,10 +311,11 @@ class Match(ClusterableModel):
         FieldPanel('player1'),
         FieldPanel('player2'),
         FieldPanel('match_winner'),
+        FieldPanel('sort_order'),
     ]
 
     def __str__(self):
-        return f"{self.player1} vs {self.player2} ({self.round})"
+        return f"[{self.player1}] vs [{self.player2}] - winner: {self.match_winner} - {self.round.name}"
 
     @property
     def winner(self):
@@ -326,10 +333,17 @@ class Match(ClusterableModel):
         if self.winner == 'player2' and not self.player2:
             raise ValidationError("Cannot select Player 2 as winner when Player 2 is not set.")
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
+    def save(self, **kwargs):
 
-        if self.winner:
+        if self.pk:
+            original = Match.objects.get(pk=self.pk)
+        else:
+            super().save(**kwargs)
+            return None
+
+        data_changed = original.winner != self.winner
+
+        if data_changed and self.round.propagate_winner:
             self.update_participant_status()
 
             if self.round.name != 'Finals':
@@ -342,6 +356,8 @@ class Match(ClusterableModel):
                 )
                 second_player_relationship.status = 'T'
                 second_player_relationship.save()
+
+        super().save(**kwargs)
 
     def update_participant_status(self):
         try:

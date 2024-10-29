@@ -1,8 +1,6 @@
 
 from django.db import models
-from django.http import HttpResponse
 from django.shortcuts import redirect
-from wagtail.contrib.routable_page.models import RoutablePageMixin
 
 from wagtail.models import Page
 from wagtail.fields import RichTextField
@@ -10,11 +8,13 @@ from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.fields import StreamField
 from wagtail.api import APIField
 from wagtail.search import index
+from wagtailgeowidget.panels import LeafletPanel
 
+from api.blocks import CompetitionPostSectionBlock
+from api.serializers import CompetitionSerializer, LocationSerializer
 from . import blocks
 
 from api import models as api_models
-from .blocks import SponsorBlock
 
 
 class HomePage(Page):
@@ -69,7 +69,6 @@ class HomePage(Page):
         null=True,
         blank=True
     )
-
 
     slogan = RichTextField(features=["italic"], null=False)
     what_is_it_content = models.CharField(max_length=500, blank=False, null=True)
@@ -134,7 +133,6 @@ class NewsPage(Page):
 
 class NewsPost(Page):
 
-    header = models.CharField(max_length=100, blank=False, null=False)
     text = RichTextField(features=["bold", "link", "italic"], null=True)
     picture = models.ForeignKey(
         "wagtailimages.Image",
@@ -145,19 +143,18 @@ class NewsPost(Page):
     )
 
     content_panels = Page.content_panels + [
-        FieldPanel("header"),
         FieldPanel("text"),
         FieldPanel("picture"),
     ]
 
     api_fields = [
-        APIField("header"),
+        APIField("title"),
         APIField("text"),
         APIField("picture"),
     ]
 
     search_fields = Page.search_fields + [
-        index.SearchField('header', partial_match=True),
+        index.SearchField('title', partial_match=True),
         index.SearchField('text', partial_match=True),
     ]
 
@@ -183,13 +180,12 @@ class CompetitionsPage(Page):
 
 class CompetitionPost(Page):
 
-    header = models.CharField(max_length=100, blank=False, null=False)
+    edition = models.CharField(max_length=100, blank=False, null=False)
     short_description = RichTextField(features=["bold", "link"], null=True)
     description = RichTextField(features=["bold", "link"], null=True)
-    event_date = models.DateTimeField(blank=True, null=True)
     place = models.CharField(max_length=100, blank=False, null=False)
-    place_maps_url = models.CharField(max_length=100, blank=True, null=True)
     rules = RichTextField(features=["bold", "link", "italic", "ol", "ul"], null=True)
+    location = models.CharField(max_length=250, blank=True, null=True)
 
     competition = models.ForeignKey(
         api_models.Competition,
@@ -208,38 +204,63 @@ class CompetitionPost(Page):
         related_name="+"
     )
 
+    sections = StreamField(
+        [
+            ("section", CompetitionPostSectionBlock())
+        ],
+        use_json_field=True,
+        null=True,
+        blank=True,
+    )
+
     content_panels = Page.content_panels + [
-        FieldPanel("header"),
+        FieldPanel("edition"),
         FieldPanel("short_description"),
         FieldPanel("description"),
-        FieldPanel("event_date"),
+        FieldPanel("sections"),
         FieldPanel("place"),
-        FieldPanel("place_maps_url"),
+        LeafletPanel('location'),
         FieldPanel("picture"),
         FieldPanel("competition"),
         FieldPanel("rules"),
     ]
 
     api_fields = [
-        APIField("header"),
-        APIField("short_description"),
+        APIField("title"),
+        APIField("edition"),
         APIField("description"),
-        APIField("event_date"),
+        APIField("sections"),
         APIField("place"),
-        APIField("place_maps_url"),
+        APIField("latitude"),
+        APIField("longitude"),
         APIField("picture"),
-        APIField("competition"),
+        APIField("competition", serializer=CompetitionSerializer(competition)),
         APIField("rules"),
     ]
 
     search_fields = Page.search_fields + [
-        index.SearchField('header', partial_match=True),
+        index.SearchField('title', partial_match=True),
+        index.SearchField('edition', partial_match=True),
         index.SearchField('short_description', partial_match=True),
         index.SearchField('description', partial_match=True),
-        index.SearchField('event_date'),
         index.SearchField('place', partial_match=True),
         index.SearchField('rules', partial_match=True),
     ]
+
+    @property
+    def latitude(self):
+        try:
+            print(type(self.location))
+            return float(self.location.split(" ")[0].split("(")[1])
+        except (AttributeError, IndexError):
+            return None
+
+    @property
+    def longitude(self):
+        try:
+            return float(self.location.split(" ")[1].split(")")[0])
+        except (AttributeError, IndexError):
+            return None
 
     def serve(self, request, *args, **kwargs):
         return redirect('/')
@@ -268,6 +289,7 @@ class ContactsPage(Page):
     ]
 
     api_fields = [
+        APIField("title"),
         APIField("about_us"),
         APIField("contacts"),
         APIField("socials"),
@@ -275,6 +297,7 @@ class ContactsPage(Page):
     ]
 
     search_fields = Page.search_fields + [
+        index.SearchField('title', partial_match=True),
         index.SearchField('about_us', partial_match=True),
         index.SearchField('contacts', partial_match=True),
         index.SearchField('socials', partial_match=True),
@@ -318,6 +341,26 @@ class TermsOfUsePage(Page):
 
     search_fields = Page.search_fields + [
         index.SearchField('terms_of_use', partial_match=True),
+    ]
+
+    def serve(self, request, *args, **kwargs):
+        return redirect('/')
+
+
+class PrivacyPolicyPage(Page):
+
+    privacy_policy = RichTextField(features=["bold", "link", "italic", "ol", "ul"], null=True)
+
+    content_panels = Page.content_panels + [
+        FieldPanel("privacy_policy"),
+    ]
+
+    api_fields = [
+        APIField("privacy_policy"),
+    ]
+
+    search_fields = Page.search_fields + [
+        index.SearchField('privacy_policy', partial_match=True),
     ]
 
     def serve(self, request, *args, **kwargs):

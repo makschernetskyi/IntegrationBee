@@ -5,7 +5,7 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import ListModelMixin
 
 from .models import NewsPost, CompetitionPost
-from .serializers import NewsPostSerializer, CompetitionSerializer
+from .serializers import NewsPostSerializer, CompetitionPostSerializer
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
 from wagtail.api.v2.views import PagesAPIViewSet
@@ -29,6 +29,6 @@ class CompetitionPagination(PageNumberPagination):
 
 class CompetitionAPIViewSet(ListModelMixin, GenericViewSet):
     queryset = CompetitionPost.objects.all()
-    serializer_class = CompetitionSerializer
+    serializer_class = CompetitionPostSerializer
     pagination_class = CompetitionPagination
 

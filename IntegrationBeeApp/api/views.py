@@ -11,14 +11,16 @@ import base64
 from rest_framework.status import HTTP_200_OK
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.exceptions import ValidationError
+from wagtail.api.v2.router import WagtailAPIRouter
+from wagtail.api.v2.views import PagesAPIViewSet
 
-from .permissions import IsAdminUser
+from .permissions import IsAdminUser, IsPublishedCompetitionPost
 from .serializers import UserSerializer, CompetitionSerializer, EmailVerificationTokenSerializer
 from api.models import Competition, User, EmailVerificationToken, UserToCompetitionRelationship
 
-from home.models import CompetitionPost as CompetitionPage
+from home.models import CompetitionPost as CompetitionPage, CompetitionPost
 from api.services.send_email import send_email
 
 
@@ -134,31 +136,6 @@ class UserDataView(APIView):
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class UsersView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        try:
-            if not request.user.is_admin():
-                return Response({"error": "Only admin users are authorized to view users."},
-                                status=status.HTTP_401_UNAUTHORIZED)
-
-            users = User.objects.all()
-            users_serializer = UserSerializer(users, many=True)
-            users_data = users_serializer.data
-
-            for user in users_data:
-                user.pop('password')
-
-            for userDB, user in zip(users, users_data):
-                user['competitions'] = list(map(lambda competition: competition.get('id'), CompetitionSerializer(userDB.competitions, many=True).data))
-
-            return Response(users_data)
-
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
 class UpdateUserView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -166,7 +143,6 @@ class UpdateUserView(APIView):
         user = request.user
         data = request.data
 
-        # Update only specified fields if they are provided
         if 'phone_number' in data:
             user.phone_number = data['phone_number']
         if 'program_of_study' in data:
@@ -174,127 +150,60 @@ class UpdateUserView(APIView):
         if 'institution' in data:
             user.institution = data['institution']
 
-        # Handle Base64-encoded profile picture with prefix
         if 'profile_picture' in data and data['profile_picture']:
             try:
-                # Split the format and Base64 content
                 format_str, imgstr = data['profile_picture'].split(';base64,')
 
-                # Decode the Base64 image data and save it
                 image_data = base64.b64decode(imgstr)
                 user.profile_picture.save("profile_picture.png", ContentFile(image_data), save=False)
             except Exception as e:
-                # Print the exception message for more insight
                 return Response({"error": "Invalid image data"}, status=status.HTTP_400_BAD_REQUEST)
 
         user.save()
         return Response({"message": "User updated successfully"}, status=status.HTTP_200_OK)
 
 
-class PublicCompetitionView(APIView):
-    def get(self, request):
-        id = request.query_params.get('id')
-        if id is None:
-            return Response({"error": "ID parameter is required"}, status=status.HTTP_400_BAD_REQUEST)
-
-        competition = get_object_or_404(Competition, id=id)
-
-        serializer = CompetitionSerializer(competition, many=False)
-        publicData = {
-            'max_participants':  serializer.data['max_participants'] if 'max_participants' in serializer.data else None,
-            'participants_count': len(serializer.data['participants'])
-        }
-        return Response(publicData)
-
-
 class CompetitionView(APIView):
-    # permission_classes = [IsAuthenticated]
-
-    @staticmethod
-    def get(request):
-        id = request.query_params.get('id')
-        if id is None:
-            return Response({"error": "ID parameter is required"}, status=status.HTTP_400_BAD_REQUEST)
-
-        competition = get_object_or_404(Competition, id=id)
-
-        serializer = CompetitionSerializer(competition, many=False)
-        return Response(serializer.data)
+    permission_classes = [IsPublishedCompetitionPost, IsAuthenticated]
 
     @staticmethod
     def patch(request):
         competition_id = request.data.get('id')
-        if competition_id is None:
-            return Response({"error": "CompetitionPost ID is required"}, status=status.HTTP_400_BAD_REQUEST)
-
-        action = request.data.get('action')
-        if action not in ("add", "remove"):
-            return Response({"error": "Invalid action"}, status=status.HTTP_400_BAD_REQUEST)
+        if not competition_id:
+            return Response({"error": "Competition ID is required"}, status=status.HTTP_400_BAD_REQUEST)
 
         competition = get_object_or_404(Competition, id=competition_id)
         user = request.user
 
-        if competition.max_participants and competition.participants_relationships.count() >= competition.max_participants:
-            return Response({"error": "Maximum number of participants reached."}, status=status.HTTP_400_BAD_REQUEST)
+        if competition.max_participants:
+            if competition.participants_relationships.count() >= competition.max_participants:
+                return Response({"error": "Maximum number of participants reached."},
+                                status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            if action == "add":
-                competition.participants_relationships.add(user)
-                UserSerializer(user, request.data)
+            UserToCompetitionRelationship.objects.get_or_create(user=user, competition=competition, status='P')
+            return Response({"success": "User added to competition waiting for admin approval"},
+                            status=status.HTTP_200_OK)
 
-            elif action == "remove":
-                competition.participants_relationships.remove(user)
-
-            return Response({"success": f"User {action}ed successfully {'from' if action=='remove' else 'to'} competition"}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @staticmethod
     def delete(request):
+        competition_id = request.data.get('id')
+        if not competition_id:
+            return Response({"error": "Competition ID is required"}, status=status.HTTP_400_BAD_REQUEST)
 
-        if not request.user.is_admin():
-            return Response({"error": "Only admin users are authorized to delete competitions"},
-                            status=status.HTTP_401_UNAUTHORIZED)
-
-        try:
-            id = request.query_params.get('id')
-            if id is None:
-                return Response({"error": "ID parameter is required"}, status=status.HTTP_400_BAD_REQUEST)
-
-            competition = get_object_or_404(Competition, id=id)
-            competition.delete()
-            return Response({"message": "CompetitionPost deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    @staticmethod
-    def post(request):
-
-        if not request.user.is_admin():
-            return Response({"error": "Only admin users are authorized to create competitions"},
-                            status=status.HTTP_401_UNAUTHORIZED)
-
-        serializer = CompetitionSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class CompetitionsView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    @staticmethod
-    def get(request):
-
-        if not request.user.is_admin():
-            return Response({"error": "Only admin users are authorized to see all competitions"},
-                            status=status.HTTP_401_UNAUTHORIZED)
+        competition = get_object_or_404(Competition, id=competition_id)
+        user = request.user
 
         try:
-            competitions = Competition.objects.all()
-            serializer = CompetitionSerializer(competitions, many=True)
-            return Response(serializer.data)
+            relationship = UserToCompetitionRelationship.objects.filter(user=user, competition=competition).first()
+            if relationship:
+                relationship.delete()
+                return Response({"success": "User removed from competition"}, status=status.HTTP_200_OK)
+            return Response({"error": "User is not part of the competition"}, status=status.HTTP_400_BAD_REQUEST)
+
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
