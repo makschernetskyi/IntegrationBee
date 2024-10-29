@@ -243,6 +243,17 @@ class Competition(ClusterableModel):
 
         self.save()
 
+    def generate_participants_csv(self):
+        participants = self.participants_relationships.all()
+        csv_content = "First Name,Last Name\n"
+
+        for participant in participants:
+            csv_content += f"{participant.user.first_name},{participant.user.last_name}\n"
+
+        response = HttpResponse(csv_content, content_type='text/csv')
+        response['Content-Disposition'] = f'attachment; filename="participants_{self.pk}.csv"'
+
+        return response
 
 
 class UserToCompetitionRelationship(Orderable):

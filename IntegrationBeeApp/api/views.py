@@ -208,25 +208,47 @@ class CompetitionView(APIView):
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-def download_latex_pdf_report_view(request, pk):
-    competition = get_object_or_404(Competition, pk=pk)
-    return competition.generate_latex_pdf_report()
+class DownloadLatexPdfReportView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        competition = get_object_or_404(Competition, pk=pk)
+        try:
+            return competition.generate_latex_pdf_report()
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)
 
 
-def download_latex_tex_report_view(request, pk):
-    competition = get_object_or_404(Competition, pk=pk)
-    return competition.generate_latex_tex_report()
+class DownloadLatexTexReportView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        competition = get_object_or_404(Competition, pk=pk)
+        try:
+            return competition.generate_latex_tex_report()
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)
 
 
-def generate_bracket_view(request, pk):
-    competition = get_object_or_404(Competition, pk=pk)
+class GenerateBracketView(APIView):
+    permission_classes = [IsAuthenticated]
 
-    try:
-        competition.generate_bracket()
+    def get(self, request, pk):
+        competition = get_object_or_404(Competition, pk=pk)
 
-    except Exception as e:
-        error_message = str(e)
-        print(error_message)
-        return HttpResponse(f"error: {error_message}", status=500)
+        try:
+            competition.generate_bracket()
+            return Response({"success": "Bracket generated successfully"}, status=200)
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)
 
-    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+class DownloadParticipantsCsvView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        competition = get_object_or_404(Competition, pk=pk)
+        try:
+            return competition.generate_participants_csv()
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)

@@ -21,11 +21,12 @@ class CompetitionAdmin(ModelAdmin):
     gen_brackets.short_description = "Generate Brackets"
 
     def download_report(self, obj):
-        return f'<a href="/api/v2/contestReport/{obj.id}/download_pdf">Download PDF</a><br>' \
-               f'<a href = "/api/v2/contestReport/{obj.id}/download_tex" > Download TEX </a>'
+        return f'<a href="/api/v2/contestReport/{obj.id}/download_pdf">Download Report PDF</a><br>' \
+               f'<a href = "/api/v2/contestReport/{obj.id}/download_tex" > Download Report TEX </a><br>' \
+                f'<a href = "/api/v2/participantsReport/{obj.id}/download_csv" > Download Participants CSV </a>'
 
     download_report.allow_tags = True
-    download_report.short_description = "Contest summary"
+    download_report.short_description = "Download"
 
 
 modeladmin_register(CompetitionAdmin)

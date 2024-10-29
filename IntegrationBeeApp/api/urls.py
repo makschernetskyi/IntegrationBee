@@ -6,8 +6,8 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from .views import (RegisterView, UserDataView, CompetitionView, VerifyEmailView, download_latex_pdf_report_view,
-                    download_latex_tex_report_view, generate_bracket_view, UpdateUserView)
+from .views import RegisterView, UserDataView, CompetitionView, VerifyEmailView, DownloadLatexPdfReportView, \
+    DownloadLatexTexReportView, DownloadParticipantsCsvView, GenerateBracketView, UpdateUserView
 
 urlpatterns = [
     path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -16,8 +16,9 @@ urlpatterns = [
     path('userData/', UserDataView.as_view(), name="user_data"),
     path('competition/<int:pk>/', CompetitionView.as_view(), name='competition_detail'),
     path('verifyemail/', VerifyEmailView.as_view(), name="verify_email"),
-    path('contestReport/<int:pk>/download_pdf/', download_latex_pdf_report_view, name='download_pdf'),
-    path('contestReport/<int:pk>/download_tex/', download_latex_tex_report_view, name='download_tex'),
-    path('contestBracket/<int:pk>/generate/', generate_bracket_view, name='generate_bracket'),
+    path('contestReport/<int:pk>/download_pdf/', DownloadLatexPdfReportView.as_view(), name='download_pdf'),
+    path('contestReport/<int:pk>/download_tex/', DownloadLatexTexReportView.as_view(), name='download_tex'),
+    path('participantsReport/<int:pk>/download_csv/', DownloadParticipantsCsvView.as_view(), name='download_csv'),
+    path('contestBracket/<int:pk>/generate/', GenerateBracketView.as_view(), name='generate_bracket'),
     path('updateUser/', UpdateUserView.as_view(), name="update_user"),
 ]
