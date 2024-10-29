@@ -1,0 +1,11 @@
+{% extends "wagtailadmin/login.html" %}
+{% load static %}
+
+
+{% block branding_login %}Sign in{% endblock %}
+
+{% block branding_logo %}
+    <div class="login-logo">
+        <img src="{% static 'logo/words_logo_no_bg.svg' %}" alt="integration bee austria logo" class="wagtail-logo">
+    </div>
+{% endblock %}
