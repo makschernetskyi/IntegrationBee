@@ -1,4 +1,5 @@
 from django.apps import AppConfig
+from wagtail.users.apps import WagtailUsersAppConfig
 
 
 class ApiConfig(AppConfig):
@@ -7,3 +8,7 @@ class ApiConfig(AppConfig):
 
     def ready(self):
         import api.signals
+
+
+class CustomUsersAppConfig(WagtailUsersAppConfig):
+    user_viewset = "api.viewsets.UserViewSet"

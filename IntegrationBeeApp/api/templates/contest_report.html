@@ -8,15 +8,6 @@
 </head>
 <body>
 
-<h1>Participants ({{ competition.max_participants }} max):</h1>
-<ul>
-    {% for participant in participants %}
-        <li>
-            <strong>{{ participant.user.first_name }} {{ participant.user.last_name }}</strong> {{ participant.user.phone_number }}
-        </li>
-    {% endfor %}
-</ul>
-
 {% for block in series %}
     {% if block.block_type == 'series' %}
         <h1>{{ block.value.series_name }}</h1>

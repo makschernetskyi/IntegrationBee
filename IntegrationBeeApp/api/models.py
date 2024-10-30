@@ -3,21 +3,15 @@ import urllib
 import datetime
 from pathlib import Path
 
-import requests
 from django.core.exceptions import ValidationError
-from django.db import models
 
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-from django.forms import ModelForm
 from django.http import HttpResponse
 from django.template.loader import render_to_string
-from modelcluster.fields import ParentalKey
-from wagtail.admin.forms import WagtailAdminModelForm
-from wagtail.admin.panels import FieldPanel, InlinePanel
-from wagtail.api import APIField
+from django.utils.html import format_html
+from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.fields import StreamField
 from wagtail.models import Orderable
-from django.db import models
 
 from wagtail.models import ClusterableModel
 from wagtail.admin.panels import FieldPanel, InlinePanel
@@ -70,22 +64,22 @@ class User(AbstractUser):
 
     objects = UserManager()
 
-    def is_editor(self):
+    @property
+    def is_page_editor(self):
         return self.groups.filter(name='Editors').exists()
 
-    def is_moderator(self):
+    @property
+    def is_integral_editor(self):
         return self.groups.filter(name='Moderators').exists()
 
-    def is_admin(self):
-        return self.groups.filter(name='Admins').exists()
-
-    def get_role(self):
-        if self.is_admin():
+    @property
+    def role(self):
+        if self.is_staff:
             return 'Admin'
-        elif self.is_moderator():
-            return 'Moderator'
-        elif self.is_editor():
-            return 'Editor'
+        elif self.is_page_editor:
+            return 'PageEditor'
+        elif self.is_integral_editor:
+            return 'IntegralEditor'
         else:
             return 'User'
 
@@ -104,12 +98,23 @@ class Competition(ClusterableModel):
     ], null=True, blank=True, use_json_field=True)
 
     panels = [
-        FieldPanel('name'),
-        FieldPanel('event_date'),
-        FieldPanel('max_participants', classname="collapsed"),
-        InlinePanel('participants_relationships', label="Participants", classname="collapsed"),
-        InlinePanel('rounds', label="Rounds", classname="collapsed"),
-        FieldPanel("series", classname="collapsed")
+        MultiFieldPanel([
+            FieldPanel('name'),
+            FieldPanel('event_date'),
+            FieldPanel('max_participants', classname="collapsed"),
+        ], heading="Competition Details", permission='api.edit_detail'),
+
+        MultiFieldPanel([
+            InlinePanel('participants_relationships', label="Participants", classname="collapsed"),
+        ], heading="Competition Participants", classname="collapsed", permission='api.edit_participants'),
+
+        MultiFieldPanel([
+            InlinePanel('rounds', label="Rounds", classname="collapsed"),
+        ], heading="Competition Rounds", classname="collapsed", permission='api.edit_rounds'),
+
+        MultiFieldPanel([
+            FieldPanel("series", classname="collapsed")
+        ], heading="Competition Integrals", classname="collapsed", permission='api.edit_integrals'),
     ]
 
     ROUND_ORDER = [
@@ -123,54 +128,64 @@ class Competition(ClusterableModel):
         return self.name
 
     def generate_latex(self, full_latex_file):
-        participants = self.participants_relationships.filter(status__in=['R', 'Q', 'E', 'F', 'S', 'T', 'W'])
-        series = self.series
+        html_file = Path('competition_report.html')
+        latex_file = Path('competition_report.tex')
 
-        report_html = render_to_string('contest_report.html', {
-            'competition': self,
-            'participants': participants,
-            'series': series,
-        })
+        try:
+            participants = self.participants_relationships.filter(status__in=['R', 'Q', 'E', 'F', 'S', 'T', 'W'])
+            series = self.series
 
-        html_file_template = 'contest_report.html'
-        html_file = 'competition_report.html'
-        latex_file_template = 'contest_report.tex'
-        latex_file = 'competition_report.tex'
+            report_html = render_to_string('contest_report.html', {
+                'competition': self,
+                'participants': participants,
+                'series': series,
+            })
 
-        with open(html_file, 'w') as f:
-            f.write(report_html)
+            with html_file.open('w') as f:
+                f.write(report_html)
 
-        pandoc_latex_command = [
-            'pandoc',
-            '-f', 'html+tex_math_dollars+tex_math_single_backslash',
-            '-t', 'latex',
-            '-o', latex_file,
-            html_file
-        ]
+            pandoc_latex_command = [
+                'pandoc',
+                '-f', 'html+tex_math_dollars+tex_math_single_backslash',
+                '-t', 'latex',
+                '-o', str(latex_file),
+                str(html_file)
+            ]
+            subprocess.run(pandoc_latex_command, stdout=subprocess.PIPE, check=True)
 
-        subprocess.run(pandoc_latex_command, stdout=subprocess.PIPE, check=True)
-
-        latex_content = render_to_string(latex_file_template, {
-                'body': open(latex_file, 'r').read(),
+            latex_content = render_to_string('contest_report.tex', {
+                'body': latex_file.read_text(),
                 'date': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 'name': self.name,
             })
 
-        with open(full_latex_file, 'w') as f:
-            f.write(latex_content)
+            with open(full_latex_file, 'w') as f:
+                f.write(latex_content)
+
+        finally:
+            html_file.unlink(missing_ok=True)
+            latex_file.unlink(missing_ok=True)
 
     def generate_latex_pdf_report(self):
         try:
             latex_path = Path(f'competition_{self.pk}_report.tex')
             pdf_path = Path(f'competition_{self.pk}_report.pdf')
+            log_path = Path(f'competition_{self.pk}_report.log')
+            aux_path = Path(f'competition_{self.pk}_report.aux')
 
             self.generate_latex(latex_path)
 
             pdf_command = f"pdflatex -jobname={pdf_path.stem} {latex_path}"
             subprocess.run(pdf_command, shell=True)
 
-            response = HttpResponse(open(pdf_path, 'rb').read(), content_type='application/pdf')
-            response['Content-Disposition'] = f'attachment; filename="{pdf_path}"'
+            with open(pdf_path, 'rb') as pdf_file:
+                response = HttpResponse(pdf_file.read(), content_type='application/pdf')
+                response['Content-Disposition'] = f'attachment; filename="{pdf_path.name}"'
+
+            latex_path.unlink(missing_ok=True)
+            pdf_path.unlink(missing_ok=True)
+            log_path.unlink(missing_ok=True)
+            aux_path.unlink(missing_ok=True)
 
             return response
 
@@ -183,8 +198,11 @@ class Competition(ClusterableModel):
             latex_path = Path(f'competition_{self.pk}_report.tex')
             self.generate_latex(latex_path)
 
-            response = HttpResponse(open(latex_path, 'rb').read(), content_type='application/tex')
-            response['Content-Disposition'] = f'attachment; filename="{latex_path}"'
+            with open(latex_path, 'rb') as tex_file:
+                response = HttpResponse(tex_file.read(), content_type='application/tex')
+                response['Content-Disposition'] = f'attachment; filename="{latex_path.name}"'
+
+            latex_path.unlink(missing_ok=True)
 
             return response
 
@@ -254,6 +272,20 @@ class Competition(ClusterableModel):
         response['Content-Disposition'] = f'attachment; filename="participants_{self.pk}.csv"'
 
         return response
+
+    def gen_brackets(self):
+        return format_html(f'<a href="/api/v2/contestBracket/{self.id}/generate">Generate Brackets</a>')
+
+    gen_brackets.short_description = "Generate Brackets"
+
+    def download_report(self):
+        return format_html(
+            f'<a href="/api/v2/contestReport/{self.id}/download_pdf">Download Report PDF</a><br>'
+            f'<a href="/api/v2/contestReport/{self.id}/download_tex">Download Report TEX</a><br>'
+            f'<a href="/api/v2/participantsReport/{self.id}/download_csv">Download Participants CSV</a>'
+        )
+
+    download_report.short_description = "Download"
 
 
 class UserToCompetitionRelationship(Orderable):
