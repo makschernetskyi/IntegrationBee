@@ -268,9 +268,8 @@ class CompetitionPost(Page):
 
 class ContactsPage(Page):
 
-    about_us = models.TextField(blank=False, null=True)
-    contacts = models.TextField(blank=False, null=True)
-    socials = models.TextField (blank=True, null=True)
+    about_us = models.CharField(blank=False, null=True, max_length=500)
+    inquiry_email = models.CharField(blank=False, null=True, max_length=25)
 
     our_team = StreamField(
         [
@@ -283,15 +282,14 @@ class ContactsPage(Page):
 
     content_panels = Page.content_panels + [
         FieldPanel("about_us"),
-        FieldPanel("contacts"),
-        FieldPanel("socials"),
+        FieldPanel("inquiry_email"),
         FieldPanel("our_team")
     ]
 
     api_fields = [
         APIField("title"),
         APIField("about_us"),
-        APIField("contacts"),
+        APIField("inquiry_email"),
         APIField("socials"),
         APIField("our_team")
     ]
@@ -299,8 +297,7 @@ class ContactsPage(Page):
     search_fields = Page.search_fields + [
         index.SearchField('title', partial_match=True),
         index.SearchField('about_us', partial_match=True),
-        index.SearchField('contacts', partial_match=True),
-        index.SearchField('socials', partial_match=True),
+        index.SearchField('inquiry_email', partial_match=True),
     ]
 
     def serve(self, request, *args, **kwargs):
