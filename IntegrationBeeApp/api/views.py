@@ -18,7 +18,6 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from wagtail.api.v2.router import WagtailAPIRouter
 from wagtail.api.v2.views import PagesAPIViewSet
 
-from .authentication import CookieTokenAuthentication
 from .permissions import IsPublishedCompetitionPost
 from .serializers import UserSerializer, CompetitionSerializer, EmailVerificationTokenSerializer
 from api.models import Competition, User, EmailVerificationToken, UserToCompetitionRelationship

@@ -15,7 +15,7 @@ const {isMenuVisible} = toRefs(props)
 const emit = defineEmits(['switchMenuVisibility'])
 
 const authStore = useAuthStore()
-const {logout, getProfileData} = authStore
+const {logout, getProfileData,} = authStore
 const {isAuthenticated, profilePicture} = storeToRefs(authStore)
 
 const router = useRouter()
@@ -104,7 +104,7 @@ const handleLogout = async () => {
 							</svg>
 							<div v-if="profilePicture" class="relative w-full h-full flex justify-center items-center">
 								<div class="relative z-[2] w-[90%] aspect-square overflow-hidden [clip-path:polygon(68.3%_3.46%,18.85%_10.88%,0.55%_57.42%,31.7%_96.54%,81.15%_89.12%,99.45%_42.58%)] [-webkit-clip-path:polygon(68.3%_3.46%,18.85%_10.88%,0.55%_57.42%,31.7%_96.54%,81.15%_89.12%,99.45%_42.58%)]">
-									<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuHm1FQ4-XKwrkURvfPNdc6863X3ua8gGYnw&s" alt="profile picture" class="w-full h-full object-cover">
+									<img :src="profilePicture" alt="profile picture" class="w-full h-full object-cover">
 								</div>
 								<div 
 									class="w-full h-full top-0 left-0 bg-primary absolute z-[1] [clip-path:polygon(68.3%_3.46%,18.85%_10.88%,0.55%_57.42%,31.7%_96.54%,81.15%_89.12%,99.45%_42.58%)] [-webkit-clip-path:polygon(68.3%_3.46%,18.85%_10.88%,0.55%_57.42%,31.7%_96.54%,81.15%_89.12%,99.45%_42.58%)]"
