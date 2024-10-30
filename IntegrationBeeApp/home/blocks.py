@@ -29,9 +29,10 @@ class HomeAcknowledgementBlock(blocks.StructBlock):
 class TeamMemberBlock(blocks.StructBlock):
     """name role contacts and picture"""
 
-    name = blocks.CharBlock(required=True, help_text="add name")
-    role = blocks.CharBlock(required=True, help_text="add role")
-    contacts = blocks.TextBlock(required=True, help_text="add contacts")
+    name = blocks.CharBlock(required=True, help_text="add name", max_length=25)
+    role = blocks.CharBlock(required=True, help_text="add role", max_length=25)
+    phone = blocks.CharBlock(required=True, help_text="add phone", max_length=25)
+    email = blocks.CharBlock(required=True, help_text="add email", max_length=25)
     picture = ImageChooserBlock()
 
     class Meta:
