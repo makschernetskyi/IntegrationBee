@@ -8,9 +8,10 @@ from wagtailmath.blocks import MathBlock
 
 
 class IntegralBlock(blocks.StructBlock):
-    integral = MathBlock(required=True)
+    integral = MathBlock(required=False)
     integral_solution = MathBlock(required=False)
-    difficulty_level = blocks.IntegerBlock(min_value=1, max_value=10, help_text="Difficulty level (1-10)", default=5)
+    difficulty_level = blocks.IntegerBlock(min_value=1, max_value=10, help_text="Difficulty level (1-10)",
+                                           default=5, required=False)
 
     class Meta:
         icon = "code"
@@ -38,10 +39,10 @@ class SeriesChoiceBlock(blocks.ChoiceBlock):
 
 
 class SeriesBlock(blocks.StructBlock):
-    series_name = SeriesChoiceBlock(required=True, help_text="Select the series")
+    series_name = SeriesChoiceBlock(required=False, help_text="Select the series")
     integrals = blocks.StreamBlock([
         ('integral', IntegralBlock()),
-    ], required=True, help_text="Integrals belonging to this series")
+    ], required=False, help_text="Integrals belonging to this series")
 
     class Meta:
         icon = "list-ul"
@@ -49,8 +50,8 @@ class SeriesBlock(blocks.StructBlock):
 
 
 class CompetitionPostSectionBlock(blocks.StructBlock):
-    title = blocks.CharBlock(required=True, help_text="Title of the section", max_length=50)
-    body = blocks.RichTextBlock(required=True, help_text="Text of the section", features=["bold", "italic", "link"])
+    title = blocks.CharBlock(required=False, help_text="Title of the section", max_length=50)
+    body = blocks.RichTextBlock(required=False, help_text="Text of the section", features=["bold", "italic", "link"])
 
     class Meta:
         icon = "list-ul"

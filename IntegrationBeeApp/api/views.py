@@ -9,7 +9,7 @@ from uuid import uuid4
 import base64
 
 from rest_framework.authentication import SessionAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.status import HTTP_200_OK
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -106,6 +106,7 @@ class UserDataView(APIView):
                 competition_data = {
                     'id': competition.id,
                     'name': competition.name,
+                    'event_date': competition.event_date,
                     'registration_date': relationship.registration_date,
                     'status': relationship.get_status_display(),
                     "page_id": None,
@@ -236,7 +237,7 @@ class DownloadLatexTexReportView(APIView):
 
 class GenerateBracketView(APIView):
     authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
     def get(self, request, pk):
         competition = get_object_or_404(Competition, pk=pk)
@@ -250,7 +251,7 @@ class GenerateBracketView(APIView):
 
 class DownloadParticipantsCsvView(APIView):
     authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
     def get(self, request, pk):
         competition = get_object_or_404(Competition, pk=pk)
