@@ -89,7 +89,7 @@ class User(AbstractUser):
 
 class Competition(ClusterableModel):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, unique=True, null=True, blank=True)
     max_participants = models.IntegerField(null=True, blank=True)
     event_date = models.DateTimeField(blank=True, null=True)
 
@@ -289,7 +289,7 @@ class Competition(ClusterableModel):
 
 
 class UserToCompetitionRelationship(Orderable):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+', null=True, blank=True)
     competition = ParentalKey('Competition', on_delete=models.CASCADE, related_name='participants_relationships')
     registration_date = models.DateTimeField(auto_now_add=True)
 
@@ -306,7 +306,7 @@ class UserToCompetitionRelationship(Orderable):
         ('W', 'Won')
     ]
 
-    status = models.CharField(max_length=1, choices=choices, default='P')
+    status = models.CharField(max_length=1, choices=choices, default='P', null=True, blank=True)
 
     panels = [
         FieldPanel('user'),
