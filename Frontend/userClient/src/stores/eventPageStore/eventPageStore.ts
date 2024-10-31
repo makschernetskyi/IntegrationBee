@@ -3,6 +3,7 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import { useToastStore } from '@/stores/toastStore/toastStore';
+import { noAuthApi } from '@/api';
 
 // Interfaces
 
@@ -47,20 +48,6 @@ export interface TournamentBracket {
   quarterfinals: [Match, Match, Match, Match];
   semifinals: [Match, Match];
   finals: [Match];
-}
-
-interface EventData {
-  competitionName: string;
-  edition: string;
-  description: string;
-  eventPictureSrc: string;
-  mainSponsor: MainSponsor;
-  goldSponsors: Sponsor[];
-  silverSponsors: Sponsor[];
-  bronzeSponsors: Sponsor[];
-  sections: Section[];
-  participatePanel: ParticipatePanelData;
-  tournamentBracket: TournamentBracket;
 }
 
 interface RegisterResponse {
@@ -124,25 +111,26 @@ export const useEventPageStore = defineStore('eventPageStore', {
   }),
 
   actions: {
-    async fetchEventData() {
+    async fetchEventData(id:string) {
       this.loading = true;
       const toastStore = useToastStore();
       try {
-        const response = await axios.get('/api/event'); // Update with your API endpoint
-        const data = response.data as EventData;
+        const response = await noAuthApi.get(`/cms/pages/${id}/`); // Update with your API endpoint
+        const data = response.data
+        console.log(data);
 
         // Populate state with fetched data
-        this.competitionName = data.competitionName;
+        this.competitionName = data.title;
         this.edition = data.edition;
         this.description = data.description;
-        this.eventPictureSrc = data.eventPictureSrc;
-        this.mainSponsor = data.mainSponsor;
-        this.goldSponsors = data.goldSponsors;
-        this.silverSponsors = data.silverSponsors;
-        this.bronzeSponsors = data.bronzeSponsors;
-        this.sections = data.sections;
-        this.participatePanel = data.participatePanel;
-        this.tournamentBracket = data.tournamentBracket;
+        this.eventPictureSrc = data.picture.meta.download_url;
+        //this.mainSponsor = data.mainSponsor;
+        //this.goldSponsors = data.goldSponsors;
+        //this.silverSponsors = data.silverSponsors;
+        //this.bronzeSponsors = data.bronzeSponsors;
+        //this.sections = data.sections;
+        //this.participatePanel = data.participatePanel;
+        //this.tournamentBracket = data.tournamentBracket;
       } catch (error) {
 		toastStore.addToast({
 			type: 'error',

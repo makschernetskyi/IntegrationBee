@@ -8,11 +8,12 @@ import SilverSponsorLogo from '@/components/SilverSponsorLogo.vue';
 import BronzeSponsorLogo from '@/components/BronzeSponsorLogo.vue';
 import ParticipationForm from '@/components/ParticipationForm.vue';
 
-import { ref } from 'vue';
+import { onBeforeMount, ref } from 'vue';
 import { useAuthStore } from '@/stores/authStore/authStore';
 import { useEventPageStore } from '@/stores/eventPageStore/eventPageStore';
 import { sanitizeHtml } from '@/utils/htmlSanitizers';
 import { storeToRefs } from 'pinia';
+import { useRoute, useRouter } from 'vue-router';
 
 
 const store = useEventPageStore()
@@ -21,6 +22,19 @@ const store = useEventPageStore()
 const isParticipationFormShown = ref(false)
 
 const {isAuthenticated} = storeToRefs(useAuthStore())
+
+
+const route = useRoute()
+const router = useRouter()
+onBeforeMount(async()=>{
+	try{
+		store.$reset()
+		await store.fetchEventData(route.params.id as string)
+	}catch(e:any){
+		//
+		router.push('/events')
+	}
+})
 
 const showParticipationForm = () =>{
 	console.log(isAuthenticated.value)

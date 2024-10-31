@@ -30,12 +30,12 @@
 						</RouterLink>
 					</li>
 					<li>
-						<RouterLink to="sign_in" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
+						<RouterLink to="/sign_in" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
 							Sign in
 						</RouterLink>
 					</li>
 					<li>
-						<RouterLink to="sign_up" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
+						<RouterLink to="/sign_up" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
 							Sign up
 						</RouterLink>
 					</li>
@@ -61,12 +61,12 @@
 				<p>© 2024 JugendWAVE All Rights Reserved.</p>
 			</div>
 			<div class="flex justify-between lg:justify-end gap-[4rem]">
-				<RouterLink to="/impressum" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:-bottom-[2px] after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
+				<RouterLink to="/imprint" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:-bottom-[2px] after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
 					impressum
 				</RouterLink>
-				<a href="" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:-bottom-[2px] after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
+				<RouterLink to="/terms_of_use" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:-bottom-[2px] after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
 					terms of use
-				</a>
+				</RouterLink>
 			</div>
 			<div class="lg:hidden flex">
 				<p class="text-center">© 2024 JugendWAVE All Rights Reserved.</p>
