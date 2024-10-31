@@ -56,7 +56,7 @@ const store = useContactPageStore()
 								<p class="font-semibold">
 									tel:
 								</p>
-								<a :href="'tel:'+member.tel" class="">
+								<a :href="'tel:'+member.tel.split(' ').join('')" class="">
 									{{ member.tel }}
 								</a>
 							</div>
@@ -64,16 +64,8 @@ const store = useContactPageStore()
 								<p class="font-semibold">
 									email:
 								</p>
-								<a :href="'mailto:' + member.email">
+								<a :href="'mailto:' + member.email.split(' ').join('')">
 									{{ member.email }}
-								</a>
-							</div>
-							<div v-if="member.linkedin" class="flex gap-[1rem]">
-								<p class="font-semibold">
-									linkedin:
-								</p>
-								<a :href="'www.linkedin.com/' + member.linkedin">
-									{{ member.linkedin }}
 								</a>
 							</div>
 						</div>

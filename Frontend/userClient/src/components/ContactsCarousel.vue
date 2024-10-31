@@ -45,15 +45,11 @@ const showPrevCard = () =>{
 					</div>
 					<div v-if="member.tel" class="w-full text-center flex flex-col items-center font-body text-text-sm font-semibold">
 						<p>tel.</p>
-						<a :href="'tel:'+member.tel">{{ member.tel }}</a>
+						<a :href="'tel:'+member.tel.split(' ').join('')">{{ member.tel }}</a>
 					</div>
-					<div class="w-full text-center flex flex-col items-center font-body text-text-sm font-semibold">
+					<div v-if="member.email" class="w-full text-center flex flex-col items-center font-body text-text-sm font-semibold">
 						<p>email</p>
-						<a :href="'mailto:'+member.email">{{ member.email?.split('@').splice(1,0,'@').join(' ') }}</a>
-					</div>
-					<div v-if="member.linkedin" class="w-full text-center flex flex-col items-center font-body text-text-sm font-semibold">
-						<p>linkedin</p>
-						<a :href="'www.linkedin.com/'+member.linkedin">{{member.linkedin}}</a>
+						<a :href="'mailto:'+member.email.split(' ').join('')">{{ member.email}}</a>
 					</div>
 				</div>
 			</div>

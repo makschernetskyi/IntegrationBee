@@ -3,6 +3,7 @@ import DefaultLayout from '@/layouts/Default.vue';
 import { useAuthStore } from '@/stores/authStore/authStore';
 import { useProfilePageStore } from '@/stores/profilePageStore/profilePageStore';
 import { storeToRefs } from 'pinia';
+import { onMounted } from 'vue';
 
 const store = useAuthStore()
 
@@ -39,7 +40,7 @@ const handleImageChoice = (e:any) => {
 							class="w-full h-full top-0 left-0 bg-primary absolute z-[1] [clip-path:polygon(68.3%_3.46%,18.85%_10.88%,0.55%_57.42%,31.7%_96.54%,81.15%_89.12%,99.45%_42.58%)] [-webkit-clip-path:polygon(68.3%_3.46%,18.85%_10.88%,0.55%_57.42%,31.7%_96.54%,81.15%_89.12%,99.45%_42.58%)]"
 						/>
 					</div>
-					<label class="flex gap-[1rem] items-center" for="profilePictureInput">
+					<label class="flex gap-[1rem] items-center cursor-pointer" for="profilePictureInput">
 						<p v-if="store.profilePicture">change profile picture</p>
 						<p v-else>set profile picture</p>
 						<div class="h-full aspect-square">
@@ -227,7 +228,7 @@ const handleImageChoice = (e:any) => {
 				</div>
 				
 				<div class="w-full bg-white-100 overflow-y-auto rounded relative text-text-sm lg:text-body">
-					<div class="grid grid-cols-[1fr_3fr_2fr] py-[1rem] shadow-md sticky top-0 bg-pearl-white-50">
+					<div class="grid grid-cols-[2fr_6fr_4fr] py-[1rem] shadow-md sticky top-0 bg-pearl-white-50">
 						<h3 class="text-center font-heading ">
 							Date
 						</h3>
@@ -240,17 +241,17 @@ const handleImageChoice = (e:any) => {
 					</div>
 					<div class="h-max max-h-[20rem] w-full text-text-xs lg:text-body">
 						<div class="w-full h-max flex flex-col py-[1rem]">
-							<a v-for="i in [...new Array(10).keys()]" :key="i" href="" class="grid grid-cols-[1fr_3fr_2fr] py-[1rem] lg:hover:bg-white-400">
+							<RouterLink v-for="competition, i in store.competitions" :key="i" :to="competition.link" class="grid grid-cols-[2fr_6fr_4fr] py-[1rem] lg:hover:bg-white-400">
 								<p class="text-center font-body">
-									1 Nov. 2025
+									{{competition.date.split(' ').slice(0,3).join(' ')}}
 								</p>
 								<p class="text-center font-body ">
-									Vienna 2024 Autumn Edition
+									{{competition.name}}
 								</p>
 								<p class="text-center font-body ">
-									Result
+									{{competition.result}}
 								</p>
-							</a>
+							</RouterLink>
 						</div>
 					</div>
 				</div>

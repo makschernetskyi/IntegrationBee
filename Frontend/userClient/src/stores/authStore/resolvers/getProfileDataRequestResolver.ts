@@ -1,5 +1,6 @@
-import {api} from "@/api"
+import {api, BASE_URL} from "@/api"
 import { useToastStore } from "@/stores/toastStore/toastStore";
+import { formatDateToLocal } from "@/utils/formatDateToLocal";
 
 const API_USER_DATA_URL = "/userData/"
 
@@ -29,20 +30,30 @@ export async function getProfileDataRequestResolver(this: any) {
         this.isAdmin = data.role === "Admin";
         this.programOfStudy = data.program_of_study
         this.profilePicture = data.profile_picture;
-        this.competitions = data.competitions;
+        this.competitions = data.competitions.map((competition:any)=>({
+            date: formatDateToLocal(competition.event_date),
+            name: competition.name,
+            result: competition.status,
+            link: `/event/${competition.page_id}`
+        }));
 
         //return data;
     } catch (error:any) {
         this.isAuthenticated = false;
-        console.log(error)
-        // Handle errors
-
         const toastStore = useToastStore()
-        //toastStore.addToast({
-        //    type: 'error',
-        //    title: "Error has occured",
-        //    message: "could not fetch profile data"
-        //})
+
+        this.userDataRequest.status = 'rejected';
+        this.userDataRequest.code = error.status;
+        this.userDataRequest.errorMSG = error.message;
+
+        // Handle errors
+        if(error.status !== 401){
+            toastStore.addToast({
+                type: "error",
+                title: "error has occured",
+                message: "could not fetch your profile data, try again later."
+            })
+        }
 
     }
 }

@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
 import { useToastStore } from '@/stores/toastStore/toastStore'; // Assuming you have a toast store
+import { noAuthApi } from '@/api';
+import { fetchImageUrl } from '@/services/fetchImageUrl';
 
 export interface TeamMember {
   id: number;
@@ -9,12 +10,11 @@ export interface TeamMember {
   imageSrc: string;
   tel?: string;
   email?: string;
-  linkedin?: string;
 }
 
 export const useContactPageStore = defineStore('contactPageStore', {
   state: () => ({
-	title: '' as string,
+	  title: '' as string,
     aboutUsText: '' as string,
     generalInqueriesEmail: '' as string,
     teamMembers: [] as TeamMember[],
@@ -24,18 +24,39 @@ export const useContactPageStore = defineStore('contactPageStore', {
     async fetchContactData() {
       this.loading = true;
       try {
-        const response = await axios.get('/api/contact'); // Replace with your actual API endpoint
-        const data = response.data;
-        this.aboutUsText = data.aboutUsText;
-        this.generalInqueriesEmail = data.generalInqueriesEmail ;
-        this.teamMembers = data.teamMembers;
+        const response = await noAuthApi.get('/cms/pages', {
+          params: {
+            type: "home.ContactsPage",
+            fields: "title,about_us,inquiry_email,our_team"
+          }
+        })
+        const data = response.data.items["0"];
+        this.title = data.title;
+        this.aboutUsText = data.about_us;
+        this.generalInqueriesEmail = data.inquiry_email ;
+
+        const processTeamMembers = async () => {
+          const members = data.our_team
+            .map(async (member:any, i:number) => ({
+              id: i,
+              name: member.value.name,
+              imageSrc: await fetchImageUrl(member.value.picture),
+              role: member.value.role,
+              ...(member.value.email ? {email: member.value.email} : {}),
+              ...(member.value.phone ? {tel: member.value.phone} : {}),
+            }));
+          return Promise.all(members);
+        };
+
+        this.teamMembers = await processTeamMembers();
+
       } catch (error) {
-		const toastStore = useToastStore();
+		    const toastStore = useToastStore();
         toastStore.addToast({
-			type: 'error',
-			title: "Couldn't fetch contacts",
-			message: "try again later."
-		});
+          type: 'error',
+          title: "Couldn't fetch contacts",
+          message: "try again later."
+        });
       } finally {
         this.loading = false;
       }

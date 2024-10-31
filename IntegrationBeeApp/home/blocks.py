@@ -31,8 +31,8 @@ class TeamMemberBlock(blocks.StructBlock):
 
     name = blocks.CharBlock(required=True, help_text="add name", max_length=25)
     role = blocks.CharBlock(required=True, help_text="add role", max_length=25)
-    phone = blocks.CharBlock(required=True, help_text="add phone", max_length=25)
-    email = blocks.CharBlock(required=True, help_text="add email", max_length=25)
+    phone = blocks.CharBlock(required=False, help_text="add phone", max_length=25)
+    email = blocks.CharBlock(required=False, help_text="add email", max_length=100)
     picture = ImageChooserBlock()
 
     class Meta:

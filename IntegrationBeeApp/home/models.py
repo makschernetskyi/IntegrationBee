@@ -290,7 +290,6 @@ class ContactsPage(Page):
         APIField("title"),
         APIField("about_us"),
         APIField("inquiry_email"),
-        APIField("socials"),
         APIField("our_team")
     ]
 

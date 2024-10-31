@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import DefaultLayout from '@/layouts/Default.vue';
 import { useEventsPageStore } from '@/stores/eventsPageStore/eventsPageStore';
-import { onMounted } from 'vue';
+import { onBeforeMount } from 'vue';
 import { storeToRefs } from 'pinia';
 
 
 const store = useEventsPageStore()
 const {searchQuery} = storeToRefs(store)
 
-onMounted(()=>{
+onBeforeMount(()=>{
 	(async()=>await store.fetchEvents())()
 })
 
@@ -40,7 +40,7 @@ const handleSearchClick = async () =>{
 			</div>
 
 			<div class="w-full grid grid-cols-1 lg:grid-cols-3 auto-rows-auto gap-y-[2rem] lg:gap-x-[2rem] px-[2rem] py-[5rem] overflow-x-hidden">
-				<RouterLink to="/" v-for="event in store.events">
+				<RouterLink v-for="event in store.events" :to="`/event/${event.id}`" >
 					<div class="w-full flex flex-col gap-[1rem] text-screenBlack p-4" data-aos="fade-left">
 						<div class="w-full aspect-[8/5] overflow-hidden rounded-3xl relative">
 							<img :src="event.pictureSrc" alt="" :class="`w-full h-full object-cover`">

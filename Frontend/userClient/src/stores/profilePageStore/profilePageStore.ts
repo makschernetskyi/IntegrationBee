@@ -28,12 +28,6 @@ export const useProfilePageStore = defineStore('profilePageStore', {
 			await api.put(`/updateUser/`, {'profile_picture': base64Picture });
 			await useAuthStore().getProfileData()
 		}catch(e){
-			//useToastStore().addToast({
-			//	type: 'error',
-			//	title: 'Image not supported',
-			//	message: `try a different one.`
-			//})
-
 			useToastStore().addToast({
 				type: 'error',
 				title: 'Something went wrong',

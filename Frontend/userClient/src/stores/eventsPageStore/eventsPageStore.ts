@@ -1,10 +1,11 @@
-// src/stores/eventsStore.ts
-
+import { noAuthApi } from '@/api';
 import { defineStore } from 'pinia';
-import axios from 'axios';
+import { useToastStore } from '../toastStore/toastStore';
+import { formatDateToLocal } from '@/utils/formatDateToLocal';
+
 
 export interface Event {
-  id: number;
+  id: string,
   name: string;
   edition: string;
   location: string;
@@ -13,12 +14,6 @@ export interface Event {
   status: 'upcoming' | 'ongoing' | 'past';
 }
 
-export interface EventsResponse {
-  data: Event[];
-  currentPage: number;
-  totalPages: number;
-  totalEvents: number;
-}
 
 export const useEventsPageStore = defineStore('eventsPageStore', {
   state: () => ({
@@ -34,32 +29,54 @@ export const useEventsPageStore = defineStore('eventsPageStore', {
   actions: {
     async fetchTitle() {
       try {
-        const response = await axios.get('/api/events/title'); // Replace with your API endpoint
-        this.title = response.data.title;
+        const response = await noAuthApi.get('/cms/pages/', {
+          params: {
+            type: "home.CompetitionsPage",
+            fields: "title"
+          }
+        }); 
+        this.title = response.data.items["0"].title;
       } catch (error) {
-        console.error('Error fetching title:', error);
+        useToastStore().addToast({
+          type: "error",
+          title: "Error has occured",
+          message: "Could not fetch title of this page."
+        })
         this.error = 'Failed to fetch title.';
       }
     },
     async fetchEvents(page = 1, search = '') {
       this.loading = true;
       try {
-        const response = await axios.get('/api/events', {
+        const response = await noAuthApi.get('/cms/pages/', {
           params: {
-            page: page,
-            search: search,
-          },
-        }); // Replace with your API endpoint
+            type: "home.CompetitionPost",
+            fields: "id,title,edition,place,picture,competition"
+          }
+        }); 
 
-        const data: EventsResponse = response.data;
-        this.events = data.data;
-        this.currentPage = data.currentPage;
-        this.totalPages = data.totalPages;
-        this.totalEvents = data.totalEvents;
+        this.events = response.data.items.map((item:any)=>({
+          id: item.id,
+          name: item.title,
+          edition: item.edition,
+          location: item.place,
+          date: formatDateToLocal(item.competition.event_date),
+          pictureSrc: item.picture?.meta.download_url,
+          status: "upcoming" //TODO IMPLEMENT DIFFERENT STATUSES
+        }));
+
+        //TODO: IMPLEMENT PAGINATION
+        //this.currentPage = data.currentPage;
+        //this.totalPages = data.totalPages;
+        //this.totalEvents = data.totalEvents;
         this.searchQuery = search;
         this.error = null;
       } catch (error) {
-        console.error('Error fetching events:', error);
+        useToastStore().addToast({
+          type: "error",
+          title: "Error has occured",
+          message: "Could not fetch compeitions"
+        })
         this.error = 'Failed to fetch events.';
       } finally {
         this.loading = false;

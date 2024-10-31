@@ -1,1 +1,1 @@
-export {api, noAuthApi} from "./api"
+export {api, noAuthApi, BASE_URL} from "./api"

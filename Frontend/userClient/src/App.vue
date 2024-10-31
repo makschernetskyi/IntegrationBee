@@ -6,12 +6,17 @@ import Toast from "./components/Toast.vue";
 import { onBeforeMount } from "vue";
 import { useHomePageStore } from "./stores/homePageStore/homePageStore";
 import { useNewsPageStore } from "./stores/newsPageStore/newsPageStore";
+import { useContactPageStore } from "./stores/contactPageStore/contactPageStore";
 
 
 
 onBeforeMount(()=>{
-	useHomePageStore().fetchHomePageData()
-	useNewsPageStore().fetchNewsPage()
+	Promise.all([
+		useHomePageStore().fetchHomePageData(),
+		useNewsPageStore().fetchNewsPage(),
+		useContactPageStore().fetchContactData(),
+	])	
+
 })
 
 

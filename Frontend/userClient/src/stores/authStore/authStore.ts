@@ -4,6 +4,12 @@ import { loginRequestResolver } from "./resolvers/loginRequestResolver";
 import { signUpRequestResolver } from "./resolvers/signUpRequestResolver";
 import { logoutResolver } from "./resolvers/logoutResolver";
 
+type Competition = {
+    date: string,
+    name: string,
+    result: string,
+    link: string,
+}
 
 
 export const useAuthStore = defineStore('auth', {
@@ -18,7 +24,7 @@ export const useAuthStore = defineStore('auth', {
         profilePicture: null,
         phoneNumber: null,
         programOfStudy: null,
-        competitions: [],
+        competitions: [] as Competition[],
         userDataRequest: {
             status: null,
             code: null,
@@ -57,6 +63,20 @@ export const useAuthStore = defineStore('auth', {
 		getProfileData: getProfileDataRequestResolver,
 		requestLogin: loginRequestResolver,
 		requestSignUp: signUpRequestResolver,
-        logout: logoutResolver
+        logout: logoutResolver,
+        resetStore() {
+            this.isAuthenticated = false;
+            this.firstName = null;
+            this.lastName = null;
+            this.email = null;
+            this.dateJoined = null;
+            this.institution = null;
+            this.isAdmin = null;
+            this.profilePicture = null;
+            this.phoneNumber = null;
+            this.programOfStudy = null;
+            this.competitions = [];
+            // Leave userDataRequest, registerRequest, and signInRequest unchanged
+        }
 	}
 })
