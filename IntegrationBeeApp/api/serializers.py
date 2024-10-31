@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import Serializer, ModelSerializer
 
 from .models import User, Competition, EmailVerificationToken, ForgotPasswordToken, UserToCompetitionRelationship, \
@@ -201,10 +202,14 @@ class RoundSerializer(ModelSerializer):
 
 class CompetitionSerializer(ModelSerializer):
     rounds = RoundSerializer(many=True, read_only=True)
+    users_count = SerializerMethodField()
 
     class Meta:
         model = Competition
-        fields = ['id', 'name', 'max_participants', 'event_date', 'rounds']
+        fields = ['id', 'name', 'max_participants', 'event_date', 'rounds', 'close_registration', 'users_count']
+
+    def get_users_count(self, obj):
+        return obj.participants_relationships.count()
 
 
 class CompetitionListSerializer(ModelSerializer):
