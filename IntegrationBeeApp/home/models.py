@@ -258,7 +258,7 @@ class CompetitionPost(Page):
     ]
 
     @property
-    def latitude(self):
+    def longitude(self):
         try:
             print(type(self.location))
             return float(self.location.split(" ")[0].split("(")[1])
@@ -266,7 +266,7 @@ class CompetitionPost(Page):
             return None
 
     @property
-    def longitude(self):
+    def latitude(self):
         try:
             return float(self.location.split(" ")[1].split(")")[0])
         except (AttributeError, IndexError):
