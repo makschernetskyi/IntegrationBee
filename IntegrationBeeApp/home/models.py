@@ -187,13 +187,13 @@ class CompetitionPost(Page):
     rules = RichTextField(features=["bold", "link", "italic", "ol", "ul"], null=True)
     location = models.CharField(max_length=250, blank=True, null=True)
 
-    competition = models.ForeignKey(
+    competition = models.OneToOneField(
         api_models.Competition,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='+',
-        verbose_name='competition'
+        verbose_name='competition',
+        related_name='competition_page'
     )
 
     picture = models.ForeignKey(
@@ -201,7 +201,6 @@ class CompetitionPost(Page):
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name="+"
     )
 
     sections = StreamField(

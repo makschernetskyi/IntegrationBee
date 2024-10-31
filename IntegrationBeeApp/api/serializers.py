@@ -1,8 +1,9 @@
+from pprint import pprint
+
 from rest_framework.serializers import Serializer, ModelSerializer
 
 from .models import User, Competition, EmailVerificationToken, ForgotPasswordToken, UserToCompetitionRelationship, \
     Round, Match
-from home.models import CompetitionPage
 from rest_framework import serializers
 from .models import User
 
@@ -27,8 +28,7 @@ class CompetitionUserSerializer(serializers.ModelSerializer):
             return None
 
     def get_page_id(self, obj):
-        competition_page = CompetitionPage.objects.filter(competition=obj).first()
-        return competition_page.id if competition_page else None
+        return obj.competition_page.id if hasattr(obj, 'competition_page') else None
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -79,7 +79,7 @@ class UserSerializer(serializers.ModelSerializer):
     def get_competitions(self, obj):
         relationships = UserToCompetitionRelationship.objects.filter(user=obj)
         competitions = [relationship.competition for relationship in relationships]
-        serializer = CompetitionSerializer(competitions, many=True, context={'user': obj})
+        serializer = CompetitionUserSerializer(competitions, many=True, context={'user': obj})
         return serializer.data
 
     def create(self, validated_data):
