@@ -153,8 +153,8 @@ export const useEventPageStore = defineStore('eventPageStore', {
 
 
         this.sections = data.sections.map((section:any)=>({
-          title: section.title,
-          text: section.body,
+          title: section.value.title,
+          text: section.value.body,
         }));
         this.participatePanel = {
           zoom: 12, //hardcoded for now
