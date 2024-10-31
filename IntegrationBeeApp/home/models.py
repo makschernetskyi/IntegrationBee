@@ -10,11 +10,11 @@ from wagtail.api import APIField
 from wagtail.search import index
 from wagtailgeowidget.panels import LeafletPanel
 
-from api.blocks import CompetitionPostSectionBlock
 from api.serializers import CompetitionSerializer, LocationSerializer
 from . import blocks
 
 from api import models as api_models
+from .blocks import CompetitionPostSectionBlock
 
 
 class HomePage(Page):
