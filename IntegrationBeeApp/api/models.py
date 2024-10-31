@@ -41,22 +41,13 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=50, null=False, blank=False)
     last_name = models.CharField(max_length=50, null=False, blank=False)
     institution = models.CharField(max_length=100, null=True, blank=True)
-
     phone_number = models.CharField(max_length=20, null=True, blank=True)
-    emergency_phone_number = models.CharField(max_length=20, null=True, blank=True)
     program_of_study = models.CharField(max_length=100, null=True, blank=True)
-    date_of_birth = models.DateField(null=True, blank=True)
-    name_pronunciation = models.CharField(max_length=100, null=True, blank=True)
-    additional_info = models.TextField(null=True, blank=True)
 
-    profile_picture = models.ImageField(upload_to="user_pictures/profile_pictures/", blank=True, null=True)
     is_verified = models.BooleanField(default=False, null=False, blank=False)
 
-    registration_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    last_login_date = models.DateTimeField(auto_now=True, null=True, blank=True)
-
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'institution']
+    REQUIRED_FIELDS = ['first_name', 'last_name']
 
     objects = UserManager()
 
@@ -81,6 +72,45 @@ class User(AbstractUser):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
+
+
+class UserToCompetitionRelationship(Orderable):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+', null=True, blank=False)
+    competition = ParentalKey('Competition', on_delete=models.CASCADE, related_name='participants_relationships')
+    phone_number = models.CharField(max_length=20, null=True, blank=True)
+    emergency_phone_number = models.CharField(max_length=20, null=True, blank=True)
+    program_of_study = models.CharField(max_length=100, null=True, blank=True)
+    name_pronunciation = models.CharField(max_length=100, null=True, blank=True)
+    additional_info = models.TextField(null=True, blank=True)
+
+    choices = [
+        ('PENDING_REQUEST', 'Pending Request'),
+        ('REQUEST_ACCEPTED', 'Request Accepted'),
+        ('NOT_QUALIFIED', 'Not Qualified'),
+        ('QUALIFIED', 'Qualified'),
+        ('EIGHTH_FINALIST', '1/8 Finalist'),
+        ('QUARTER_FINALIST', '1/4 Finalist'),
+        ('SEMIFINALIST', 'Semifinalist'),
+        ('FINALIST', 'Finalist'),
+        ('SECOND_PLACE', '2nd Place'),
+        ('WINNER', 'Won')
+    ]
+
+    status = models.CharField(
+        max_length=20,
+        choices=choices,
+        default='PENDING_REQUEST',
+        null=False,
+        blank=False
+    )
+
+    panels = [
+        FieldPanel('user'),
+        FieldPanel('status'),
+    ]
+
+    def __str__(self):
+        return f"{self.user.email} - {self.competition.name} - {self.status}"
 
 
 class Competition(ClusterableModel):
@@ -294,41 +324,6 @@ class Competition(ClusterableModel):
         )
 
     download_report.short_description = "Download"
-
-
-class UserToCompetitionRelationship(Orderable):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+', null=True, blank=False)
-    competition = ParentalKey('Competition', on_delete=models.CASCADE, related_name='participants_relationships')
-    registration_date = models.DateTimeField(auto_now_add=True)
-
-    choices = [
-        ('PENDING_REQUEST', 'Pending Request'),
-        ('REQUEST_ACCEPTED', 'Request Accepted'),
-        ('NOT_QUALIFIED', 'Not Qualified'),
-        ('QUALIFIED', 'Qualified'),
-        ('EIGHTH_FINALIST', '1/8 Finalist'),
-        ('QUARTER_FINALIST', '1/4 Finalist'),
-        ('SEMIFINALIST', 'Semifinalist'),
-        ('FINALIST', 'Finalist'),
-        ('SECOND_PLACE', '2nd Place'),
-        ('WINNER', 'Won')
-    ]
-
-    status = models.CharField(
-        max_length=20,
-        choices=choices,
-        default='PENDING_REQUEST',
-        null=False,
-        blank=False
-    )
-
-    panels = [
-        FieldPanel('user'),
-        FieldPanel('status'),
-    ]
-
-    def __str__(self):
-        return f"{self.user.email} - {self.competition.name} - {self.status}"
 
 
 class Round(ClusterableModel):
