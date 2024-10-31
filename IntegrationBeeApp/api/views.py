@@ -127,16 +127,11 @@ class UpdateUserView(APIView):
 
 
 class CompetitionView(APIView):
-    permission_classes = [IsAuthenticated, IsPublishedCompetitionPost]
+    # permission_classes = [IsAuthenticated, IsPublishedCompetitionPost]
 
-    def patch(self, request):
-        competition_id = request.data.get('id')
+    def patch(self, request, pk):
         action = request.data.get('action', 'register')  # Default action is 'register'
-
-        if not competition_id:
-            return Response({"error": "Competition ID is required"}, status=status.HTTP_400_BAD_REQUEST)
-
-        competition = get_object_or_404(Competition, id=competition_id)
+        competition = get_object_or_404(Competition, pk=pk)
         user = request.user
 
         if action == 'register':
