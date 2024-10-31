@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useToastStore } from '@/stores/toastStore/toastStore';
 import { noAuthApi } from '@/api';
 import { formatDateToLocal } from '@/utils/formatDateToLocal';
+import { fetchImageUrl } from '@/services/fetchImageUrl';
 
 // Interfaces
 
@@ -60,6 +61,7 @@ interface RegisterResponse {
 
 export const useEventPageStore = defineStore('eventPageStore', {
   state: () => ({
+    competitionId: null as number|null,
     competitionName: '',
     edition: '',
     description: '',
@@ -79,9 +81,9 @@ export const useEventPageStore = defineStore('eventPageStore', {
       coordinates: [0, 0],
       isRegistrationOpen: false,
       participantsCount: 0,
-	  location: '',
-	  locationMapsUrl: '',
-	  date: ''
+      location: '',
+      locationMapsUrl: '',
+      date: ''
     } as ParticipatePanelData,
     tournamentBracket: {
       eightFinals: [
@@ -125,31 +127,95 @@ export const useEventPageStore = defineStore('eventPageStore', {
         this.edition = data.edition;
         this.description = data.description;
         this.eventPictureSrc = data.picture.meta.download_url;
-        //this.mainSponsor = data.mainSponsor;
-        //this.goldSponsors = data.goldSponsors;
-        //this.silverSponsors = data.silverSponsors;
-        //this.bronzeSponsors = data.bronzeSponsors;
+        
+
+        const processSponsors = async (tier:string) => {
+          const sponsors = data.sponsors
+            .filter((sponsor:any) => sponsor.value.sponsor_tier === tier)
+            .map(async (sponsor:any) => ({
+            sponsorName: sponsor.value.sponsor_name,
+            logoSrc: await fetchImageUrl(sponsor.value.sponsor_logo),
+            logoSize: sponsor.value.sponsor_logo_size,
+            ...(tier === 'main' ? {description: sponsor.value.sponsor_description} : {}),
+            }));
+          return Promise.all(sponsors);
+        };
+        
+        this.mainSponsorExists = Boolean(data.sponsors.find((sponsor:any)=>sponsor.value.sponsor_tier == "main"));
+      
+
+        this.mainSponsor = this.mainSponsorExists
+        ? (await processSponsors('main'))[0] || null
+        : null;
+        this.goldSponsors = await processSponsors('gold');
+        this.silverSponsors = await processSponsors('silver');
+        this.bronzeSponsors = await processSponsors('bronze');
+
+
         this.sections = data.sections.map((section:any)=>({
           title: section.title,
           text: section.body,
         }));
         this.participatePanel = {
           zoom: 12, //hardcoded for now
-          coordinates: [data.longitude, data.latitude],
+          coordinates: [data.latitude, data.longitude],
           isRegistrationOpen: false, //TODO change to Backend Field
           reasonRegistrationClosed: '', //TODO change to Backend Field
           participantsCount: 0, //TODO change to Backend Field,
           date: formatDateToLocal(data.competition.event_date), //update to from_to,
           location: data.place,
-          locationMapsUrl: `https://www.google.com/maps/dir/${data.longitude},${data.latitude}`
+          locationMapsUrl: `https://www.google.com/maps/dir//${data.latitude},${data.longitude}`
         }
+        if(data.competition.rounds){
+          this.tournamentBracket.eightFinals = data.competition.rounds
+          .find((round:any)=>round.name === "1/8 Finals")
+          .matches
+          .sort((m1:any, m2:any)=>m1.sort_order - m2.sort_order)
+          .map((match:any)=>({
+            id: match.id,
+            participant1: match.player1,
+            participant2: match.player2,
+            winner: match.winner
+          }))
+          this.tournamentBracket.quarterfinals = data.competition.rounds
+          .find((round:any)=>round.name === "Quarterfinals")
+          .matches
+          .sort((m1:any, m2:any)=>m1.sort_order - m2.sort_order)
+          .map((match:any)=>({
+            id: match.id,
+            participant1: match.player1,
+            participant2: match.player2,
+            winner: match.winner
+          }))
+          this.tournamentBracket.semifinals = data.competition.rounds
+          .find((round:any)=>round.name === "Semifinals")
+          .matches
+          .sort((m1:any, m2:any)=>m1.sort_order - m2.sort_order)
+          .map((match:any)=>({
+            id: match.id,
+            participant1: match.player1,
+            participant2: match.player2,
+            winner: match.winner
+          }))
+          this.tournamentBracket.finals = data.competition.rounds
+          .find((round:any)=>round.name === "Finals")
+          .matches
+          .sort((m1:any, m2:any)=>m1.sort_order - m2.sort_order)
+          .map((match:any)=>({
+            id: match.id,
+            participant1: match.player1,
+            participant2: match.player2,
+            winner: match.winner
+          }))
+        }
+        
         //this.tournamentBracket = data.tournamentBracket;
       } catch (error) {
-		toastStore.addToast({
-			type: 'error',
-			title: "Error has occured",
-			message: "could not fetch infos about this event"
-		})
+        toastStore.addToast({
+          type: 'error',
+          title: "Error has occured",
+          message: "could not fetch infos about this event"
+        })
       } finally {
         this.loading = false;
       }

@@ -73,7 +73,7 @@ export const useHomePageStore = defineStore('homePageStore', {
 		const data = response.data.items["0"];
 
 
-		// Update state with data from API
+
 		this.mainSponsorExists = Boolean(data.sponsors.find((sponsor:any)=>sponsor.value.sponsor_tier == "main"));
 		
 

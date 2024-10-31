@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import {toRefs, ref} from "vue"
+import {toRefs, ref,watch} from "vue"
 import { LMap, LTileLayer, LMarker, LIcon } from "@vue-leaflet/vue-leaflet";
 import "leaflet/dist/leaflet.css";
 
-import { ParticipatePanelData } from "@/stores/eventPageStore/eventPageStore";
+import { ParticipatePanelData, useEventPageStore } from "@/stores/eventPageStore/eventPageStore";
 import { sanitizeHtml } from "@/utils/htmlSanitizers";
 
 const props = defineProps<{
@@ -12,9 +12,11 @@ const props = defineProps<{
 
 const {data} = toRefs(props)
 
+watch(data, ()=>{
+	console.log("DATA UPDATE:", data)
+})
 
 const zoom = ref(data.value.zoom)
-
 
 const emit = defineEmits(['showParticipationForm'])
 
@@ -22,7 +24,7 @@ const emit = defineEmits(['showParticipationForm'])
 <template>
 	<div class="flex flex-col gap-[2rem]">
 		<!-- map -->
-		<div class="w-full h-[20rem] overflow-hidden rounded-xl hidden lg:flex z-[2]">
+		<div v-if="data.coordinates[0]!==0 || data.coordinates[1]!==0" class="w-full h-[20rem] overflow-hidden rounded-xl hidden lg:flex z-[2]">
 			<l-map :use-global-leaflet="false" class="h-full w-full" ref="map" v-model="zoom" v-model:zoom="zoom" :center="data.coordinates">
 				<l-tile-layer
 					url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -46,7 +48,7 @@ const emit = defineEmits(['showParticipationForm'])
 					</svg>
 				</div>
 			</div>
-			<p class="font-body text-body lg:text-text-sm text-gray" :v-html="sanitizeHtml(data.date)"/>
+			<p class="font-body text-body lg:text-text-sm text-gray" v-html="sanitizeHtml(data.date)"/>
 		</div>
 
 		<!--location-->
