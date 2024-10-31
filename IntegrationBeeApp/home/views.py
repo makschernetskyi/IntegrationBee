@@ -14,7 +14,7 @@ from .serializers import NewsPostSerializer
 
 
 class NewsPostPagination(PageNumberPagination):
-    page_size = 2
+    page_size = 10
 
 
 class NewsPostAPIViewSet(ListModelMixin, GenericViewSet):
@@ -24,7 +24,7 @@ class NewsPostAPIViewSet(ListModelMixin, GenericViewSet):
 
 
 class CompetitionPagination(PageNumberPagination):
-    page_size = 2
+    page_size = 3
 
 
 class CompetitionAPIViewSet(ListModelMixin, GenericViewSet):

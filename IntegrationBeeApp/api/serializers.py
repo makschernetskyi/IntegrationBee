@@ -1,24 +1,89 @@
+from pprint import pprint
+
 from rest_framework.serializers import Serializer, ModelSerializer
 
 from .models import User, Competition, EmailVerificationToken, ForgotPasswordToken, UserToCompetitionRelationship, \
     Round, Match
-
 from rest_framework import serializers
 from .models import User
 
 
+from wagtail.users.models import UserProfile as WagtailUserProfile
+
+
+class CompetitionUserSerializer(serializers.ModelSerializer):
+    status = serializers.SerializerMethodField()
+    page_id = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Competition
+        fields = ['id', 'name', 'event_date', 'status', 'page_id']
+
+    def get_status(self, obj):
+        user = self.context['user']
+        try:
+            relationship = UserToCompetitionRelationship.objects.get(user=user, competition=obj)
+            return relationship.get_status_display()
+        except UserToCompetitionRelationship.DoesNotExist:
+            return None
+
+    def get_page_id(self, obj):
+        return obj.competition_page.id if hasattr(obj, 'competition_page') else None
+
+
 class UserSerializer(serializers.ModelSerializer):
-    profile_picture = serializers.ImageField(required=False)
+    profile_picture = serializers.ImageField(required=False, allow_null=True)
+    competitions = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = [
-            "email", "first_name", "last_name", "institution", "phone_number",
-            "is_verified", "is_superuser", "password", 'program_of_study'
+            "email",
+            "first_name",
+            "last_name",
+            "institution",
+            "phone_number",
+            "is_verified",
+            "is_superuser",
+            "password",
+            "program_of_study",
+            "profile_picture",
+            "competitions",
         ]
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'is_verified': {'read_only': True},
+            'is_superuser': {'read_only': True},
+        }
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        try:
+            profile = instance.wagtail_userprofile
+            if profile.avatar:
+                request = self.context.get('request', None)
+                avatar_url = profile.avatar.url
+                if request is not None:
+                    avatar_url = request.build_absolute_uri(avatar_url)
+                ret['profile_picture'] = avatar_url
+            else:
+                ret['profile_picture'] = None
+        except WagtailUserProfile.DoesNotExist:
+            ret['profile_picture'] = None
+
+        # Add competitions data
+        ret['competitions'] = self.get_competitions(instance)
+
+        return ret
+
+    def get_competitions(self, obj):
+        relationships = UserToCompetitionRelationship.objects.filter(user=obj)
+        competitions = [relationship.competition for relationship in relationships]
+        serializer = CompetitionUserSerializer(competitions, many=True, context={'user': obj})
+        return serializer.data
 
     def create(self, validated_data):
-
+        profile_picture = validated_data.pop('profile_picture', None)
         user = User.objects.create(
             email=validated_data["email"],
             username=validated_data["email"],
@@ -28,15 +93,52 @@ class UserSerializer(serializers.ModelSerializer):
         )
         user.set_password(validated_data["password"])
         user.save()
+
+        if profile_picture:
+            profile, created = WagtailUserProfile.objects.get_or_create(user=user)
+            profile.avatar = profile_picture
+            profile.save()
         return user
 
-    def update(self, user, validated_data):
-        user.institution = validated_data.get("institution", user.institution)
-        user.phone_number = validated_data.get("phone_number", user.phone_number)
-        user.program_of_study = validated_data.get("profile_picture", user.program_of_study)
+    def update(self, instance, validated_data):
+        profile_picture = validated_data.pop('profile_picture', None)
 
-        user.save()
-        return user
+        instance.institution = validated_data.get("institution", instance.institution)
+        instance.phone_number = validated_data.get("phone_number", instance.phone_number)
+        instance.program_of_study = validated_data.get("program_of_study", instance.program_of_study)
+        instance.first_name = validated_data.get("first_name", instance.first_name)
+        instance.last_name = validated_data.get("last_name", instance.last_name)
+        instance.save()
+
+        profile, created = WagtailUserProfile.objects.get_or_create(user=instance)
+        if profile_picture is not None:
+            profile.avatar = profile_picture
+            profile.save()
+        return instance
+
+
+class UserToCompetitionRelationshipSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserToCompetitionRelationship
+        fields = [
+            'emergency_phone_number', 'name_pronunciation', 'additional_info'
+        ]
+
+    def create(self, validated_data):
+        user = self.context['user']
+        competition = self.context['competition']
+        validated_data['user'] = user
+        validated_data['competition'] = competition
+        validated_data['status'] = 'PENDING_REQUEST'
+
+        relationship, created = UserToCompetitionRelationship.objects.get_or_create(
+            user=user,
+            competition=competition,
+            defaults=validated_data
+        )
+        if not created:
+            raise serializers.ValidationError('User is already registered for this competition.')
+        return relationship
 
 
 class EmailVerificationTokenSerializer(ModelSerializer):
@@ -65,13 +167,13 @@ class MatchSerializer(ModelSerializer):
     @staticmethod
     def get_player1(obj):
         if obj.player1:
-            return f"{obj.player1.first_name.title()} {obj.player1.last_name[:1].title()}."
+            return f"{obj.player1.first_name.title()[:1]}. {obj.player1.last_name.title()}."
         return None
 
     @staticmethod
     def get_player2(obj):
         if obj.player2:
-            return f"{obj.player2.first_name.title()} {obj.player2.last_name[:1].title()}."
+            return f"{obj.player2.first_name.title()[:1]}. {obj.player2.last_name.title()}."
         return None
 
     def get_match_winner(self, obj):

@@ -1,29 +1,23 @@
-from django.db import transaction, IntegrityError
-from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404
-from django.template.loader import render_to_string
-from django.core.files.base import ContentFile
-from django.shortcuts import redirect
-from rest_framework import status
-from uuid import uuid4
 import base64
+from uuid import uuid4
 
+from django.core.files.base import ContentFile
+from django.db import transaction, IntegrityError
+from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
+from django.template.loader import render_to_string
+from rest_framework import status
 from rest_framework.authentication import SessionAuthentication
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from rest_framework.status import HTTP_200_OK
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
-from rest_framework_simplejwt.authentication import JWTAuthentication
-from wagtail.api.v2.router import WagtailAPIRouter
-from wagtail.api.v2.views import PagesAPIViewSet
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from .permissions import IsPublishedCompetitionPost
-from .serializers import UserSerializer, CompetitionSerializer, EmailVerificationTokenSerializer
 from api.models import Competition, User, EmailVerificationToken, UserToCompetitionRelationship
-
-from home.models import CompetitionPost as CompetitionPage, CompetitionPost
 from api.services.send_email import send_email
+from home.models import CompetitionPost as CompetitionPage
+from .permissions import IsPublishedCompetitionPost
+from .serializers import UserSerializer, UserToCompetitionRelationshipSerializer
 
 
 class RegisterView(APIView):
@@ -48,10 +42,10 @@ class RegisterView(APIView):
             send_email(
                 [email],
                 message=render_to_string(
-                   template_name='verificationEmail.html',
-                   context={
-                       "verification_link": verification_link
-                   }
+                    template_name='verificationEmail.html',
+                    context={
+                        "verification_link": verification_link
+                    }
                 ),
                 subject="(NO REPLY) Verify your email address.",
                 is_html=True
@@ -95,48 +89,9 @@ class UserDataView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        try:
-            user = request.user
-
-            competition_relationships = UserToCompetitionRelationship.objects.filter(user=user)
-            competitions_data = []
-
-            for relationship in competition_relationships:
-                competition = relationship.competition
-                competition_data = {
-                    'id': competition.id,
-                    'name': competition.name,
-                    'event_date': competition.event_date,
-                    'registration_date': relationship.registration_date,
-                    'status': relationship.get_status_display(),
-                    "page_id": None,
-                }
-
-                competition_page = CompetitionPage.objects.filter(competition=competition)
-                competition_data['page_id'] = competition_page.first().id if competition_page else None
-
-                competitions_data.append(competition_data)
-
-            return Response({
-                'email': user.email,
-                'first_name': user.first_name,
-                'second_name': user.last_name,
-                'institution': user.institution,
-                'phone_number': user.phone_number,
-                'emergency_phone_number': user.emergency_phone_number,
-                'program_of_study': user.program_of_study,
-                'date_of_birth': user.date_of_birth,
-                'name_pronunciation': user.name_pronunciation,
-                'additional_info': user.additional_info,
-                'profile_picture': user.profile_picture.url if user.profile_picture else None,
-                'registration_date': user.registration_date,
-                'last_login_date': user.last_login_date,
-                'is_verified': user.is_verified,
-                'role': user.role,  # Get the user's role
-                'competitions': competitions_data
-            })
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        user = request.user
+        serializer = UserSerializer(user, context={'request': request})
+        return Response(serializer.data)
 
 
 class UpdateUserView(APIView):
@@ -158,7 +113,12 @@ class UpdateUserView(APIView):
                 format_str, imgstr = data['profile_picture'].split(';base64,')
 
                 image_data = base64.b64decode(imgstr)
-                user.profile_picture.save("profile_picture.png", ContentFile(image_data), save=False)
+                wagtail_profile = user.wagtail_userprofile
+                avatar = wagtail_profile.avatar
+                avatar.save("profile_picture.png", ContentFile(image_data), save=False)
+                wagtail_profile.save()
+                user.save()
+
             except Exception as e:
                 return Response({"error": "Invalid image data"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -169,63 +129,55 @@ class UpdateUserView(APIView):
 class CompetitionView(APIView):
     permission_classes = [IsAuthenticated, IsPublishedCompetitionPost]
 
-    @staticmethod
-    def patch(request):
+    def patch(self, request):
         competition_id = request.data.get('id')
-        if not competition_id:
-            return Response({"error": "Competition ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+        action = request.data.get('action', 'register')  # Default action is 'register'
 
-        competition = get_object_or_404(Competition, id=competition_id)
-
-        if competition.max_participants:
-            if competition.participants_relationships.count() >= competition.max_participants:
-                return Response({"error": "Maximum number of participants reached."},
-                                status=status.HTTP_400_BAD_REQUEST)
-
-        if competition.close_registration:
-            return Response({"error": "Registration is closed for this competition."},
-                            status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            user = request.user
-            phone_number = request.data.get('phone_number')
-            emergency_phone_number = request.data.get('emergency_phone_number')
-            program_of_study = request.data.get('program_of_study')
-            name_pronunciation = request.data.get('name_pronunciation')
-            additional_info = request.data.get('additional_info')
-
-            UserToCompetitionRelationship.objects.get_or_create(user=user,
-                                                                competition=competition,
-                                                                emergency_phone_number=emergency_phone_number,
-                                                                phone_number=phone_number,
-                                                                program_of_study=program_of_study,
-                                                                name_pronunciation=name_pronunciation,
-                                                                additional_info=additional_info,
-                                                                status='PENDING_REQUEST')
-            return Response({"success": "User added to competition waiting for admin approval"},
-                            status=status.HTTP_200_OK)
-
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    @staticmethod
-    def delete(request):
-        competition_id = request.data.get('id')
         if not competition_id:
             return Response({"error": "Competition ID is required"}, status=status.HTTP_400_BAD_REQUEST)
 
         competition = get_object_or_404(Competition, id=competition_id)
         user = request.user
 
-        try:
+        if action == 'register':
+            if competition.max_participants and competition.participants_relationships.count() >= competition.max_participants:
+                return Response({"error": "Maximum number of participants reached."}, status=status.HTTP_400_BAD_REQUEST)
+
+            if competition.close_registration:
+                return Response({"error": "Registration is closed for this competition."}, status=status.HTTP_400_BAD_REQUEST)
+
+            user_serializer = UserSerializer(user, data=request.data, partial=True)
+            if user_serializer.is_valid():
+                user_serializer.save()
+            else:
+                return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            relationship_serializer = UserToCompetitionRelationshipSerializer(
+                data=request.data,
+                context={'user': user, 'competition': competition}
+            )
+
+            if relationship_serializer.is_valid():
+                try:
+                    relationship_serializer.save()
+                    return Response({"success": "User registered for competition, waiting for admin approval"},
+                                    status=status.HTTP_200_OK)
+                except ValidationError as e:
+                    return Response({"error": str(e.detail)}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response(relationship_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        elif action == 'unregister':
+
             relationship = UserToCompetitionRelationship.objects.filter(user=user, competition=competition).first()
             if relationship:
                 relationship.delete()
-                return Response({"success": "User removed from competition"}, status=status.HTTP_200_OK)
-            return Response({"error": "User is not part of the competition"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"success": "User unregistered from competition"}, status=status.HTTP_200_OK)
+            else:
+                return Response({"error": "User is not registered for this competition"}, status=status.HTTP_400_BAD_REQUEST)
 
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response({"error": "Invalid action specified"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class DownloadLatexPdfReportView(APIView):
