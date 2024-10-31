@@ -112,7 +112,7 @@ class HomePage(Page):
         index.SearchField('why_participate', partial_match=True),
     ]
 
-    subpage_types = ["home.NewsPage", "home.CompetitionsPage", "home.ContactsPage"]
+    subpage_types = ["home.NewsPage", "home.CompetitionsPage", "home.ContactsPage", "home.ImprintPage"]
 
 
 class NewsPage(Page):
