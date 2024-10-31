@@ -7,20 +7,52 @@ from rest_framework import serializers
 from .models import User
 
 
+# serializers.py
+
+from wagtail.users.models import UserProfile as WagtailUserProfile
+
+
 class UserSerializer(serializers.ModelSerializer):
-    profile_picture = serializers.ImageField(required=False)
+    profile_picture = serializers.ImageField(required=False, allow_null=True)
 
     class Meta:
         model = User
         fields = [
-            "email", "first_name", "last_name", "institution", "phone_number",
-            "is_verified", "is_superuser", "password", 'program_of_study'
+            "email",
+            "first_name",
+            "last_name",
+            "institution",
+            "phone_number",
+            "is_verified",
+            "is_superuser",
+            "password",
+            "program_of_study",
+            "profile_picture",
         ]
         extra_kwargs = {
             'password': {'write_only': True},
+            'is_verified': {'read_only': True},
+            'is_superuser': {'read_only': True},
         }
 
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        try:
+            profile = instance.wagtail_userprofile
+            if profile.avatar:
+                request = self.context.get('request', None)
+                avatar_url = profile.avatar.url
+                if request is not None:
+                    avatar_url = request.build_absolute_uri(avatar_url)
+                ret['profile_picture'] = avatar_url
+            else:
+                ret['profile_picture'] = None
+        except WagtailUserProfile.DoesNotExist:
+            ret['profile_picture'] = None
+        return ret
+
     def create(self, validated_data):
+        profile_picture = validated_data.pop('profile_picture', None)
         user = User.objects.create(
             email=validated_data["email"],
             username=validated_data["email"],
@@ -30,14 +62,29 @@ class UserSerializer(serializers.ModelSerializer):
         )
         user.set_password(validated_data["password"])
         user.save()
+
+        if profile_picture:
+            profile, created = WagtailUserProfile.objects.get_or_create(user=user)
+            profile.avatar = profile_picture
+            profile.save()
         return user
 
-    def update(self, user, validated_data):
-        user.institution = validated_data.get("institution", user.institution)
-        user.phone_number = validated_data.get("phone_number", user.phone_number)
-        user.program_of_study = validated_data.get("program_of_study", user.program_of_study)
-        user.save()
-        return user
+    def update(self, instance, validated_data):
+        profile_picture = validated_data.pop('profile_picture', None)
+
+        instance.institution = validated_data.get("institution", instance.institution)
+        instance.phone_number = validated_data.get("phone_number", instance.phone_number)
+        instance.program_of_study = validated_data.get("program_of_study", instance.program_of_study)
+        instance.first_name = validated_data.get("first_name", instance.first_name)
+        instance.last_name = validated_data.get("last_name", instance.last_name)
+        instance.save()
+
+        profile, created = WagtailUserProfile.objects.get_or_create(user=instance)
+        if profile_picture is not None:
+            profile.avatar = profile_picture
+            profile.save()
+        return instance
+
 
 
 class UserToCompetitionRelationshipSerializer(serializers.ModelSerializer):
