@@ -1,6 +1,3 @@
-from pydoc import pager
-
-from django.utils.safestring import mark_safe
 from wagtail import hooks
 
 

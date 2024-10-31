@@ -176,15 +176,32 @@ class CompetitionView(APIView):
             return Response({"error": "Competition ID is required"}, status=status.HTTP_400_BAD_REQUEST)
 
         competition = get_object_or_404(Competition, id=competition_id)
-        user = request.user
 
         if competition.max_participants:
             if competition.participants_relationships.count() >= competition.max_participants:
                 return Response({"error": "Maximum number of participants reached."},
                                 status=status.HTTP_400_BAD_REQUEST)
 
+        if competition.close_registration:
+            return Response({"error": "Registration is closed for this competition."},
+                            status=status.HTTP_400_BAD_REQUEST)
+
         try:
-            UserToCompetitionRelationship.objects.get_or_create(user=user, competition=competition, status='P')
+            user = request.user
+            phone_number = request.data.get('phone_number')
+            emergency_phone_number = request.data.get('emergency_phone_number')
+            program_of_study = request.data.get('program_of_study')
+            name_pronunciation = request.data.get('name_pronunciation')
+            additional_info = request.data.get('additional_info')
+
+            UserToCompetitionRelationship.objects.get_or_create(user=user,
+                                                                competition=competition,
+                                                                emergency_phone_number=emergency_phone_number,
+                                                                phone_number=phone_number,
+                                                                program_of_study=program_of_study,
+                                                                name_pronunciation=name_pronunciation,
+                                                                additional_info=additional_info,
+                                                                status='PENDING_REQUEST')
             return Response({"success": "User added to competition waiting for admin approval"},
                             status=status.HTTP_200_OK)
 
