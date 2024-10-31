@@ -4,6 +4,7 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import { useToastStore } from '@/stores/toastStore/toastStore';
 import { noAuthApi } from '@/api';
+import { formatDateToLocal } from '@/utils/formatDateToLocal';
 
 // Interfaces
 
@@ -128,8 +129,20 @@ export const useEventPageStore = defineStore('eventPageStore', {
         //this.goldSponsors = data.goldSponsors;
         //this.silverSponsors = data.silverSponsors;
         //this.bronzeSponsors = data.bronzeSponsors;
-        //this.sections = data.sections;
-        //this.participatePanel = data.participatePanel;
+        this.sections = data.sections.map((section:any)=>({
+          title: section.title,
+          text: section.body,
+        }));
+        this.participatePanel = {
+          zoom: 12, //hardcoded for now
+          coordinates: [data.longitude, data.latitude],
+          isRegistrationOpen: false, //TODO change to Backend Field
+          reasonRegistrationClosed: '', //TODO change to Backend Field
+          participantsCount: 0, //TODO change to Backend Field,
+          date: formatDateToLocal(data.competition.event_date), //update to from_to,
+          location: data.place,
+          locationMapsUrl: `https://www.google.com/maps/dir/${data.longitude},${data.latitude}`
+        }
         //this.tournamentBracket = data.tournamentBracket;
       } catch (error) {
 		toastStore.addToast({

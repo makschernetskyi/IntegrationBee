@@ -37,14 +37,6 @@ const handleSubmit = (e: any) =>{
 			</h4>
 			<div class="w-full grid grid-cols-1 lg:grid-cols-2 gap-x-[2rem] gap-y-[2rem]">
 				<div class="flex flex-col">
-					<FormInput v-model="firstName" label="First Name*" :invalid="Boolean(errors.firstName)"/>
-					<div v-if="errors.firstName" class="text-text-sm font-body text-red pl-[0rem]">{{ errors.firstName }}</div>
-				</div>
-				<div class="flex flex-col">
-					<FormInput v-model="lastName" label="Last Name*" :invalid="Boolean(errors.lastName)"/>
-					<div v-if="errors.lastName" class="text-text-sm font-body text-red pl-[0rem]">{{errors.lastName}}</div>
-				</div>
-				<div class="flex flex-col">
 					<FormInput v-model="phoneNumber" label="Phone Number*" :invalid="Boolean(errors.phoneNumber)"/>
 					<div v-if="errors.phoneNumber" class="text-text-sm font-body text-red pl-[0rem]">{{errors.phoneNumber}}</div>
 				</div>
