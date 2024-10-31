@@ -16,9 +16,11 @@ class UserSerializer(serializers.ModelSerializer):
             "email", "first_name", "last_name", "institution", "phone_number",
             "is_verified", "is_superuser", "password", 'program_of_study'
         ]
+        extra_kwargs = {
+            'password': {'write_only': True},
+        }
 
     def create(self, validated_data):
-
         user = User.objects.create(
             email=validated_data["email"],
             username=validated_data["email"],
@@ -33,10 +35,33 @@ class UserSerializer(serializers.ModelSerializer):
     def update(self, user, validated_data):
         user.institution = validated_data.get("institution", user.institution)
         user.phone_number = validated_data.get("phone_number", user.phone_number)
-        user.program_of_study = validated_data.get("profile_picture", user.program_of_study)
-
+        user.program_of_study = validated_data.get("program_of_study", user.program_of_study)
         user.save()
         return user
+
+
+class UserToCompetitionRelationshipSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserToCompetitionRelationship
+        fields = [
+            'emergency_phone_number', 'name_pronunciation', 'additional_info'
+        ]
+
+    def create(self, validated_data):
+        user = self.context['user']
+        competition = self.context['competition']
+        validated_data['user'] = user
+        validated_data['competition'] = competition
+        validated_data['status'] = 'PENDING_REQUEST'
+
+        relationship, created = UserToCompetitionRelationship.objects.get_or_create(
+            user=user,
+            competition=competition,
+            defaults=validated_data
+        )
+        if not created:
+            raise serializers.ValidationError('User is already registered for this competition.')
+        return relationship
 
 
 class EmailVerificationTokenSerializer(ModelSerializer):
@@ -65,13 +90,13 @@ class MatchSerializer(ModelSerializer):
     @staticmethod
     def get_player1(obj):
         if obj.player1:
-            return f"{obj.player1.first_name.title()} {obj.player1.last_name[:1].title()}."
+            return f"{obj.player1.first_name.title()[:1]}. {obj.player1.last_name.title()}."
         return None
 
     @staticmethod
     def get_player2(obj):
         if obj.player2:
-            return f"{obj.player2.first_name.title()} {obj.player2.last_name[:1].title()}."
+            return f"{obj.player2.first_name.title()[:1]}. {obj.player2.last_name.title()}."
         return None
 
     def get_match_winner(self, obj):
