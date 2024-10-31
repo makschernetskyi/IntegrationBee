@@ -10,29 +10,34 @@
 			<div class="flex justify-center lg:justify-start items-center">
 				<ul class="flex flex-col gap-[2rem] text-center lg:text-left font-body text-pearl-white text-body lg:text-body">
 					<li>
-						<a href="" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
+						<RouterLink to="/" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
 							Home
-						</a>
+						</RouterLink>
 					</li>
 					<li>
-						<a href="" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
+						<RouterLink to="/events" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
 							Events
-						</a>
+						</RouterLink>
 					</li>
 					<li>
-						<a href="" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
+						<RouterLink to="/news" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
 							News
-						</a>
+						</RouterLink>
 					</li>
 					<li>
-						<a href="" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
+						<RouterLink to="/contact" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
 							Contact
-						</a>
+						</RouterLink>
 					</li>
 					<li>
-						<a href="" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
+						<RouterLink to="sign_in" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
 							Sign in
-						</a>
+						</RouterLink>
+					</li>
+					<li>
+						<RouterLink to="sign_up" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
+							Sign up
+						</RouterLink>
 					</li>
 				</ul>
 			</div>
@@ -56,9 +61,9 @@
 				<p>© 2024 JugendWAVE All Rights Reserved.</p>
 			</div>
 			<div class="flex justify-between lg:justify-end gap-[4rem]">
-				<a href="" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:-bottom-[2px] after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
+				<RouterLink to="/impressum" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:-bottom-[2px] after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
 					impressum
-				</a>
+				</RouterLink>
 				<a href="" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:-bottom-[2px] after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
 					terms of use
 				</a>

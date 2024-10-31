@@ -7,6 +7,7 @@ import Event from '@/pages/Event.vue'
 import Profile from '@/pages/Profile.vue'
 import SignUp from '@/pages/SignUp.vue'
 import SignIn from '@/pages/SignIn.vue'
+import Imprint from "@/pages/imprint.vue"
 
 import { createRouter, createWebHashHistory, createWebHistory  } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore/authStore.ts'
@@ -33,7 +34,8 @@ const router = createRouter({
         {path: '/event/:id', component: Event, name: 'event'},
         {path: '/myProfile', component: Profile, name: 'profile'},
         {path: '/sign_up', component: SignUp, name: "sign_up"},
-        {path: '/sign_in', component: SignIn, name: "sign_in"}
+        {path: '/sign_in', component: SignIn, name: "sign_in"},
+        {path: '/imprint', component: Imprint, name: "imprint"}
 	],
 })
 

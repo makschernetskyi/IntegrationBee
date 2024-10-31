@@ -7,6 +7,7 @@ import { onBeforeMount } from "vue";
 import { useHomePageStore } from "./stores/homePageStore/homePageStore";
 import { useNewsPageStore } from "./stores/newsPageStore/newsPageStore";
 import { useContactPageStore } from "./stores/contactPageStore/contactPageStore";
+import { useEventsPageStore } from "./stores/eventsPageStore/eventsPageStore";
 
 
 
@@ -15,6 +16,7 @@ onBeforeMount(()=>{
 		useHomePageStore().fetchHomePageData(),
 		useNewsPageStore().fetchNewsPage(),
 		useContactPageStore().fetchContactData(),
+		useEventsPageStore().fetchTitle(),
 	])	
 
 })
