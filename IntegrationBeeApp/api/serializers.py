@@ -2,18 +2,38 @@ from rest_framework.serializers import Serializer, ModelSerializer
 
 from .models import User, Competition, EmailVerificationToken, ForgotPasswordToken, UserToCompetitionRelationship, \
     Round, Match
-
+from home.models import CompetitionPage
 from rest_framework import serializers
 from .models import User
 
 
-# serializers.py
-
 from wagtail.users.models import UserProfile as WagtailUserProfile
+
+
+class CompetitionUserSerializer(serializers.ModelSerializer):
+    status = serializers.SerializerMethodField()
+    page_id = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Competition
+        fields = ['id', 'name', 'event_date', 'status', 'page_id']
+
+    def get_status(self, obj):
+        user = self.context['user']
+        try:
+            relationship = UserToCompetitionRelationship.objects.get(user=user, competition=obj)
+            return relationship.get_status_display()
+        except UserToCompetitionRelationship.DoesNotExist:
+            return None
+
+    def get_page_id(self, obj):
+        competition_page = CompetitionPage.objects.filter(competition=obj).first()
+        return competition_page.id if competition_page else None
 
 
 class UserSerializer(serializers.ModelSerializer):
     profile_picture = serializers.ImageField(required=False, allow_null=True)
+    competitions = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -28,6 +48,7 @@ class UserSerializer(serializers.ModelSerializer):
             "password",
             "program_of_study",
             "profile_picture",
+            "competitions",
         ]
         extra_kwargs = {
             'password': {'write_only': True},
@@ -49,7 +70,17 @@ class UserSerializer(serializers.ModelSerializer):
                 ret['profile_picture'] = None
         except WagtailUserProfile.DoesNotExist:
             ret['profile_picture'] = None
+
+        # Add competitions data
+        ret['competitions'] = self.get_competitions(instance)
+
         return ret
+
+    def get_competitions(self, obj):
+        relationships = UserToCompetitionRelationship.objects.filter(user=obj)
+        competitions = [relationship.competition for relationship in relationships]
+        serializer = CompetitionSerializer(competitions, many=True, context={'user': obj})
+        return serializer.data
 
     def create(self, validated_data):
         profile_picture = validated_data.pop('profile_picture', None)
@@ -84,7 +115,6 @@ class UserSerializer(serializers.ModelSerializer):
             profile.avatar = profile_picture
             profile.save()
         return instance
-
 
 
 class UserToCompetitionRelationshipSerializer(serializers.ModelSerializer):

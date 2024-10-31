@@ -89,41 +89,9 @@ class UserDataView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        try:
-            user = request.user
-
-            competition_relationships = UserToCompetitionRelationship.objects.filter(user=user)
-            competitions_data = []
-
-            for relationship in competition_relationships:
-                competition = relationship.competition
-                competition_data = {
-                    'id': competition.id,
-                    'name': competition.name,
-                    'event_date': competition.event_date,
-                    'status': relationship.get_status_display(),
-                    "page_id": None,
-                }
-
-                competition_page = CompetitionPage.objects.filter(competition=competition)
-                competition_data['page_id'] = competition_page.first().id if competition_page else None
-
-                competitions_data.append(competition_data)
-
-            return Response({
-                'email': user.email,
-                'first_name': user.first_name,
-                'second_name': user.last_name,
-                'institution': user.institution,
-                'phone_number': user.phone_number,
-                'program_of_study': user.program_of_study,
-                'profile_picture': user.profile_picture.url if user.profile_picture else None,
-                'is_verified': user.is_verified,
-                'role': user.role,  # Get the user's role
-                'competitions': competitions_data
-            })
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        user = request.user
+        serializer = UserSerializer(user, context={'request': request})
+        return Response(serializer.data)
 
 
 class UpdateUserView(APIView):
