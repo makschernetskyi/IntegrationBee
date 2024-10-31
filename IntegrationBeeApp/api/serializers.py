@@ -121,7 +121,7 @@ class CompetitionSerializer(ModelSerializer):
 class CompetitionListSerializer(ModelSerializer):
     class Meta:
         model = Competition
-        fields = ['event_date']
+        fields = ['event_date', 'close_registration']
 
 
 class LocationSerializer(serializers.ModelSerializer):

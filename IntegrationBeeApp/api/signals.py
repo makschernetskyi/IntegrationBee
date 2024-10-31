@@ -1,5 +1,4 @@
-from django.db import models
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.core.mail import send_mail
 from django.conf import settings
@@ -9,40 +8,45 @@ from api.models import UserToCompetitionRelationship
 
 @receiver(pre_save, sender=UserToCompetitionRelationship)
 def send_status_change_email(sender, instance, **kwargs):
+    print(sender, instance, kwargs)
     if instance.pk is None:
         return
 
     old_status = UserToCompetitionRelationship.objects.get(pk=instance.pk).status
     new_status = instance.status
+    print(old_status, new_status)
 
-    if old_status != new_status and new_status == 'R':
-        send_status_update_email(instance)
-
-    if old_status != new_status and new_status == 'N':
+    if old_status != new_status and new_status in ['REQUEST_ACCEPTED', 'NOT_QUALIFIED', 'QUALIFIED']:
         send_status_update_email(instance)
 
 
 def send_status_update_email(instance):
-    """
-    Sends an email to the user notifying them of their status change.
-    """
 
     user = instance.user
     competition = instance.competition
-    status = instance.get_status_display()
+    status_display = instance.get_status_display()
 
     email_subject = f"Status Update: {competition.name} Integration Bee Competition"
     email_body = f"Dear {user.first_name},\n\n"
-    email_body += f"Your status for the competition '{competition.name}' has been updated to: {status}.\n"
+    email_body += f"Your status for the competition '{competition.name}' has been updated to: {status_display}.\n\n"
 
-    if instance.status == 'R':
+    if instance.status == 'REQUEST_ACCEPTED':
         email_body += (
             "Congratulations! Your request has been accepted. "
-            "Please follow the infos on our website and Instagram to not miss the mandatory preliminary round."
+            "Please follow the information on our website and Instagram to not miss the mandatory preliminary round."
         )
 
-    elif instance.status == 'N':
-        email_body += "Unfortunately, you did not qualify for the competition. We wish you better luck next time."
+    elif instance.status == 'NOT_QUALIFIED':
+        email_body += (
+            "Unfortunately, you did not qualify for the competition in the preliminary round. "
+            "We wish you better luck next time."
+        )
+
+    elif instance.status == 'QUALIFIED':
+        email_body += (
+            "Great news! You have qualified for the competition after successfully passing the preliminary round. "
+            "Please prepare for the next round; further details will be provided soon by mail."
+        )
 
     email_body += "\n\nBest regards,\nIntegrationBee Team"
 
@@ -53,3 +57,4 @@ def send_status_update_email(instance):
         [user.email],
         fail_silently=False,
     )
+

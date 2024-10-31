@@ -47,12 +47,3 @@ class SeriesBlock(blocks.StructBlock):
     class Meta:
         icon = "list-ul"
         label = "Series"
-
-
-class CompetitionPostSectionBlock(blocks.StructBlock):
-    title = blocks.CharBlock(required=False, help_text="Title of the section", max_length=50)
-    body = blocks.RichTextBlock(required=False, help_text="Text of the section", features=["bold", "italic", "link"])
-
-    class Meta:
-        icon = "list-ul"
-        label = "Section"

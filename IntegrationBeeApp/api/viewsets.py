@@ -1,9 +1,12 @@
+from pprint import pprint
+
+from django.forms.utils import ErrorList
 from wagtail.users.views.users import UserViewSet as WagtailUserViewSet
 from wagtail.snippets.models import register_snippet
 from wagtail.snippets.views.snippets import SnippetViewSet
 from wagtail.users.views.users import UserViewSet as WagtailUserViewSet
-from api.models import Competition
-from .forms import CustomUserCreationForm, CustomUserEditForm
+from api.models import Competition, UserToCompetitionRelationship
+from .forms import CustomUserCreationForm, CustomUserEditForm, CustomYourModelForm
 from .forms import CustomUserCreationForm, CustomUserEditForm
 
 
@@ -20,6 +23,7 @@ class UserViewSet(WagtailUserViewSet):
 class CompetitionSnippetViewSet(SnippetViewSet):
     model = Competition
     icon = 'calendar'
+    menu_label = 'Competitions'
     add_to_settings_menu = False
     add_to_admin_menu = True
     menu_order = 300
@@ -27,5 +31,15 @@ class CompetitionSnippetViewSet(SnippetViewSet):
     search_fields = ('name', 'name', 'max_participants')
 
 
-register_snippet(CompetitionSnippetViewSet)
+class UserToCompetitionRelationshipSnippetViewSet(SnippetViewSet):
+    model = UserToCompetitionRelationship
+    icon = 'calendar'
+    menu_label = 'Submissions'
+    add_to_settings_menu = False
+    add_to_admin_menu = True
+    menu_order = 301
+    list_display = ('id', 'competition', 'user', 'status')
 
+
+register_snippet(CompetitionSnippetViewSet)
+register_snippet(UserToCompetitionRelationshipSnippetViewSet)

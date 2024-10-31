@@ -10,11 +10,11 @@ from wagtail.api import APIField
 from wagtail.search import index
 from wagtailgeowidget.panels import LeafletPanel
 
-from api.blocks import CompetitionPostSectionBlock
 from api.serializers import CompetitionSerializer, LocationSerializer
 from . import blocks
 
 from api import models as api_models
+from .blocks import CompetitionPostSectionBlock
 
 
 class HomePage(Page):
@@ -213,6 +213,15 @@ class CompetitionPost(Page):
         blank=True,
     )
 
+    sponsors = StreamField(
+        [
+            ("sponsor", blocks.SponsorBlock()),
+        ],
+        use_json_field=True,
+        null=True,
+        blank=True
+    )
+
     content_panels = Page.content_panels + [
         FieldPanel("edition"),
         FieldPanel("short_description"),
@@ -223,6 +232,7 @@ class CompetitionPost(Page):
         FieldPanel("picture"),
         FieldPanel("competition"),
         FieldPanel("rules"),
+        FieldPanel("sponsors"),
     ]
 
     api_fields = [
@@ -236,6 +246,7 @@ class CompetitionPost(Page):
         APIField("picture"),
         APIField("competition", serializer=CompetitionSerializer(competition)),
         APIField("rules"),
+        APIField("sponsors"),
     ]
 
     search_fields = Page.search_fields + [
@@ -269,7 +280,7 @@ class CompetitionPost(Page):
 class ContactsPage(Page):
 
     about_us = models.CharField(blank=False, null=True, max_length=500)
-    inquiry_email = models.CharField(blank=False, null=True, max_length=25)
+    inquiry_email = models.CharField(blank=False, null=True, max_length=100)
 
     our_team = StreamField(
         [
