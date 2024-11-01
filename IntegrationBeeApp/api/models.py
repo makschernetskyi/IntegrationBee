@@ -11,7 +11,7 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.utils.html import format_html
 from modelcluster.fields import ParentalKey
-from wagtail.admin.panels import FieldPanel, InlinePanel
+from wagtail.admin.panels import FieldPanel, InlinePanel, PublishingPanel
 from wagtail.admin.panels import MultiFieldPanel
 from wagtail.fields import StreamField
 from wagtail.models import ClusterableModel, RevisionMixin
@@ -76,7 +76,7 @@ class User(AbstractUser):
         return f"{self.first_name} {self.last_name}"
 
 
-class UserToCompetitionRelationship(Orderable):
+class UserToCompetitionRelationship(RevisionMixin, Orderable):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+', null=True, blank=False)
     competition = ParentalKey('Competition', on_delete=models.CASCADE, related_name='participants_relationships')
@@ -85,6 +85,7 @@ class UserToCompetitionRelationship(Orderable):
     program_of_study = models.CharField(max_length=100, null=True, blank=True)
     name_pronunciation = models.CharField(max_length=2*(10**6), null=True, blank=True)
     additional_info = models.TextField(null=True, blank=True)
+    _revisions = GenericRelation("wagtailcore.Revision", related_query_name="usertocompetitionrelationship")
 
     choices = [
         ('PENDING_REQUEST', 'Pending Request'),
@@ -121,6 +122,10 @@ class UserToCompetitionRelationship(Orderable):
     def __str__(self):
         return f"{self.user.email} - {self.competition.name} - {self.status}"
 
+    @property
+    def revisions(self):
+        return self._revisions
+
 
 class FilteredInlineFormSet(BaseInlineFormSet):
     def __init__(self, *args, **kwargs):
@@ -150,7 +155,7 @@ class Competition(RevisionMixin, ClusterableModel):
     max_participants = models.IntegerField(null=True, blank=True)
     event_date = models.DateTimeField(blank=True, null=True)
     close_registration = models.CharField(max_length=100, null=True, blank=True, default="Registration Closed")
-    _revisions = GenericRelation("wagtailcore.Revision", related_query_name="advert")
+    _revisions = GenericRelation("wagtailcore.Revision", related_query_name="competition")
 
     series = StreamField([
         ('series', SeriesBlock()),
@@ -163,6 +168,7 @@ class Competition(RevisionMixin, ClusterableModel):
             FieldPanel('max_participants'),
             FieldPanel('close_registration'),
             FieldPanel('participants_filter'),
+
         ], heading="Competition Details", permission='api.edit_detail'),
 
         MultiFieldPanel([
