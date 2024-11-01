@@ -143,7 +143,7 @@ class FilteredInlinePanel(InlinePanel):
         return form_options
 
 
-class Competition(RevisionMixin, ClusterableModel):
+class Competition(ClusterableModel):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, unique=True, null=True, blank=True)
     max_participants = models.IntegerField(null=True, blank=True)
