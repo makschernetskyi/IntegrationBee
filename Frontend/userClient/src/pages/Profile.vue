@@ -183,7 +183,7 @@ const handleImageChoice = (e:any) => {
 					<!--places' counts-->
 					<div class="flex gap-[3rem] items-center h-[4rem] lg:h-[7rem] font-heading text-body lg:text-subtitle">
 						<!-- first places count-->
-						<div class="flex gap-[1rem] items-center h-full drop-shadow-sm">
+						<div v-if="store.wins.golds" class="flex gap-[1rem] items-center h-full drop-shadow-sm">
 							<div class="aspect-square h-full flex items-center">
 								<svg width="247" height="155" viewBox="0 0 247 155" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
 									<g clip-path="url(#clip0_340_462)">
@@ -197,11 +197,11 @@ const handleImageChoice = (e:any) => {
 								</svg>
 							</div>
 							<span>:</span>
-							<span>1</span>
+							<span>{{store.wins.golds}}</span>
 						</div>
 
 						<!-- second places count-->
-						<div class="flex gap-[1rem] items-center h-full">
+						<div v-if="store.wins.silvers" class="flex gap-[1rem] items-center h-full">
 							<div class="aspect-square h-full flex items-center p-3 drop-shadow-sm">
 								<svg width="292" height="292" viewBox="0 0 292 292" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
 									<path d="M90.4479 280.739C91.5597 282.138 93.3338 282.837 95.1014 282.573L234.389 261.766C236.156 261.502 237.648 260.315 238.303 258.653L289.943 127.523C290.597 125.862 290.316 123.978 289.206 122.58L201.552 12.2614C200.44 10.8622 198.666 10.1627 196.899 10.4267L57.6109 31.2345C55.8439 31.4984 54.352 32.6851 53.6973 34.3475L2.057 165.477C1.40286 167.138 1.68395 169.022 2.7945 170.42L90.4479 280.739Z" fill="#4D4D4D"/>
@@ -210,11 +210,11 @@ const handleImageChoice = (e:any) => {
 
 							</div>
 							<span>:</span>
-							<span>2</span>
+							<span>{{ store.wins.silvers }}</span>
 						</div>
 
 						<!-- third/fourth places count-->
-						<div class="flex gap-[1rem] items-center h-full">
+						<div v-if="store.wins.bronzes" class="flex gap-[1rem] items-center h-full">
 							<div class="aspect-square h-full flex items-center p-3 drop-shadow-sm">
 								<svg width="292" height="292" viewBox="0 0 292 292" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
 									<path d="M90.4479 280.739C91.5597 282.138 93.3338 282.837 95.1014 282.573L234.389 261.766C236.156 261.502 237.648 260.315 238.303 258.653L289.943 127.523C290.597 125.862 290.316 123.978 289.206 122.58L201.552 12.2614C200.44 10.8622 198.666 10.1627 196.899 10.4267L57.6109 31.2345C55.8439 31.4984 54.352 32.6851 53.6973 34.3475L2.057 165.477C1.40286 167.138 1.68395 169.022 2.7945 170.42L90.4479 280.739Z" fill="#CD7F32"/>
@@ -222,7 +222,7 @@ const handleImageChoice = (e:any) => {
 								</svg>
 							</div>
 							<span>:</span>
-							<span>1</span>
+							<span>{{ store.wins.bronzes }}</span>
 						</div>
 					</div>
 				</div>

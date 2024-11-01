@@ -58,7 +58,14 @@ export const useAuthStore = defineStore('auth', {
               competitions: state.competitions,
               programOfStudy: state.programOfStudy
           }
-      )
+      ),
+      wins: (state): {golds: number, silvers: number, bronzes: number} =>{
+        return {
+            golds: state.competitions.reduce((accumulator, current)=>current.result === "Won" ? 1 : 0,0),
+            silvers: state.competitions.reduce((accumulator, current)=>current.result === "2nd Place" ? 1 : 0,0),
+            bronzes: state.competitions.reduce((accumulator, current)=>current.result === "Semifinalist" ? 1 : 0,0)
+        }
+      }
     },
 	actions: {
 		getProfileData: getProfileDataRequestResolver,

@@ -37,12 +37,13 @@ onBeforeMount(async()=>{
 })
 
 const showParticipationForm = () =>{
-	console.log(isAuthenticated.value)
 	isParticipationFormShown.value = true
 	//uncomment for production
-	isAuthenticated || (window.onbeforeunload = function() {
-		return true;
-	});
+	if(isAuthenticated){
+		window.onbeforeunload = function() {
+			return true;
+		};
+	}
 }
 const closeParticipationForm = () =>{
 	const confirmResponse = !isAuthenticated || confirm("Are you sure you want to leave this form? All entered data will be lost")
@@ -258,7 +259,7 @@ const closeParticipationForm = () =>{
 					<p class="font-body text-body text-screenBlack text-center"> you need to be signed into your account in order to participate in the event.</p>
 					<div class="w-full flex justify-center gap-[2rem]">
 						<RouterLink to="/sign_up" class="rounded-2xl text-secondary lg:hover:bg-screenBlack-400 lg:hover:bg-opacity-15 w-[16rem] h-[6rem] lg:w-[18rem] lg:h-[6rem] flex justify-center items-center text-body font-semibold">Sign up</RouterLink>
-						<RouterLink to="/sign_in?next=event/1" class="rounded-2xl text-secondary bg-primary w-[16rem] h-[6rem] lg:w-[18rem] lg:h-[6rem] flex justify-center items-center text-body font-semibold">Sign in</RouterLink>
+						<RouterLink :to="`/sign_in?next=${route.path}`" class="rounded-2xl text-secondary bg-primary w-[16rem] h-[6rem] lg:w-[18rem] lg:h-[6rem] flex justify-center items-center text-body font-semibold">Sign in</RouterLink>
 					</div>
 
 				</div>
