@@ -1,8 +1,11 @@
 import base64
+from pprint import pprint
 from uuid import uuid4
 
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.files.base import ContentFile
 from django.db import transaction, IntegrityError
+from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
@@ -12,6 +15,8 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from wagtail.snippets.views.snippets import PreviewRevisionView, RevisionsCompareView, WorkflowHistoryView, \
+    WorkflowHistoryDetailView, RevisionsUnscheduleView, WorkflowPreviewView
 
 from api.models import Competition, User, EmailVerificationToken, UserToCompetitionRelationship
 from api.services.send_email import send_email
@@ -223,3 +228,10 @@ class DownloadParticipantsCsvView(APIView):
             return competition.generate_participants_csv()
         except Exception as e:
             return Response({"error": str(e)}, status=500)
+
+
+class CustomRevisionsCompareView(RevisionsCompareView):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_superuser:
+            return HttpResponseForbidden()
+        return super().dispatch(request, *args, **kwargs)

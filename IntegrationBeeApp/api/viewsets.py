@@ -1,16 +1,13 @@
-from pprint import pprint
-
 from django.db.models import Manager
-from django.forms.utils import ErrorList
+from django.http import HttpResponseForbidden
 from wagtail.admin.filters import WagtailFilterSet
-from wagtail.admin.panels import TabbedInterface, FieldPanel, ObjectList
-from wagtail.users.views.users import UserViewSet as WagtailUserViewSet
 from wagtail.snippets.models import register_snippet
 from wagtail.snippets.views.snippets import SnippetViewSet
 from wagtail.users.views.users import UserViewSet as WagtailUserViewSet
+
 from api.models import Competition, UserToCompetitionRelationship
-from .forms import CustomUserCreationForm, CustomUserEditForm, CustomYourModelForm
 from .forms import CustomUserCreationForm, CustomUserEditForm
+from .views import CustomRevisionsCompareView
 
 
 class UserViewSet(WagtailUserViewSet):
@@ -37,6 +34,24 @@ class CompetitionSnippetViewSet(SnippetViewSet):
     menu_order = 300
     list_display = ('id', 'name', 'max_participants', 'gen_brackets', 'download_report')
     search_fields = ('name', 'name', 'max_participants')
+
+    revisions_compare_view_class = CustomRevisionsCompareView
+
+    @property
+    def revisions_revert_view_class(self):
+        revert_class = super().revisions_revert_view_class
+
+        class CustomRevisionsRevertView(revert_class):
+            def post(self, request, *args, **kwargs):
+                if not request.user.is_superuser:
+                    return HttpResponseForbidden()
+
+                return super().post(request, *args, **kwargs)
+
+            def get(self, request, *args, **kwargs):
+                return super().get(request, *args, **kwargs)
+
+        return CustomRevisionsRevertView
 
     def get_form_class(self, for_update=False):
         form_class = super().get_form_class(for_update)

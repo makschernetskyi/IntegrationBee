@@ -175,7 +175,7 @@ class Competition(RevisionMixin, ClusterableModel):
             FieldPanel('participants_filter'),
             FilteredInlinePanel('participants_relationships', label="Participants", classname="collapsed",
                         panels=[FieldPanel('user', read_only=True),
-                                FieldPanel('status', read_only=True)]),
+                                FieldPanel('status')]),
         ], heading="Competition Participants", classname="collapsed", permission='api.edit_participants'),
 
         MultiFieldPanel([

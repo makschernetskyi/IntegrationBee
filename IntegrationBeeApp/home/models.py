@@ -27,7 +27,7 @@ class HomePage(Page):
         api_models.Competition,
         on_delete=models.SET_NULL,
         null=True,
-        blank=True,
+        blank=False,
         related_name='+',
         verbose_name='competition',
     )
