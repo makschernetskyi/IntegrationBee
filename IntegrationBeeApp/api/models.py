@@ -153,7 +153,8 @@ class Competition(RevisionMixin, ClusterableModel):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, unique=True, null=True, blank=True)
     max_participants = models.IntegerField(null=True, blank=True)
-    event_date = models.DateTimeField(blank=True, null=True)
+    event_date_start = models.DateTimeField(blank=True, null=True)
+    event_date_end = models.DateTimeField(blank=True, null=True)
     close_registration = models.CharField(max_length=100, null=True, blank=True, default="Registration Closed")
     _revisions = GenericRelation("wagtailcore.Revision", related_query_name="competition")
 
@@ -164,14 +165,14 @@ class Competition(RevisionMixin, ClusterableModel):
     panels = [
         MultiFieldPanel([
             FieldPanel('name'),
-            FieldPanel('event_date'),
+            FieldPanel('event_date_start'),
+            FieldPanel('event_date_end'),
             FieldPanel('max_participants'),
             FieldPanel('close_registration'),
-            FieldPanel('participants_filter'),
-
         ], heading="Competition Details", permission='api.edit_detail'),
 
         MultiFieldPanel([
+            FieldPanel('participants_filter'),
             FilteredInlinePanel('participants_relationships', label="Participants", classname="collapsed",
                         panels=[FieldPanel('user', read_only=True),
                                 FieldPanel('status', read_only=True)]),
@@ -205,7 +206,7 @@ class Competition(RevisionMixin, ClusterableModel):
         choices=choices,
         default='ALL',
         null=False,
-        blank=False
+        blank=True
     )
 
     @property

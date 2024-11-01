@@ -18,7 +18,7 @@ class CompetitionUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Competition
-        fields = ['id', 'name', 'event_date', 'status', 'page_id']
+        fields = ['id', 'name', 'event_date_start', 'event_date_end', 'status', 'page_id']
 
     def get_status(self, obj):
         user = self.context['user']
@@ -206,7 +206,7 @@ class CompetitionSerializer(ModelSerializer):
 
     class Meta:
         model = Competition
-        fields = ['id', 'name', 'max_participants', 'event_date', 'rounds', 'close_registration', 'users_count']
+        fields = ['id', 'name', 'max_participants', 'event_date_start', 'event_date_end', 'rounds', 'close_registration', 'users_count']
 
     def get_users_count(self, obj):
         return obj.participants_relationships.count()
@@ -215,7 +215,7 @@ class CompetitionSerializer(ModelSerializer):
 class CompetitionListSerializer(ModelSerializer):
     class Meta:
         model = Competition
-        fields = ['event_date', 'close_registration']
+        fields = ['event_date_start', 'event_date_end', 'close_registration']
 
 
 class LocationSerializer(serializers.ModelSerializer):
