@@ -1,6 +1,9 @@
 from pprint import pprint
 
+from django.db.models import Manager
 from django.forms.utils import ErrorList
+from wagtail.admin.filters import WagtailFilterSet
+from wagtail.admin.panels import TabbedInterface, FieldPanel, ObjectList
 from wagtail.users.views.users import UserViewSet as WagtailUserViewSet
 from wagtail.snippets.models import register_snippet
 from wagtail.snippets.views.snippets import SnippetViewSet
@@ -20,6 +23,11 @@ class UserViewSet(WagtailUserViewSet):
         return CustomUserCreationForm
 
 
+class CompetitionManager(Manager):
+    def visible_in_admin(self):
+        return self.filter(show_in_admin='ALL')  # Adjust as needed
+
+
 class CompetitionSnippetViewSet(SnippetViewSet):
     model = Competition
     icon = 'calendar'
@@ -31,14 +39,23 @@ class CompetitionSnippetViewSet(SnippetViewSet):
     search_fields = ('name', 'name', 'max_participants')
 
 
+class UserToCompetitionRelationshipFilterSet(WagtailFilterSet):
+    class Meta:
+        model = UserToCompetitionRelationship
+        fields = ['competition', 'user', 'status']
+
+
 class UserToCompetitionRelationshipSnippetViewSet(SnippetViewSet):
     model = UserToCompetitionRelationship
-    icon = 'calendar'
+    icon = 'tasks'
     menu_label = 'Submissions'
+    menu_name = 'Submissions'
+    name = 'Submissions'
     add_to_settings_menu = False
     add_to_admin_menu = True
     menu_order = 301
     list_display = ('id', 'competition', 'user', 'status')
+    filterset_class = UserToCompetitionRelationshipFilterSet
 
 
 register_snippet(CompetitionSnippetViewSet)
