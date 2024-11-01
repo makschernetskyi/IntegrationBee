@@ -3,7 +3,7 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import { useToastStore } from '@/stores/toastStore/toastStore';
-import { noAuthApi } from '@/api';
+import { api, noAuthApi } from '@/api';
 import { formatDateToLocal } from '@/utils/formatDateToLocal';
 import { fetchImageUrl } from '@/services/fetchImageUrl';
 
@@ -123,6 +123,7 @@ export const useEventPageStore = defineStore('eventPageStore', {
         console.log(data);
 
         // Populate state with fetched data
+        this.competitionId = data.competition.id;
         this.competitionName = data.title;
         this.edition = data.edition;
         this.description = data.description;
@@ -159,9 +160,9 @@ export const useEventPageStore = defineStore('eventPageStore', {
         this.participatePanel = {
           zoom: 12, //hardcoded for now
           coordinates: [data.latitude, data.longitude],
-          isRegistrationOpen: false, //TODO change to Backend Field
-          reasonRegistrationClosed: '', //TODO change to Backend Field
-          participantsCount: 0, //TODO change to Backend Field,
+          isRegistrationOpen: !Boolean(data.competition.close_registration), //TODO change to Backend Field
+          reasonRegistrationClosed: data.competition.close_registration, //TODO change to Backend Field
+          participantsCount: data.competition.users_count, //TODO change to Backend Field,
           date: formatDateToLocal(data.competition.event_date), //update to from_to,
           location: data.place,
           locationMapsUrl: `https://www.google.com/maps/dir//${data.latitude},${data.longitude}`
@@ -220,58 +221,23 @@ export const useEventPageStore = defineStore('eventPageStore', {
         this.loading = false;
       }
     },
-
-    async registerParticipant(formData: Record<string, any>) {
-      const toastStore = useToastStore();
-      if (!this.participatePanel.isRegistrationOpen) {
-        toastStore.addToast({
-			type: 'error',
-			title: "Registration is not open yet",
-			message: "Try later"
-		})
-        return;
-      }
-      try {
-        const response = await axios.post('/api/event/register', formData); // Update with your API endpoint
-        const data = response.data as RegisterResponse;
-        if (data.success) {
-          this.participatePanel.participantsCount += 1;
-          toastStore.addToast({
-			type: 'success',
-			title: "Registration was successful",
-			message: "check your email regularly for updates"
-		})
-        } else {
-			toastStore.addToast({
-				type: 'error',
-				title: "Registration failed",
-				message: "Could not sign up for the event, try again later."
-			})
-        }
-      } catch (error) {
-        toastStore.addToast({
-			type: 'error',
-			title: "Registration failed",
-			message: "Could not sign up for the event, try again later."
-		})
+    async deregisterParticipant(){
+      try{
+        await api.patch(`/competition/${this.competitionId}/`, {
+          action: "unregister"
+        })
+        useToastStore().addToast({
+          type: 'success',
+          title: "Success",
+          message: "Your participation was successfully cancelled!"
+        })
+      }catch(err:any){
+        useToastStore().addToast({
+          type: 'error',
+          title: "Error has occured",
+          message: "could not deregister"
+        })
       }
     },
-
-    updateMatch(
-      round: keyof TournamentBracket,
-      matchId: number,
-      updatedMatch: Partial<Match>
-    ) {
-      const matches = this.tournamentBracket[round];
-      const matchIndex = matches.findIndex(match => match.id === matchId);
-      if (matchIndex !== -1) {
-        this.tournamentBracket[round][matchIndex] = {
-          ...this.tournamentBracket[round][matchIndex],
-          ...updatedMatch,
-        };
-      } else {
-        
-      }
-    },
-  },
+  }  
 });

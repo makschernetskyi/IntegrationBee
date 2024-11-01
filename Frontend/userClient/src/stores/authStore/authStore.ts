@@ -9,6 +9,7 @@ type Competition = {
     name: string,
     result: string,
     link: string,
+    id: number|string,
 }
 
 

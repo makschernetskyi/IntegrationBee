@@ -226,7 +226,7 @@ const closeParticipationForm = () =>{
 					</svg>
 				</button>
 				<!--Form itself-->
-				<ParticipationForm/>
+				<ParticipationForm @close-form="()=>{isParticipationFormShown = false}"/>
 			</div>
 		</transition>
 

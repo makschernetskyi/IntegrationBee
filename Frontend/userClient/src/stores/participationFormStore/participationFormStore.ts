@@ -1,14 +1,13 @@
-// src/stores/participationFormStore.ts
-
 import { defineStore } from 'pinia';
-import axios from 'axios';
+import { api } from '@/api';
 import { useToastStore } from '@/stores/toastStore/toastStore';
+import { useEventPageStore } from '../eventPageStore/eventPageStore';
+import { useAuthStore } from '../authStore/authStore';
+import { blobToBase64 } from '@/utils/blobToBase64';
 
 export const useParticipationFormStore = defineStore('participationFormStore', {
   // State
   state: () => ({
-    firstName: '',
-    lastName: '',
     phoneNumber: '',
     emergencyPhoneNumber: '',
     studyProgram: '',
@@ -24,14 +23,6 @@ export const useParticipationFormStore = defineStore('participationFormStore', {
     // Validate form fields and populate errors
     validateForm() {
       this.errors = {};
-
-      if (!this.firstName.trim()) {
-        this.errors.firstName = 'First Name is required.';
-      }
-
-      if (!this.lastName.trim()) {
-        this.errors.lastName = 'Last Name is required.';
-      }
 
       if (!this.phoneNumber.trim()) {
         this.errors.phoneNumber = 'Phone Number is required.';
@@ -65,60 +56,45 @@ export const useParticipationFormStore = defineStore('participationFormStore', {
     async submitForm() {
       const toastStore = useToastStore();
 
-      if (!this.validateForm()) {
-        toastStore.addToast({
-			type: "error",
-			title: 'Please correct the errors in the form',
-			message: ''
-	 	});
-        return;
-      }
-
       this.loading = true;
 
       try {
-        const formData = new FormData();
+        console.log("I AM TRYING! REALLY!")
+        
+        const id = useEventPageStore().competitionId
 
-        formData.append('firstName', this.firstName);
-        formData.append('lastName', this.lastName);
-        formData.append('phoneNumber', this.phoneNumber);
-        formData.append('emergencyPhoneNumber', this.emergencyPhoneNumber);
-        formData.append('studyProgram', this.studyProgram);
+        console.log("I HAVE EVEN GOT a COMP ID!!!")
 
-        if (this.namePronunciation) {
-          formData.append('namePronunciation', this.namePronunciation, 'namePronunciation.wav');
-        }
+        console.log(this.namePronunciation, await blobToBase64(this.namePronunciation as Blob))
 
-        formData.append('additionalInfo', this.additionalInfo);
-        formData.append('acceptedRules', this.acceptedRules.toString());
+        console.log("I got audio")
 
-        const response = await axios.post('/api/participation', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
+        const namePronunciationBase64 = await blobToBase64(this.namePronunciation as Blob)
+
+        const response = await api.patch(`/competition/${id}/`, {
+          "action": "register",
+          "phone_number": this.phoneNumber,
+          "emergency_phone_number": this.emergencyPhoneNumber,
+          "program_of_study": this.studyProgram,
+          "name_pronunciation": namePronunciationBase64,
+          "additional_info": this.additionalInfo
         });
 
         if (response.status === 200) {
-			toastStore.addToast({
-				type: "success",
-				title: 'successfully registered',
-				message: 'please check your email regularly to see updates'
-			 });
+          toastStore.addToast({
+            type: "success",
+            title: 'successfully registered',
+            message: 'please check your email regularly to see updates'
+          }); 
           this.resetForm();
-        } else {
-			toastStore.addToast({
-				type: "error",
-				title: 'registration failed',
-				message: 'please try again later.'
-			 });
         }
       } catch (error) {
-        console.error('Error submitting participation form:', error);
         toastStore.addToast({
-			type: "error",
-			title: 'an error has occured',
-			message: 'an error has occured while submitting the form'
-		 });
+          type: "error",
+          title: 'an error has occured',
+          message: 'an error has occured while submitting the form'
+        });
+        throw error;
       } finally {
         this.loading = false;
       }
@@ -126,8 +102,6 @@ export const useParticipationFormStore = defineStore('participationFormStore', {
 
     // Reset the form to initial state
     resetForm() {
-      this.firstName = '';
-      this.lastName = '';
       this.phoneNumber = '';
       this.emergencyPhoneNumber = '';
       this.studyProgram = '';
@@ -136,5 +110,10 @@ export const useParticipationFormStore = defineStore('participationFormStore', {
       this.acceptedRules = false;
       this.errors = {};
     },
+    prefillForm(){
+      const authStore = useAuthStore()
+      authStore.phoneNumber && (this.phoneNumber = authStore.phoneNumber)
+      authStore.programOfStudy && (this.studyProgram = authStore.programOfStudy)
+    }
   },
 });

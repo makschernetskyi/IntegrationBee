@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import {toRefs, ref,watch} from "vue"
+import {toRefs, ref,watch, computed} from "vue"
 import { LMap, LTileLayer, LMarker, LIcon } from "@vue-leaflet/vue-leaflet";
 import "leaflet/dist/leaflet.css";
-
+import { useRoute } from "vue-router";
 import { ParticipatePanelData, useEventPageStore } from "@/stores/eventPageStore/eventPageStore";
 import { sanitizeHtml } from "@/utils/htmlSanitizers";
+import { useAuthStore } from "@/stores/authStore/authStore";
+import { storeToRefs } from "pinia";
 
 const props = defineProps<{
 	data: ParticipatePanelData
@@ -12,13 +14,24 @@ const props = defineProps<{
 
 const {data} = toRefs(props)
 
-watch(data, ()=>{
-	console.log("DATA UPDATE:", data)
-})
+const eventPageStore = useEventPageStore();
+const {competitionId} = storeToRefs(eventPageStore)
+
+const {deregisterParticipant, fetchEventData}= eventPageStore
+const {competitions, getProfileData} = useAuthStore()
 
 const zoom = ref(data.value.zoom)
 
 const emit = defineEmits(['showParticipationForm'])
+
+const isParticipating = computed(()=>competitions.find(competition=>competition.id == competitionId.value))
+
+const handleCancellation = async() =>{
+	if(confirm("Are you sure you want to cancel your participation?")){
+		await deregisterParticipant()
+		await getProfileData()
+	}
+}
 
 </script>
 <template>
@@ -69,7 +82,8 @@ const emit = defineEmits(['showParticipationForm'])
 			</p>
 		</div>
 		<div class="w-full flex justify-center items-center">
-			<button 
+			<button
+				v-if="!isParticipating"
 				:class="{
 					'overflow-hidden rounded-[20px] font-heading text-title  px-[4rem] pt-[0.6rem] pb-[0.4rem] relative ' : true,
 					'bg-gray-100 text-gray-400 cursor-default' : !data.isRegistrationOpen,
@@ -82,6 +96,22 @@ const emit = defineEmits(['showParticipationForm'])
 					Participate
 				</span>
 			</button>
+
+			<button
+				v-else
+				:class="{
+					'overflow-hidden rounded-[20px] font-heading text-title  px-[4rem] pt-[0.6rem] pb-[0.4rem] relative ' : true,
+					'bg-gray-100 text-gray-400 cursor-default' : !data.isRegistrationOpen,
+					'bg-red border-red border-4 text-pearl-white lg:hover:text-screenBlack' : data.isRegistrationOpen,
+				}"
+				:title="data.isRegistrationOpen ? 'cancel participation' : 'deregistration is closed'"
+				@click="handleCancellation"
+			>
+				<span class="relative z-[2]">
+					Cancel
+				</span>
+			</button>
+
 		</div>
 		<div class="w-full flex justify-center items-center">
 			<p class="text-body font-body">

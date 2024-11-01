@@ -4,23 +4,43 @@ import FormInput from '@/components/FormInput.vue';
 import VoiceInput from '@/components/VoiceInput.vue';
 import { useParticipationFormStore } from '@/stores/participationFormStore/participationFormStore';
 import { storeToRefs } from 'pinia';
+import { useEventPageStore } from '@/stores/eventPageStore/eventPageStore';
+import { useRoute } from 'vue-router';
+import { useAuthStore } from '@/stores/authStore/authStore';
 
 const store = useParticipationFormStore()
-const {firstName, lastName, phoneNumber, emergencyPhoneNumber, studyProgram, namePronunciation, errors} = storeToRefs(store)
+const {phoneNumber, emergencyPhoneNumber, studyProgram, namePronunciation, errors} = storeToRefs(store)
 
 
 
 onBeforeMount(()=>{
+	store.prefillForm()
 	document.getElementsByTagName('body')[0].style.overflowY = "hidden"
 })
 onUnmounted(()=>{
 	document.getElementsByTagName('body')[0].style.overflowY = "unset"
 })
 
-const handleSubmit = (e: any) =>{
+const emit = defineEmits(['closeForm'])
+
+const {fetchEventData} = useEventPageStore()
+
+const {getProfileData} = useAuthStore()
+
+const handleSubmit = async (e: any) =>{
 	e.preventDefault();
 	if(store.validateForm()){
-		//TODO: submit here
+		try{
+			console.log("trying to validate")
+			await store.submitForm()
+			await getProfileData()
+			console.log("did what I can")
+			emit('closeForm')
+		}catch(err:any){
+			console.error(err)
+			emit('closeForm')
+		}
+		
 	}
 }
 

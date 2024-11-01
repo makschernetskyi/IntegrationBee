@@ -23,7 +23,7 @@ export async function getProfileDataRequestResolver(this: any) {
         this.isAuthenticated = true;
         this.email = data.email;
         this.firstName = data.first_name;
-        this.lastName = data.second_name;
+        this.lastName = data.last_name;
         this.phoneNumber = data.phone_number
         this.dateJoined = data.registration_date;
         this.institution = data.institution;
@@ -34,8 +34,11 @@ export async function getProfileDataRequestResolver(this: any) {
             date: formatDateToLocal(competition.event_date),
             name: competition.name,
             result: competition.status,
-            link: `/event/${competition.page_id}`
+            link: `/event/${competition.page_id}`,
+            id: competition.id
         }));
+
+        console.log(this.$state)
 
         //return data;
     } catch (error:any) {
