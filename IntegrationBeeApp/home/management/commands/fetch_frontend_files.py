@@ -37,7 +37,7 @@ class Command(BaseCommand):
 
 		base_dir = settings.BASE_DIR
 		build_path = os.path.normpath(os.path.join(base_dir, options["path"] or DEFAULT_BUILD_PATH))
-		print( build_path )
+		print(build_path)
 
 		for root, _, files in os.walk(build_path):
 			for file in files:

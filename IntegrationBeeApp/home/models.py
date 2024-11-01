@@ -260,7 +260,6 @@ class CompetitionPost(Page):
     @property
     def longitude(self):
         try:
-            print(type(self.location))
             return float(self.location.split(" ")[0].split("(")[1])
         except (AttributeError, IndexError):
             return None

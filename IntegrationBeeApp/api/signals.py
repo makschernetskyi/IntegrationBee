@@ -8,13 +8,11 @@ from api.models import UserToCompetitionRelationship
 
 @receiver(pre_save, sender=UserToCompetitionRelationship)
 def send_status_change_email(sender, instance, **kwargs):
-    print(sender, instance, kwargs)
     if instance.pk is None:
         return
 
     old_status = UserToCompetitionRelationship.objects.get(pk=instance.pk).status
     new_status = instance.status
-    print(old_status, new_status)
 
     if old_status != new_status and new_status in ['REQUEST_ACCEPTED', 'NOT_QUALIFIED', 'QUALIFIED']:
         send_status_update_email(instance)
