@@ -18,7 +18,7 @@ const eventPageStore = useEventPageStore();
 const {competitionId} = storeToRefs(eventPageStore)
 
 const {deregisterParticipant, fetchEventData}= eventPageStore
-const {competitions, getProfileData} = useAuthStore()
+const {competitions, getProfileData, isAuthenticated} = useAuthStore()
 
 const zoom = ref(data.value.zoom)
 
@@ -83,7 +83,7 @@ const handleCancellation = async() =>{
 		</div>
 		<div class="w-full flex justify-center items-center">
 			<button
-				v-if="!isParticipating"
+				v-if="!isParticipating || !isAuthenticated"
 				:class="{
 					'overflow-hidden rounded-[20px] font-heading text-title  px-[4rem] pt-[0.6rem] pb-[0.4rem] relative ' : true,
 					'bg-gray-100 text-gray-400 cursor-default' : !data.isRegistrationOpen,

@@ -21,7 +21,7 @@ export const useParticipationFormStore = defineStore('participationFormStore', {
   // Actions
   actions: {
     // Validate form fields and populate errors
-    validateForm() {
+    async validateForm() {
       this.errors = {};
 
       if (!this.phoneNumber.trim()) {
@@ -42,7 +42,12 @@ export const useParticipationFormStore = defineStore('participationFormStore', {
 
       if(!this.namePronunciation){
         this.errors.namePronunciation = 'Name pronunciation is required';
+      }else{
+        if(!(await this.checkIfAudioIsUnderNSeconds(this.namePronunciation, 10))){
+          this.errors.namePronunciation = 'audio must be under 10 sec';
+        }
       }
+      
 
       //if (!this.acceptedRules) {
       //  this.errors.acceptedRules = 'You must accept the rules of participation.';
@@ -114,6 +119,13 @@ export const useParticipationFormStore = defineStore('participationFormStore', {
       const authStore = useAuthStore()
       authStore.phoneNumber && (this.phoneNumber = authStore.phoneNumber)
       authStore.programOfStudy && (this.studyProgram = authStore.programOfStudy)
+    },
+    async checkIfAudioIsUnderNSeconds(blob:Blob, sec:number=10){
+      const audioContext = new AudioContext();
+      const arrayBuffer = await blob.arrayBuffer();
+      const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+      const duration = audioBuffer.duration;
+      return duration < 10;
     }
   },
 });

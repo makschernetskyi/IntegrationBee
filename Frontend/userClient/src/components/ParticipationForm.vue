@@ -29,7 +29,7 @@ const {getProfileData} = useAuthStore()
 
 const handleSubmit = async (e: any) =>{
 	e.preventDefault();
-	if(store.validateForm()){
+	if(await store.validateForm()){
 		try{
 			console.log("trying to validate")
 			await store.submitForm()
