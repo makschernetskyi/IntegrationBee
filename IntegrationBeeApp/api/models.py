@@ -2,9 +2,10 @@ import datetime
 import subprocess
 from pathlib import Path
 
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser, BaseUserManager, Group
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.forms import BaseInlineFormSet
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.utils.html import format_html
@@ -75,6 +76,7 @@ class User(AbstractUser):
 
 
 class UserToCompetitionRelationship(Orderable):
+
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+', null=True, blank=False)
     competition = ParentalKey('Competition', on_delete=models.CASCADE, related_name='participants_relationships')
     phone_number = models.CharField(max_length=20, null=True, blank=True)
@@ -107,10 +109,38 @@ class UserToCompetitionRelationship(Orderable):
     panels = [
         FieldPanel('user'),
         FieldPanel('status'),
+        FieldPanel('competition'),
+        FieldPanel('phone_number'),
+        FieldPanel('emergency_phone_number'),
+        FieldPanel('program_of_study'),
+        FieldPanel('name_pronunciation'),
+        FieldPanel('additional_info'),
     ]
 
     def __str__(self):
         return f"{self.user.email} - {self.competition.name} - {self.status}"
+
+
+class FilteredInlineFormSet(BaseInlineFormSet):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        show_status = self.instance.participants_filter
+
+        if show_status == 'PENDING_REQUEST':
+            self.queryset = self.queryset.filter(status=show_status)
+        if show_status == 'REQUEST_ACCEPTED':
+            self.queryset = self.queryset.filter(status=show_status)
+        if show_status == 'IN_COMPETITION':
+            self.queryset = self.queryset.filter(status__in=['QUALIFIED', 'EIGHTH_FINALIST', 'QUARTER_FINALIST',
+                                                            'SEMIFINALIST', 'FINALIST', 'SECOND_PLACE', 'WINNER'])
+
+
+class FilteredInlinePanel(InlinePanel):
+    def get_form_options(self):
+        form_options = super().get_form_options()
+        formset_options = form_options['formsets'][self.relation_name]
+        formset_options['formset'] = FilteredInlineFormSet
+        return form_options
 
 
 class Competition(ClusterableModel):
@@ -130,11 +160,13 @@ class Competition(ClusterableModel):
             FieldPanel('event_date'),
             FieldPanel('max_participants'),
             FieldPanel('close_registration'),
+            FieldPanel('participants_filter'),
         ], heading="Competition Details", permission='api.edit_detail'),
 
         MultiFieldPanel([
-            InlinePanel('participants_relationships', label="Participants", classname="collapsed",
-                        panels=[FieldPanel('user'), FieldPanel('status')]),
+            FilteredInlinePanel('participants_relationships', label="Participants", classname="collapsed",
+                        panels=[FieldPanel('user', read_only=True),
+                                FieldPanel('status', read_only=True)]),
         ], heading="Competition Participants", classname="collapsed", permission='api.edit_participants'),
 
         MultiFieldPanel([
@@ -152,6 +184,21 @@ class Competition(ClusterableModel):
         'Semifinals',
         'Finals',
     ]
+
+    choices = [
+        ('PENDING_REQUEST', 'Pending Request'),
+        ('REQUEST_ACCEPTED', 'Request Accepted'),
+        ('IN_COMPETITION', 'In Competition'),
+        ('ALL', 'All'),
+    ]
+
+    participants_filter = models.CharField(
+        max_length=20,
+        choices=choices,
+        default='ALL',
+        null=False,
+        blank=False
+    )
 
     def __str__(self):
         return self.name

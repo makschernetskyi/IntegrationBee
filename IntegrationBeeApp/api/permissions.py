@@ -19,16 +19,13 @@ class IsPublishedCompetitionPost(BasePermission):
     """
 
     def has_permission(self, request, view):
-        if request.method == 'GET':
-            competition_id = view.kwargs.get('pk')
+        return request.method == 'GET'
 
-            if competition_id is not None:
-                is_live = CompetitionPost.objects.filter(
-                    competition_id=competition_id, live=True
-                ).exists()
-                return is_live
-
-        return False
+    def has_object_permission(self, request, view, obj):
+        is_live = CompetitionPost.objects.filter(
+            competition=obj, live=True
+        ).exists()
+        return is_live
 
 
 @hooks.register('register_permissions')
