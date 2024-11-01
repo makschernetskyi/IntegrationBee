@@ -13,7 +13,7 @@ from modelcluster.fields import ParentalKey
 from wagtail.admin.panels import FieldPanel, InlinePanel
 from wagtail.admin.panels import MultiFieldPanel
 from wagtail.fields import StreamField
-from wagtail.models import ClusterableModel
+from wagtail.models import ClusterableModel, RevisionMixin
 from wagtail.models import Orderable
 
 from api.blocks import SeriesBlock
@@ -143,12 +143,13 @@ class FilteredInlinePanel(InlinePanel):
         return form_options
 
 
-class Competition(ClusterableModel):
+class Competition(RevisionMixin, ClusterableModel):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, unique=True, null=True, blank=True)
     max_participants = models.IntegerField(null=True, blank=True)
     event_date = models.DateTimeField(blank=True, null=True)
     close_registration = models.CharField(max_length=100, null=True, blank=True, default="Registration Closed")
+    _revisions = GenericRelation("wagtailcore.Revision", related_query_name="advert")
 
     series = StreamField([
         ('series', SeriesBlock()),
@@ -199,6 +200,10 @@ class Competition(ClusterableModel):
         null=False,
         blank=False
     )
+
+    @property
+    def revisions(self):
+        return self._revisions
 
     def __str__(self):
         return self.name
