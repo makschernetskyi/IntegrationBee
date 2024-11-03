@@ -1,28 +1,87 @@
 import base64
-from pprint import pprint
 from uuid import uuid4
 
-from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.models import User
+from django.contrib.auth.tokens import default_token_generator
 from django.core.files.base import ContentFile
-from django.db import transaction, IntegrityError
+from django.core.mail import send_mail
+from django.db import IntegrityError
+from django.db import transaction
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from wagtail.snippets.views.snippets import PreviewRevisionView, RevisionsCompareView, WorkflowHistoryView, \
-    WorkflowHistoryDetailView, RevisionsUnscheduleView, WorkflowPreviewView
+from wagtail.snippets.views.snippets import RevisionsCompareView
 
 from api.models import Competition, User, EmailVerificationToken, UserToCompetitionRelationship
 from api.services.send_email import send_email
-from home.models import CompetitionPost as CompetitionPage
 from .permissions import IsPublishedCompetitionPost
 from .serializers import UserSerializer, UserToCompetitionRelationshipSerializer
+
+
+class PasswordResetRequestView(APIView):
+    def post(self, request):
+        email = request.data.get('email')
+        if not email:
+            return Response({"error": "Email is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({"error": "User with this email does not exist."}, status=status.HTTP_404_NOT_FOUND)
+
+        token = default_token_generator.make_token(user)
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+
+        reset_link = f"https://www.integrationbee.at/api/v2/resetpassword/confirm/?uid={uid}&token={token}"
+
+        send_mail(
+            subject="Password Reset Request",
+            message=render_to_string('passwordResetEmail.html', context={"reset_link": reset_link}),
+            from_email="no-reply@integrationbee.at",
+            recipient_list=[email],
+            fail_silently=False,
+        )
+
+        return Response({"message": "Password reset link sent."}, status=status.HTTP_200_OK)
+
+
+class PasswordResetConfirmView(APIView):
+    def post(self, request):
+        uidb64 = request.data.get('uid')
+        token = request.data.get('token')
+        new_password = request.data.get('new_password')
+
+        if not uidb64 or not token or not new_password:
+            return Response({"error": "All fields are required (uid, token, new_password)."},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except (User.DoesNotExist, ValueError, TypeError):
+            return Response({"error": "Invalid uid or token."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not default_token_generator.check_token(user, token):
+            return Response({"error": "Invalid token."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            with transaction.atomic():
+                user.set_password(new_password)
+                user.save()
+        except Exception as e:
+            return Response({"error": "An error occurred while updating the password."},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response({"message": "Password reset successful."}, status=status.HTTP_200_OK)
 
 
 class RegisterView(APIView):
@@ -141,10 +200,12 @@ class CompetitionView(APIView):
 
         if action == 'register':
             if competition.max_participants and competition.participants_relationships.count() >= competition.max_participants:
-                return Response({"error": "Maximum number of participants reached."}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error": "Maximum number of participants reached."},
+                                status=status.HTTP_400_BAD_REQUEST)
 
             if competition.close_registration:
-                return Response({"error": "Registration is closed for this competition."}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error": "Registration is closed for this competition."},
+                                status=status.HTTP_400_BAD_REQUEST)
 
             user_serializer = UserSerializer(user, data=request.data, partial=True)
             if user_serializer.is_valid():
@@ -174,7 +235,8 @@ class CompetitionView(APIView):
                 relationship.delete()
                 return Response({"success": "User unregistered from competition"}, status=status.HTTP_200_OK)
             else:
-                return Response({"error": "User is not registered for this competition"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error": "User is not registered for this competition"},
+                                status=status.HTTP_400_BAD_REQUEST)
 
         else:
             return Response({"error": "Invalid action specified"}, status=status.HTTP_400_BAD_REQUEST)
