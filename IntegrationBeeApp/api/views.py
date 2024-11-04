@@ -1,18 +1,15 @@
 import base64
 from uuid import uuid4
 
-from django.contrib.auth.models import User
-from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.hashers import make_password
+from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
-from django.core.mail import send_mail
 from django.db import IntegrityError
 from django.db import transaction
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
-from django.utils.encoding import force_bytes, force_str
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.exceptions import ValidationError
@@ -20,14 +17,50 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from wagtail.snippets.views.snippets import RevisionsCompareView
+from django.conf import settings
 
-from api.models import Competition, User, EmailVerificationToken, UserToCompetitionRelationship
 from api.services.send_email import send_email
+from .models import PasswordResetToken, EmailVerificationToken, \
+    UserToCompetitionRelationship, Competition, User  # Ensure you have PasswordResetToken model
 from .permissions import IsPublishedCompetitionPost
 from .serializers import UserSerializer, UserToCompetitionRelationshipSerializer
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth.hashers import make_password
+from django.utils import timezone
+from datetime import timedelta
+from .models import PasswordResetToken
 
-class PasswordResetRequestView(APIView):
+
+class PasswordResetConfirmView(APIView):
+
+    def post(self, request):
+        token = request.data.get('token')
+        new_password = request.data.get('new_password')
+
+        if not token or not new_password:
+            return Response({"error": "Token and new password are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            reset_token = PasswordResetToken.objects.get(token=token)
+
+            if reset_token.created_at < timezone.now() - timedelta(hours=24):
+                reset_token.delete()
+                return Response({"error": "Token has expired."}, status=status.HTTP_400_BAD_REQUEST)
+
+            reset_token.user.password = make_password(new_password)
+            reset_token.user.save()
+
+            reset_token.delete()
+            return Response({"message": "Password has been reset successfully."}, status=status.HTTP_200_OK)
+
+        except PasswordResetToken.DoesNotExist:
+            return Response({"error": "Invalid token."}, status=status.HTTP_404_NOT_FOUND)
+
+
+class RequestPasswordResetView(APIView):
     def post(self, request):
         email = request.data.get('email')
         if not email:
@@ -35,53 +68,26 @@ class PasswordResetRequestView(APIView):
 
         try:
             user = User.objects.get(email=email)
+            reset_token = str(uuid4())
+
+            PasswordResetToken.objects.create(user=user, token=reset_token)
+
+            reset_link = f"{settings.WAGTAILADMIN_BASE_URL}/reset_password?token={reset_token}"
+            send_email(
+                [email],
+                message=render_to_string(
+                    template_name='passwordResetEmail.html',
+                    context={"reset_link": reset_link}
+                ),
+                subject="(NO REPLY) Password Reset Request",
+                is_html=True
+            )
+
+            return Response({"message": "Password reset link sent."}, status=status.HTTP_200_OK)
         except User.DoesNotExist:
-            return Response({"error": "User with this email does not exist."}, status=status.HTTP_404_NOT_FOUND)
-
-        token = default_token_generator.make_token(user)
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
-
-        reset_link = f"https://www.integrationbee.at/api/v2/resetpassword/confirm/?uid={uid}&token={token}"
-
-        send_mail(
-            subject="Password Reset Request",
-            message=render_to_string('passwordResetEmail.html', context={"reset_link": reset_link}),
-            from_email="no-reply@integrationbee.at",
-            recipient_list=[email],
-            fail_silently=False,
-        )
-
-        return Response({"message": "Password reset link sent."}, status=status.HTTP_200_OK)
-
-
-class PasswordResetConfirmView(APIView):
-    def post(self, request):
-        uidb64 = request.data.get('uid')
-        token = request.data.get('token')
-        new_password = request.data.get('new_password')
-
-        if not uidb64 or not token or not new_password:
-            return Response({"error": "All fields are required (uid, token, new_password)."},
-                            status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            uid = force_str(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(pk=uid)
-        except (User.DoesNotExist, ValueError, TypeError):
-            return Response({"error": "Invalid uid or token."}, status=status.HTTP_400_BAD_REQUEST)
-
-        if not default_token_generator.check_token(user, token):
-            return Response({"error": "Invalid token."}, status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            with transaction.atomic():
-                user.set_password(new_password)
-                user.save()
-        except Exception as e:
-            return Response({"error": "An error occurred while updating the password."},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-        return Response({"message": "Password reset successful."}, status=status.HTTP_200_OK)
+            return Response({"error": "No user with this email."}, status=status.HTTP_404_NOT_FOUND)
+        except ValidationError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class RegisterView(APIView):

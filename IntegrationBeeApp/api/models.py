@@ -517,3 +517,9 @@ class ForgotPasswordToken(models.Model):
     User = models.ForeignKey(User, on_delete=models.CASCADE)
     token = models.CharField(max_length=300, null=False)
     date_created = models.DateTimeField(auto_now_add=True, blank=False, null=False)
+
+
+class PasswordResetToken(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    token = models.CharField(max_length=100, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
