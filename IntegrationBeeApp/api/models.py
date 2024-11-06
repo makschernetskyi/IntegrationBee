@@ -83,7 +83,7 @@ class UserToCompetitionRelationship(RevisionMixin, Orderable):
     phone_number = models.CharField(max_length=20, null=True, blank=True)
     emergency_phone_number = models.CharField(max_length=20, null=True, blank=True)
     program_of_study = models.CharField(max_length=100, null=True, blank=True)
-    name_pronunciation = models.CharField(max_length=2*(10**6), null=True, blank=True)
+    name_pronunciation = models.TextField(max_length=2*(10**6), null=True, blank=True)
     additional_info = models.TextField(null=True, blank=True)
     _revisions = GenericRelation("wagtailcore.Revision", related_query_name="usertocompetitionrelationship")
 
