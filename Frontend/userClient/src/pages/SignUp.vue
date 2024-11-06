@@ -5,16 +5,26 @@ import { useSignUpPageStore } from '@/stores/signUpPageStore/signUpPageStore';
 
 import {ref} from "vue";
 import { storeToRefs } from 'pinia';
+import { useRouter } from 'vue-router';
 
 const testInputModel = ref('')
 
 const store = useSignUpPageStore()
 const {email, password, firstName, lastName, institution, errors} = storeToRefs(store)
 
-const handleSubmit = (e:any) =>{
+
+const router = useRouter();
+
+const handleSubmit = async (e:any) =>{
 	e.preventDefault();
 	if(store.validateForm()){
-		store.initializeSignUp()
+		try{
+			await store.initializeSignUp();
+			router.push('/sign_in')
+			store.$reset()
+		}catch(error:any){
+
+		}
 	}
 }
 

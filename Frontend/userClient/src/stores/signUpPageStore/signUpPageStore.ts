@@ -1,4 +1,6 @@
+import { api, noAuthApi } from '@/api';
 import { defineStore } from 'pinia';
+import { useToastStore } from '../toastStore/toastStore';
 
 
 export const useSignUpPageStore = defineStore('signUpPageStore', {
@@ -53,7 +55,28 @@ export const useSignUpPageStore = defineStore('signUpPageStore', {
 		},
 
 		async initializeSignUp(){
-			//TODO: call sign up from authstore here
+			try{
+				const request = await noAuthApi.post('/register/', {
+					first_name: this.firstName,
+					last_name: this.lastName,
+					school: this.institution,
+					email: this.email,
+					password: this.password
+				})
+
+				useToastStore().addToast({
+					type: "info",
+					title: "Check your e-mail",
+					message: "We sent a message to the e-mail you provided, use the link there to validate your e-mail address"
+				})
+			}catch(e:any){
+				useToastStore().addToast({
+					type: "error",
+					title: "Error has occured",
+					message: "try again later"
+				})
+				throw e;
+			}
 		}
 	},
 });

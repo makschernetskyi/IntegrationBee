@@ -3,6 +3,9 @@ import {getProfileDataRequestResolver} from "./resolvers/getProfileDataRequestRe
 import { loginRequestResolver } from "./resolvers/loginRequestResolver";
 import { signUpRequestResolver } from "./resolvers/signUpRequestResolver";
 import { logoutResolver } from "./resolvers/logoutResolver";
+import { noAuthApi } from "@/api";
+import { useToastStore } from "../toastStore/toastStore";
+import { AxiosError } from "axios";
 
 type Competition = {
     date: string,
@@ -43,6 +46,12 @@ export const useAuthStore = defineStore('auth', {
             code: null,
             error: null,
             errorMSG: null,
+        },
+        passwordResetRequest: {
+            status: null as null|string,
+            code: null as null|number,
+            error: null as any,
+            errorMSG: null as string|null,
         }
     }),
     getters:{
@@ -85,6 +94,47 @@ export const useAuthStore = defineStore('auth', {
             this.programOfStudy = null;
             this.competitions = [];
             // Leave userDataRequest, registerRequest, and signInRequest unchanged
+        },
+        async resetPassword(newPassword: string, token: string){
+
+            this.passwordResetRequest = {
+                status: 'pending',
+                code: null,
+                error: null,
+                errorMSG: null,
+            }
+
+            try{
+                const response = await noAuthApi.post('/reset-password-confirm/', {
+                    token: token
+                })
+                useToastStore().addToast({
+                    type: 'success',
+                    title: "Password successfuly reset",
+                    message: ""
+                })
+
+                this.passwordResetRequest = {
+                    status: 'resolved',
+                    code: response.status,
+                    error: null,
+                    errorMSG: null,
+                }
+
+            }catch(err: any){
+                useToastStore().addToast({
+                    type: 'error',
+                    title: "could not reset password",
+                    message: "try again."
+                })
+                this.passwordResetRequest = {
+                    status: 'resolved',
+                    code: err.status,
+                    error: err,
+                    errorMSG: err.message,
+                }
+                throw err;
+            }
         }
 	}
 })

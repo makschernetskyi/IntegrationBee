@@ -9,9 +9,11 @@ import SignUp from '@/pages/SignUp.vue'
 import SignIn from '@/pages/SignIn.vue'
 import Imprint from "@/pages/Imprint.vue"
 import TermsOfUse from "@/pages/TermsOfUse.vue"
+import PasswordReset from "@/pages/PasswordReset.vue"
 
 import { createRouter, createWebHashHistory, createWebHistory  } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore/authStore.ts'
+
 
 
 const router = createRouter({
@@ -37,7 +39,8 @@ const router = createRouter({
         {path: '/sign_up', component: SignUp, name: "sign_up"},
         {path: '/sign_in', component: SignIn, name: "sign_in"},
         {path: '/imprint', component: Imprint, name: "imprint"},
-        {path: '/terms_of_use', component: TermsOfUse, name: "terms_of_use"}
+        {path: '/terms_of_use', component: TermsOfUse, name: "terms_of_use"},
+        {path: '/reset_password', component: PasswordReset, name: 'reset_password'}
 	],
 })
 
