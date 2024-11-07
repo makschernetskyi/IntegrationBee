@@ -28,7 +28,7 @@ const handleLogout = async () => {
 
 </script>
 <template>
-	<div class="fixed top-0 w-full lg:px-[2rem] xl:px-[12rem] font-body z-30 h-[6rem] lg:h-[10rem] text-secondary lg:py-4">
+	<div class="fixed top-0 w-full lg:px-[2rem] xl:px-[10vw] font-body z-30 h-[6rem] lg:h-[10rem] text-secondary lg:py-4">
 		<div class="w-full h-full bg-screenBlack lg:bg-pearl-white lg:bg-opacity-90 lg:backdrop-blur-sm overflow-hidden lg:rounded-3xl shadow-md px-8 lg:px-6">
 			<div class="relative h-full flex justify-center items-center ">
 				

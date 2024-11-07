@@ -43,7 +43,7 @@ const {isAuthenticated} = useAuthStore()
 		<div class="top-0 h-max bg-screenBlack overflow-x-hidden">
 			<!-- first welcome section -->
 			<section 
-				class="top-0 flex justify-start pt-[30vh] md:pt-0 md:items-center lg:min-h-[40rem] h-[111vh] px-[2rem] lg:px-[12rem] bg-no-repeat bg-cover [clip-path:polygon(0_0,100%_0,100%_90%,0%_100%)] relative"
+				class="top-0 flex justify-start pt-[30vh] md:pt-0 md:items-center lg:min-h-[40rem] h-[111vh] px-[2rem] lg:px-[12rem] xl:px-[10vw] bg-no-repeat bg-cover [clip-path:polygon(0_0,100%_0,100%_90%,0%_100%)] relative"
 				:style="{backgroundImage: `url(${store.titleBackgroundImage})`}"
 			>
 				<div class="flex flex-col font-body text-pearl-white gap-[3rem] w-full">
@@ -71,7 +71,7 @@ const {isAuthenticated} = useAuthStore()
 				</div>
 			</section>
 			<!-- what is it section -->
-			<section id="about" class="w-full h-max scroll-pt-[30rem] grid grid-cols-1 lg:grid-cols-[4fr_5fr] gap-[6rem] lg:gap-[4rem] px-[2rem] lg:px-[12rem] py-[10rem]">
+			<section id="about" class="w-full h-max scroll-pt-[30rem] grid grid-cols-1 lg:grid-cols-[4fr_5fr] gap-[6rem] lg:gap-[4rem] px-[2rem] lg:px-[12rem] xl:px-[10vw] py-[10rem]">
 				<div class="w-full h-max flex justify-center items-center">
 					<div class="text-pearl-white flex flex-col items-center lg:items-start gap-[2rem]">
 						<h3 class="font-heading text-title" data-aos="fade-up">
@@ -88,7 +88,7 @@ const {isAuthenticated} = useAuthStore()
 				</div>
 			</section>
 			<!-- steps to participate -->
-			<section class="w-full h-max grid grid-cols-1 lg:grid-cols-[4fr_5fr] gap-y-[10rem] lg:gap-[4rem] lg:px-[12rem] pt-[5rem] lg:py-[5rem] relative lg:gap-y-3">
+			<section class="w-full h-max grid grid-cols-1 lg:grid-cols-[4fr_5fr] gap-y-[10rem] lg:gap-[4rem] lg:px-[12rem] xl:px-[10vw] pt-[5rem] lg:py-[5rem] relative lg:gap-y-3">
 				
 				<div>
 					<div class="flex flex-col justify-center lg:h-[75rem] relative ">
@@ -167,7 +167,7 @@ const {isAuthenticated} = useAuthStore()
 				</div>
 			</section>
 			<!-- next event -->
-			<section class="w-full h-max grid grid-cols-1 xl:grid-cols-[4fr_6fr] gap-[4rem] lg:px-[12rem] pb-[10rem] lg:py-[5rem] relative gap-y-3">
+			<section class="w-full h-max grid grid-cols-1 xl:grid-cols-[4fr_6fr] gap-[4rem] lg:px-[12rem] xl:px-[10vw] pb-[10rem] lg:py-[5rem] relative gap-y-3">
 				
 				<div>
 					<div class="flex flex-col justify-center h-[45rem] relative w-full">
@@ -187,7 +187,7 @@ const {isAuthenticated} = useAuthStore()
 					</div>
 				</div>
 				<div class="w-full h-max px-[2rem] lg:px-[0]" data-aos="fade-left">
-					<a href="" class="w-full h-max lg:h-[45rem] bg-pearl-white rounded-[40px] grid grid-cols-1 md:grid-cols-[5fr_4fr] auto-rows-auto md:grid-rows-[5fr_5fr] cursor-pointer">
+					<RouterLink :to="store.nextEvent?.link as string" class="w-full h-max lg:h-[45rem] bg-pearl-white rounded-[40px] grid grid-cols-1 md:grid-cols-[5fr_4fr] auto-rows-auto md:grid-rows-[5fr_5fr] cursor-pointer">
 						<div class="font-heading flex flex-col justify-center items-start p-[2rem]">
 							<h4 class="text-screen-black text-subtitle md:text-title text-left ">
 								{{ store.nextEvent?.title }}
@@ -202,15 +202,13 @@ const {isAuthenticated} = useAuthStore()
 							</div>
 						</div>
 						<div class="md:col-span-2 px-[2rem] py-[4rem] lg:py-[0] h-full w-full flex items-center">
-							<p class="font-body text-body text-center lg:text-left">
-								{{ store.nextEvent?.description }}
-							</p>	
+							<p class="font-body text-body text-center lg:text-left" v-html="sanitizeHtml(store.nextEvent?.description as string)"/>	
 						</div>
-					</a>
+					</RouterLink>
 				</div>
 			</section>
 			<!--Why participate section-->
-			<section class="bg-pearl-white text-screenBlack px-[2rem] lg:px-[12rem] flex flex-col gap-[6rem] lg:gap-[10rem] py-[10rem] lg:py-[15rem] [clip-path:polygon(0_5rem,100%_0,100%_calc(100%-5rem),0%_100%)]">
+			<section class="bg-pearl-white text-screenBlack px-[2rem] lg:px-[12rem] xl:px-[10vw] flex flex-col gap-[6rem] lg:gap-[10rem] py-[10rem] lg:py-[15rem] [clip-path:polygon(0_5rem,100%_0,100%_calc(100%-5rem),0%_100%)]">
 				<div class="w-full flex justify-center">
 					<h3 class="font-heading text-subtitle lg:text-heading text-center relative after:absolute after:left-0 after:top-[2rem]  lg:after:top-[7.5rem] after:-z-10 after:w-full after:h-[2rem] lg:after:h-[3rem] after:bg-primary after:-skew-x-[30deg] after:scale-x-[1.1] after:translate-x-2 after:-rotate-[2deg]">
 						Why Participate?
@@ -244,7 +242,7 @@ const {isAuthenticated} = useAuthStore()
 					</div>
 				</div>
 				<!--Main sponsor-->
-				<div v-if="store.mainSponsorExists" class="w-full h-max flex flex-col gap-[5rem] lg:gap-0 lg:grid lg:grid-cols-[1fr_25rem] lg:grid-rows-1 lg:gap-x-[10rem] px-[2rem] lg:px-[12rem] py-[12rem] bg-pearl-white [clip-path:polygon(0_5rem,100%_0,100%_calc(100%-5rem),0%_100%)]">
+				<div v-if="store.mainSponsorExists" class="w-full h-max flex flex-col gap-[5rem] lg:gap-0 lg:grid lg:grid-cols-[1fr_25rem] lg:grid-rows-1 lg:gap-x-[10rem] px-[2rem] lg:px-[12rem] xl:px-[10vw] py-[12rem] bg-pearl-white [clip-path:polygon(0_5rem,100%_0,100%_calc(100%-5rem),0%_100%)]">
 					<div class="flex flex-col gap-[4rem]">
 						<h4 class="font-heading text-center text-title lg:text-heading">
 							Main Sponsor - {{ store.mainSponsor?.sponsorName }}
@@ -276,7 +274,7 @@ const {isAuthenticated} = useAuthStore()
 							</h3>
 						</div>
 					</div>
-					<div class="px-[2rem] lg:px-[12rem]">
+					<div class="px-[2rem] lg:px-[12rem] xl:px-[10vw]">
 						<div class="flex flex-row justify-center lg:justify-between flex-wrap ">
 							<div v-for="(sponsor, i) in store.goldSponsors" :key="i" data-aos="fade-left" :data-aos-delay="i*50" data-aos-offset="20" class="relative w-[35rem] h-[35rem]">
 								<!-- background hexagon -->
@@ -323,7 +321,7 @@ const {isAuthenticated} = useAuthStore()
 							</h3>
 						</div>
 					</div>
-					<div class="px-[2rem] lg:px-[12rem]">
+					<div class="px-[2rem] lg:px-[12rem] xl:px-[10vw]">
 						<div class="flex flex-row-reverse justify-center lg:justify-between flex-wrap ">
 							<div v-for="(sponsor, i) in store.silverSponsors" :key="i" data-aos="fade-left" :data-aos-delay="i*50" data-aos-offset="20" class="relative w-[30rem] h-[30rem]">
 								<!-- background hexagon -->
@@ -370,7 +368,7 @@ const {isAuthenticated} = useAuthStore()
 							</h3>
 						</div>
 					</div>
-					<div class="px-[2rem] lg:px-[12rem]">
+					<div class="px-[2rem] lg:px-[12rem] xl:px-[10vw]">
 						<div class="flex justify-center lg:justify-between flex-wrap ">
 							<div v-for="(sponsor, i) in store.bronzeSponsors" :key="i" data-aos="fade-left" :data-aos-delay="i*50" data-aos-offset="20" class="relative w-[25rem] h-[25rem]">
 								<!-- background hexagon -->
@@ -404,7 +402,7 @@ const {isAuthenticated} = useAuthStore()
 				</template>
 			</section>
 			<!-- social media -->
-			<section class="w-full px-[2rem] lg:px-[12rem] h-max py-[10rem] flex flex-col gap-[5rem] lg:gap-0 lg:grid lg:grid-cols-2">
+			<section class="w-full px-[2rem] lg:px-[12rem] xl:px-[10vw] h-max py-[10rem] flex flex-col gap-[5rem] lg:gap-0 lg:grid lg:grid-cols-2">
 				<div class="w-full flex text-center lg:text-left justify-center lg:justify-start items-center">
 					<h4 class="font-heading text-title lg:text-heading text-pearl-white relative z-[2]">
 						<span class="relative z-[2] after:absolute after:left-0 after:top-[4rem] lg:after:top-[8rem] after:-z-[1] after:w-full after:h-[3rem] after:bg-primary after:-skew-x-[30deg] after:scale-x-[1.1] after:translate-x-2 after:-rotate-[2deg]">

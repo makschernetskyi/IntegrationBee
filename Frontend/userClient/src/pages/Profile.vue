@@ -21,13 +21,13 @@ const handleImageChoice = (e:any) => {
 </script>
 <template>
 	<DefaultLayout>
-		<div class="w-full px-[2rem] lg:px-[12rem] bg-screenBlack flex justify-center pt-[8rem] pb-[2rem] lg:pt-[16rem]">
+		<div class="w-full px-[2rem] lg:px-[12rem] xl:px-[10vw] bg-screenBlack flex justify-center pt-[8rem] pb-[2rem] lg:pt-[16rem]">
 			<h1 class="font-heading text-subtitle lg:text-title text-center text-pearl-white">
 				Profile
 			</h1>
 		</div>
 
-		<div class="w-full px-[2rem] lg:px-[12rem] bg-pearl-white flex flex-col justify-center py-[5rem]">
+		<div class="w-full px-[2rem] lg:px-[12rem] xl:px-[10vw] bg-pearl-white flex flex-col justify-center py-[5rem]">
 
 			<section class="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-y-[4rem] lg:gap-y-0 lg:gap-x-[4rem] text-screenBlack font-body text-text-sm lg:text-body">
 

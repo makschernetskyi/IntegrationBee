@@ -14,11 +14,11 @@ onBeforeMount(()=>{
 </script>
 <template>
 	<DefaultLayout>
-		<div class="w-full px-[2rem] lg:px-[12rem] bg-screenBlack flex justify-center pt-[8rem] pb-[2rem] lg:pt-[16rem]">
+		<div class="w-full px-[2rem] lg:px-[12rem] xl:px-[10vw] bg-screenBlack flex justify-center pt-[8rem] pb-[2rem] lg:pt-[16rem]">
 			<h1 class="font-heading text-subtitle lg:text-title text-center text-pearl-white">
 				Terms of use
 			</h1>
 		</div>
-		<div class="w-full py-[10rem] px-[2rem] lg:px-[12rem] bg-pearl-white font-body text-body" v-html="store.text"/>
+		<div class="w-full py-[10rem] px-[2rem] lg:px-[12rem] xl:px-[10vw] bg-pearl-white font-body text-body" v-html="store.text"/>
 	</DefaultLayout>
 </template>

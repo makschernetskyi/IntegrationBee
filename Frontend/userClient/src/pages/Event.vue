@@ -73,7 +73,7 @@ const closeParticipationForm = () =>{
 		<div>
 		
 		<main class="w-full bg-screenBlack  text-screenBlack">
-			<section class="px-[2rem] bg-pearl-white lg:px-[12rem] pt-[4rem] pb-[5rem] min-h-[64rem] flex flex-col lg:block">
+			<section class="px-[2rem] bg-pearl-white lg:px-[12rem] xl:px-[10vw] pt-[4rem] pb-[5rem] min-h-[64rem] flex flex-col lg:block">
 				<div class="w-full lg:w-[48rem] lg:h-[60rem] lg:px-[6rem] pt-[2rem] pb-[6rem] lg:py-[2rem] relative lg:float-right">
 					<CompetitionParticipatePanel :data="store.participatePanel" class="w-full h-full" @showParticipationForm="showParticipationForm"/>
 				</div>
@@ -94,7 +94,10 @@ const closeParticipationForm = () =>{
 				<h3 class="font-heading text-title mt-[3rem] w-full text-center lg:text-left">
 					Tournament Bracket
 				</h3>
-				<TournamentBracket :data="store.tournamentBracket" class="w-full mt-[4rem]"/>
+				<div class="w-full">
+					<TournamentBracket :data="store.tournamentBracket" class="w-full mt-[4rem] origin-center lg:scale-[0.9]"/>
+				</div>
+				
 			</section>
 			<!--sponsors-->
 			<section class="w-full h-max bg-screenBlack overflow-x-hidden">
@@ -113,7 +116,7 @@ const closeParticipationForm = () =>{
 						</div>
 					</div>
 					<!--Main sponsor-->
-					<div v-if="store.mainSponsorExists" class="w-full h-max flex flex-col gap-[5rem] lg:gap-0 lg:grid lg:grid-cols-[1fr_25rem] lg:grid-rows-1 lg:gap-x-[10rem] px-[2rem] lg:px-[12rem] py-[12rem] bg-pearl-white [clip-path:polygon(0_0,100%_0,100%_calc(100%-5rem),0%_100%)]">
+					<div v-if="store.mainSponsorExists" class="w-full h-max flex flex-col gap-[5rem] lg:gap-0 lg:grid lg:grid-cols-[1fr_25rem] lg:grid-rows-1 lg:gap-x-[10rem] px-[2rem] lg:px-[12rem] xl:px-[10vw] py-[12rem] bg-pearl-white [clip-path:polygon(0_0,100%_0,100%_calc(100%-5rem),0%_100%)]">
 						<div class="flex flex-col gap-[4rem]">
 							<h4 class="font-heading text-center text-title lg:text-heading">
 								Main sponsor - Huawei
@@ -144,7 +147,7 @@ const closeParticipationForm = () =>{
 								</h3>
 							</div>
 						</div>
-						<div class="px-[2rem] lg:px-[12rem]">
+						<div class="px-[2rem] lg:px-[12rem] xl:px-[10vw]">
 							<div class="flex flex-row justify-center lg:justify-between flex-wrap ">
 								<GoldSponsorLogo v-for="(sponsor, i) in store.goldSponsors" :key="i" :logo-src="sponsor.logoSrc" :sponsor-name="sponsor.sponsorName" :index="i" :logo-size="sponsor.logoSize"/>
 								<div class="h-[35rem] min-w-[35rem] flex items-center justify-center">
@@ -167,7 +170,7 @@ const closeParticipationForm = () =>{
 								</h3>
 							</div>
 						</div>
-						<div class="px-[2rem] lg:px-[12rem]">
+						<div class="px-[2rem] lg:px-[12rem] xl:px-[10vw]">
 							<div class="flex flex-row-reverse justify-center lg:justify-between flex-wrap ">
 								<SilverSponsorLogo v-for="(sponsor, i) in store.silverSponsors" :key="i" :logo-src="sponsor.logoSrc" :sponsor-name="sponsor.sponsorName" :index="i" :logo-size="sponsor.logoSize"/>
 								<div class="h-[30rem] min-w-[30rem] flex items-center justify-center">
@@ -191,7 +194,7 @@ const closeParticipationForm = () =>{
 								</h3>
 							</div>
 						</div>
-						<div class="px-[2rem] lg:px-[12rem]">
+						<div class="px-[2rem] lg:px-[12rem] xl:px-[10vw]">
 							<div class="flex justify-center lg:justify-between flex-wrap ">
 								<BronzeSponsorLogo v-for="(sponsor, i) in store.bronzeSponsors" :key="i" :logo-src="sponsor.logoSrc" :sponsor-name="sponsor.sponsorName" :index="i" :logo-size="sponsor.logoSize"/>
 								<div class="h-[25rem] min-w-[25rem] flex items-center justify-center">

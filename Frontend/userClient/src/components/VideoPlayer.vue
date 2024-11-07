@@ -29,13 +29,12 @@
 		if (videoPlayer.value) {
 			
 			player.value = videojs(videoPlayer.value, options.value, function() {
-				this.log('onPlayerReady', this);
+				//this.log('onPlayerReady', this);
 			});
 		}
 	});
 
 	watch(options, (newOptions)=>{
-		console.log(newOptions)
 		if (player.value) {
           player.value.src(newOptions.sources[0]);
         }

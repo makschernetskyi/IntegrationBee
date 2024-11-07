@@ -49,12 +49,12 @@ function switchFocusToFullScreenInput(newsItem:any){
 </script>
 <template>
 	<Defaultlayout>
-		<div class="w-full px-[2rem] lg:px-[12rem] bg-screenBlack flex justify-center pt-[8rem] pb-[2rem] lg:pt-[16rem]">
+		<div class="w-full px-[2rem] lg:px-[12rem] xl:px-[10vw] bg-screenBlack flex justify-center pt-[8rem] pb-[2rem] lg:pt-[16rem]">
 			<h1 class="font-heading text-subtitle lg:text-title text-center text-pearl-white">
 				{{ store.title }}
 			</h1>
 		</div>
-		<div class="w-full px-[2rem] lg:px-[12rem] bg-pearl-white flex flex-col justify-center py-[5rem]">
+		<div class="w-full px-[2rem] lg:px-[12rem] xl:px-[10vw] bg-pearl-white flex flex-col justify-center py-[5rem]">
 
 			<MasonryWall :items="store.newsItems" :max-columns="2" :column-width="300" :gap="16">
 				<template #default="{ item : newsItem, index }">

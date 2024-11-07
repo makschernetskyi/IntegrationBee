@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { noAuthApi } from '@/api';
 import { useToastStore } from '../toastStore/toastStore';
 import { fetchImageUrl } from '@/services/fetchImageUrl';
+import axios from 'axios';
 
 interface Sponsor {
 	logoSrc: string;
@@ -71,7 +72,6 @@ export const useHomePageStore = defineStore('homePageStore', {
         }
 
 		const data = response.data.items["0"];
-		console.log(data)
 
 
 
@@ -99,9 +99,16 @@ export const useHomePageStore = defineStore('homePageStore', {
 		this.silverSponsors = await processSponsors('silver');
 		this.bronzeSponsors = await processSponsors('bronze');
 
-
-
-		//this.nextEvent = data.nextEvent;
+		const {data: competitionData} = await axios.get(data.competition.meta.detail_url)
+		this.nextEvent = {
+			id: competitionData.id,
+			title: competitionData.title,
+			edition: competitionData.edition,
+			description: competitionData.description.slice(0,300),
+			imageSrc: competitionData.picture?.meta.download_url || '',
+			link: 'event/' + competitionData.id
+		}
+		
 		this.stepsToParticipate = data.steps_to_participate
 		.sort((s1:any,s2:any)=>s1.step_number-s2.step_number)
 		.map((step:any)=>({

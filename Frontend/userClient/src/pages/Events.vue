@@ -20,12 +20,12 @@ const handleSearchClick = async () =>{
 </script>
 <template>
 	<DefaultLayout>
-		<div class="w-full px-[2rem] lg:px-[12rem] bg-screenBlack flex justify-center pt-[8rem] pb-[2rem] lg:pt-[16rem]">
+		<div class="w-full px-[2rem] lg:px-[12rem] xl:px-[10vw] bg-screenBlack flex justify-center pt-[8rem] pb-[2rem] lg:pt-[16rem]">
 			<h1 class="font-heading text-subtitle lg:text-title text-center text-pearl-white">
 				{{store.title}}
 			</h1>
 		</div>
-		<div class="w-full px-[2rem] lg:px-[12rem] bg-pearl-white flex flex-col justify-center py-[5rem]">
+		<div class="w-full px-[2rem] lg:px-[12rem] xl:px-[10vw] bg-pearl-white flex flex-col justify-center py-[5rem]">
 			<!-- searchbar NOT IMPLEMENTED IN BACKEND YET-->
 			<!-- <div class="w-full">
 				<div class="w-full h-[5rem] rounded-3xl bg-white-100 grid grid-cols-[1fr_5rem]">
@@ -104,7 +104,7 @@ const handleSearchClick = async () =>{
 				pagination here
 			</div>-->
 
-			<div class="w-full px-[2rem] lg:px-[12rem] flex justify-center py-[10rem]">
+			<div class="w-full px-[2rem] lg:px-[12rem] xl:px-[10vw] flex justify-center py-[10rem]">
 				<p class="font-body text-body lg:text-subtitle text-center">
 					Want to host a competition at your university?<br>
 					contact us at <a href="mailto:info@integrationbee.at?subject=Competition%20organization%20request" class="underline ">info@integrationbee.at</a>

@@ -60,7 +60,7 @@ export const useEventsPageStore = defineStore('eventsPageStore', {
           name: item.title,
           edition: item.edition,
           location: item.place,
-          date: formatDateToLocal(item.competition.event_date),
+          date: formatDateToLocal(item.competition.event_date_start),
           pictureSrc: item.picture?.meta.download_url,
           status: "upcoming" //TODO IMPLEMENT DIFFERENT STATUSES
         }));

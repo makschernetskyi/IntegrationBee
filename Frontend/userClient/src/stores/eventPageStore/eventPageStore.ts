@@ -163,11 +163,11 @@ export const useEventPageStore = defineStore('eventPageStore', {
           isRegistrationOpen: !Boolean(data.competition.close_registration), //TODO change to Backend Field
           reasonRegistrationClosed: data.competition.close_registration, //TODO change to Backend Field
           participantsCount: data.competition.users_count, //TODO change to Backend Field,
-          date: formatDateToLocal(data.competition.event_date), //update to from_to,
+          date: formatDateToLocal(data.competition.event_date_start) + '<br>' + formatDateToLocal(data.competition.event_date_end), //update to from_to,
           location: data.place,
           locationMapsUrl: `https://www.google.com/maps/dir//${data.latitude},${data.longitude}`
         }
-        if(data.competition.rounds){
+        if(data.competition.rounds.length){
           this.tournamentBracket.eightFinals = data.competition.rounds
           .find((round:any)=>round.name === "1/8 Finals")
           .matches
@@ -212,6 +212,7 @@ export const useEventPageStore = defineStore('eventPageStore', {
         
         //this.tournamentBracket = data.tournamentBracket;
       } catch (error) {
+        console.log('event', error)
         toastStore.addToast({
           type: 'error',
           title: "Error has occured",

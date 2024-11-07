@@ -32,9 +32,9 @@ const handleConfirm = async () =>{
 </script>
 <template>
 	<DefaultLayout>
-		<div class="w-full px-[2rem] lg:px-[12rem] bg-screenBlack flex justify-center pt-[8rem] pb-[2rem] lg:pt-[16rem]">
+		<div class="w-full px-[2rem] lg:px-[12rem] xl:px-[10vw] bg-screenBlack flex justify-center pt-[8rem] pb-[2rem] lg:pt-[16rem]">
 		</div>
-		<div class="bg-pearl-white py-[10rem] flex flex-col items-center justify-center font-body text-body text-screenBlack px-[2rem] lg:px-[12rem]">
+		<div class="bg-pearl-white py-[10rem] flex flex-col items-center justify-center font-body text-body text-screenBlack px-[2rem] lg:px-[12rem] xl:px-[10vw]">
 			<div class="w-full lg:w-[30vw] flex flex-col items-center gap-[2rem]">
 				<h1 class="font-heading text-subtitle lg:text-title">Reset password</h1>
 				<p>provide new password</p>
