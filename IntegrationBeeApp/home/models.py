@@ -16,105 +16,6 @@ from . import blocks
 from api import models as api_models
 from .blocks import CompetitionPostSectionBlock
 
-
-class HomePage(Page):
-    """Home Page Model"""
-
-    template = "home/home.html"
-    max_count = 1
-
-    competition = models.ForeignKey(
-        api_models.Competition,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=False,
-        related_name='+',
-        verbose_name='competition',
-    )
-
-    youtube_video_link = models.CharField(max_length=150, blank=True, null=True)
-
-    sponsors = StreamField(
-        [
-            ("sponsor", blocks.SponsorBlock()),
-        ],
-        use_json_field=True,
-        null=True,
-        blank=True
-    )
-
-    steps_to_participate = StreamField(
-        [
-            ("step_to_participate", blocks.StepToParticipateBlock()),
-        ],
-        use_json_field=True,
-        null=True,
-        blank=True
-    )
-
-    social_media_links = StreamField(
-        [
-            ("social_media_link", blocks.SocialMediaLinkBlock())
-        ],
-        use_json_field=True,
-        null=True,
-        blank=True
-    )
-
-    why_participate = StreamField(
-        [
-            ("reason", blocks.ReasonBlock()),
-        ],
-        use_json_field=True,
-        null=True,
-        blank=True
-    )
-
-    slogan = RichTextField(features=["italic"], null=False)
-    what_is_it_content = models.CharField(max_length=500, blank=False, null=True)
-
-    title_background_image = models.ForeignKey(
-        'wagtailimages.Image',
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name='+',
-        verbose_name="Title Background Image"
-    )
-
-    content_panels = Page.content_panels + [
-        FieldPanel("youtube_video_link"),
-        FieldPanel("sponsors"),
-        FieldPanel("competition"),
-        FieldPanel("steps_to_participate"),
-        FieldPanel("why_participate"),
-        FieldPanel("slogan"),
-        FieldPanel("what_is_it_content"),
-        FieldPanel("title_background_image"),
-        FieldPanel("social_media_links"),
-    ]
-
-    api_fields = [
-        APIField("sponsors"),
-        APIField("youtube_video_link"),
-        APIField("competition"),
-        APIField("steps_to_participate"),
-        APIField("why_participate"),
-        APIField("slogan"),
-        APIField("what_is_it_content"),
-        APIField("title_background_image"),
-        APIField("social_media_links"),
-    ]
-
-    search_fields = Page.search_fields + [
-        index.SearchField('slogan', partial_match=True),
-        index.SearchField('what_is_it_content', partial_match=True),
-        index.SearchField('why_participate', partial_match=True),
-    ]
-
-    subpage_types = ["home.NewsPage", "home.CompetitionsPage", "home.ContactsPage", "home.ImprintPage", "home.TermsOfUsePage"]
-
-
 class NewsPage(Page):
 
     api_fields = [
@@ -370,3 +271,101 @@ class PrivacyPolicyPage(Page):
 
     def serve(self, request, *args, **kwargs):
         return redirect('/')
+
+
+class HomePage(Page):
+    """Home Page Model"""
+
+    template = "home/home.html"
+    max_count = 1
+
+    competition = models.ForeignKey(
+        CompetitionPost,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='+',
+        verbose_name='competitionpost',
+    )
+
+    youtube_video_link = models.CharField(max_length=150, blank=True, null=True)
+
+    sponsors = StreamField(
+        [
+            ("sponsor", blocks.SponsorBlock()),
+        ],
+        use_json_field=True,
+        null=True,
+        blank=True
+    )
+
+    steps_to_participate = StreamField(
+        [
+            ("step_to_participate", blocks.StepToParticipateBlock()),
+        ],
+        use_json_field=True,
+        null=True,
+        blank=True
+    )
+
+    social_media_links = StreamField(
+        [
+            ("social_media_link", blocks.SocialMediaLinkBlock())
+        ],
+        use_json_field=True,
+        null=True,
+        blank=True
+    )
+
+    why_participate = StreamField(
+        [
+            ("reason", blocks.ReasonBlock()),
+        ],
+        use_json_field=True,
+        null=True,
+        blank=True
+    )
+
+    slogan = RichTextField(features=["italic"], null=False)
+    what_is_it_content = models.CharField(max_length=500, blank=False, null=True)
+
+    title_background_image = models.ForeignKey(
+        'wagtailimages.Image',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='+',
+        verbose_name="Title Background Image"
+    )
+
+    content_panels = Page.content_panels + [
+        FieldPanel("youtube_video_link"),
+        FieldPanel("sponsors"),
+        FieldPanel("competition"),
+        FieldPanel("steps_to_participate"),
+        FieldPanel("why_participate"),
+        FieldPanel("slogan"),
+        FieldPanel("what_is_it_content"),
+        FieldPanel("title_background_image"),
+        FieldPanel("social_media_links"),
+    ]
+
+    api_fields = [
+        APIField("sponsors"),
+        APIField("youtube_video_link"),
+        APIField("competition"),
+        APIField("steps_to_participate"),
+        APIField("why_participate"),
+        APIField("slogan"),
+        APIField("what_is_it_content"),
+        APIField("title_background_image"),
+        APIField("social_media_links"),
+    ]
+
+    search_fields = Page.search_fields + [
+        index.SearchField('slogan', partial_match=True),
+        index.SearchField('what_is_it_content', partial_match=True),
+        index.SearchField('why_participate', partial_match=True),
+    ]
+
+    subpage_types = ["home.NewsPage", "home.CompetitionsPage", "home.ContactsPage", "home.ImprintPage", "home.TermsOfUsePage"]
