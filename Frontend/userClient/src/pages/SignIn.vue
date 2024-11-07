@@ -78,9 +78,10 @@ function closePasswordRecovery (){
 							class="overflow-hidden w-[90%] rounded-3xl font-heading text-subtitle pt-[0.8rem] pb-[0.6rem] relative bg-primary border-primary border-2 text-screenBlack after:absolute after:w-full after:h-full after:top-0 after:left-0 after:bg-pearl-white after:transition-transform after:duration-200 after:will-change-transform after:origin-top after:scale-y-0 lg:hover:after:scale-y-100"
 							title="sign in"
 							type="submit"
+							:disabled="store.loading"
 						>
 							<span class="relative z-[2]">
-								Sign in
+								{{store.loading ? "loading..." : "sign in"}}
 							</span>
 						</button>
 						

@@ -3,13 +3,16 @@ import { storeToRefs } from "pinia";
 import { useUiStore } from "./stores/uiStore/uiStore";
 import MobileMenu from "@/components/MobileMenu.vue"
 import Toast from "./components/Toast.vue";
-import { onBeforeMount } from "vue";
+import { onBeforeMount, ref } from "vue";
 import { useHomePageStore } from "./stores/homePageStore/homePageStore";
 import { useNewsPageStore } from "./stores/newsPageStore/newsPageStore";
 import { useContactPageStore } from "./stores/contactPageStore/contactPageStore";
 import { useEventsPageStore } from "./stores/eventsPageStore/eventsPageStore";
+import LoadingScreen from "./components/LoadingScreen.vue";
 
 
+
+const isLoading = ref(true)
 
 onBeforeMount(()=>{
 	Promise.all([
@@ -17,7 +20,9 @@ onBeforeMount(()=>{
 		useNewsPageStore().fetchNewsPage(),
 		useContactPageStore().fetchContactData(),
 		useEventsPageStore().fetchTitle(),
-	])	
+	]).finally(()=>{
+		isLoading.value = false
+	})
 
 })
 
@@ -41,26 +46,35 @@ function endMenuAction(){
 
 </script>
 <template>
-<router-view>
-</router-view>
-<teleport to='body'>
 	<transition
 		enter-from-class="opacity-0"
-		enter-active-class="transition-all duration-200"
-		enter-to-class="opacity-1"
-		leave-from-class="opacity-1"
-		leave-active-class="transition-all duration-200"
+		enter-to-class="opacity-100"
+		leave-from-class="opacity-100"
 		leave-to-class="opacity-0"
 	>
-		<MobileMenu
-			v-if="isMobileMenuVisible || shouldMobileMenuBeVisible" 
-			:should-menu-be-visible="shouldMobileMenuBeVisible"
-			@end-action="endMenuAction"
-			@close-menu="toggleShouldMenuBeVisible"
-		/>
+		<LoadingScreen v-if="isLoading" class="transition-all"/>
 	</transition>
-</teleport>
+	
+	<router-view>
+	</router-view>
+	<teleport to='body'>
+		<transition
+			enter-from-class="opacity-0"
+			enter-active-class="transition-all duration-200"
+			enter-to-class="opacity-1"
+			leave-from-class="opacity-1"
+			leave-active-class="transition-all duration-200"
+			leave-to-class="opacity-0"
+		>
+			<MobileMenu
+				v-if="isMobileMenuVisible || shouldMobileMenuBeVisible" 
+				:should-menu-be-visible="shouldMobileMenuBeVisible"
+				@end-action="endMenuAction"
+				@close-menu="toggleShouldMenuBeVisible"
+			/>
+		</transition>
+	</teleport>
 
-<Toast/>
+	<Toast/>
 
 </template>

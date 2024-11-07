@@ -26,8 +26,8 @@ const handleSearchClick = async () =>{
 			</h1>
 		</div>
 		<div class="w-full px-[2rem] lg:px-[12rem] bg-pearl-white flex flex-col justify-center py-[5rem]">
-			<!-- searchbar -->
-			<div class="w-full">
+			<!-- searchbar NOT IMPLEMENTED IN BACKEND YET-->
+			<!-- <div class="w-full">
 				<div class="w-full h-[5rem] rounded-3xl bg-white-100 grid grid-cols-[1fr_5rem]">
 					<input v-model="searchQuery" type="text" placeholder="Find Compeition you are looking for..." class="font-body text-body px-[2rem] rounded-l-3xl w-full h-full bg-white-100 outline-none"/>
 					<button @click="handleSearchClick" class="w-full h-full aspect-square p-3">
@@ -37,7 +37,7 @@ const handleSearchClick = async () =>{
 						</svg>
 					</button>
 				</div>
-			</div>
+			</div> -->
 
 			<div class="w-full grid grid-cols-1 lg:grid-cols-3 auto-rows-auto gap-y-[2rem] lg:gap-x-[2rem] px-[2rem] py-[5rem] overflow-x-hidden">
 				<RouterLink v-for="event in store.events" :to="`/event/${event.id}`" >

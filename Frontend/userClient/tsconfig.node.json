@@ -11,6 +11,9 @@
     "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": true,
+    "types": [
+      "node"
+    ],
 
     /* Linting */
     "strict": true,
@@ -23,7 +26,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
   },
   "include": ["vite.config.ts"]
 }

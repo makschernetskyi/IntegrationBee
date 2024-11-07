@@ -62,7 +62,7 @@ export const useHomePageStore = defineStore('homePageStore', {
 		const response = await noAuthApi.get('/cms/pages/', {
 			params: {
                 type: "home.HomePage",
-				fields: "slogan,sponsors,why_participate,competition,youtube_video_link,what_is_it_content,title_background_image,social_media_links,steps_to_participate"
+				fields: "slogan,sponsors,why_participate,competition,youtube_video_link,what_is_it_content,title_background_image,social_media_links,steps_to_participate,competition"
 			}
 		});
 
@@ -71,6 +71,7 @@ export const useHomePageStore = defineStore('homePageStore', {
         }
 
 		const data = response.data.items["0"];
+		console.log(data)
 
 
 
