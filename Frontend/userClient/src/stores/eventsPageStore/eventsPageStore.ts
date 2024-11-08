@@ -53,7 +53,26 @@ export const useEventsPageStore = defineStore('eventsPageStore', {
             type: "home.CompetitionPost",
             fields: "id,title,edition,place,picture,competition"
           }
-        }); 
+        });
+
+        function getStatus(startDate:string, endDate:string) {
+          const today = new Date();
+          const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        
+          const start = new Date(startDate);
+          const startDateOnly = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+        
+          const end = new Date(endDate);
+          const endDateOnly = new Date(end.getFullYear(), end.getMonth(), end.getDate());
+        
+          if (todayDateOnly < startDateOnly) {
+            return "upcoming";
+          } else if (todayDateOnly > endDateOnly) {
+            return "past";
+          } else {
+            return "ongoing";
+          }
+        }
 
         this.events = response.data.items.map((item:any)=>({
           id: item.id,
@@ -62,7 +81,7 @@ export const useEventsPageStore = defineStore('eventsPageStore', {
           location: item.place,
           date: formatDateToLocal(item.competition.event_date_start),
           pictureSrc: item.picture?.meta.download_url,
-          status: "upcoming" //TODO IMPLEMENT DIFFERENT STATUSES
+          status: getStatus(item.competition.event_date_start, item.competition.event_date_end)
         }));
 
         //TODO: IMPLEMENT PAGINATION

@@ -31,13 +31,10 @@ const handleSubmit = async (e: any) =>{
 	e.preventDefault();
 	if(await store.validateForm()){
 		try{
-			console.log("trying to validate")
 			await store.submitForm()
 			await getProfileData()
-			console.log("did what I can")
 			emit('closeForm')
 		}catch(err:any){
-			console.error(err)
 			emit('closeForm')
 		}
 		

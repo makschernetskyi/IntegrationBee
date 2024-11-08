@@ -40,7 +40,7 @@ export const useSignInPageStore = defineStore('useSignInPageStore', {
       const authStore = useAuthStore()
       try{
         await authStore.requestLogin(this.email, this.password)
-        authStore.getProfileData()
+        await authStore.getProfileData()
         router.push(next)
         useSignInPageStore().$reset()
       }catch(e){

@@ -13,7 +13,6 @@ const linksShown = ref(0)
 
 const toggleInternalVisibility = ()=>{
 	const t = setInterval( ()=>{
-		console.log((+shouldMenuBeVisible.value))
 		if((shouldMenuBeVisible.value && linksShown.value <= linksNumber) || (!shouldMenuBeVisible.value && linksShown.value > 0)){
 			// +/- 1 depending on the direction
 			linksShown.value += (+shouldMenuBeVisible.value)*2 - 1

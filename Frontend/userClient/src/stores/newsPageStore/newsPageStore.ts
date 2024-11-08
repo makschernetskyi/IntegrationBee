@@ -61,7 +61,6 @@ export const useNewsPageStore = defineStore('newsPageStore', {
             offset: page*NEWS_PER_PAGE
           }
         })
-        console.log(response)
         const data = response.data.items;
         this.newsItems = data.map((newsItem: any)=>({
           id: newsItem.id,
@@ -71,7 +70,6 @@ export const useNewsPageStore = defineStore('newsPageStore', {
           date: formatDateToLocal(newsItem.meta.first_published_at)
         }))
         
-        console.log("STTTTTTATIEST STATE", this.$state)
 
         //this.newsItems = data.;
         //this.currentPage = page

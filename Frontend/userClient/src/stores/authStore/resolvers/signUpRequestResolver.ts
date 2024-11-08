@@ -30,8 +30,6 @@ export async function signUpRequestResolver(this: any, firstName:string, lastNam
             },
         });
 
-        console.log(response)
-
         this.registerRequest.status = 'resolved';
         this.registerRequest.code = response.status;
         this.registerRequest.error = null;
