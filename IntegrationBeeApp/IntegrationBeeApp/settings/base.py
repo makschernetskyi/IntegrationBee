@@ -183,7 +183,7 @@ WAGTAILSEARCH_BACKENDS = {
 
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
-WAGTAILADMIN_BASE_URL = "http://www.integrationbee.at"
+WAGTAILADMIN_BASE_URL = "https://www.integrationbee.at"
 
 # Rest framework
 
@@ -222,6 +222,5 @@ AUTH_USER_MODEL = 'api.User'
 SECURE_SSL_REDIRECT = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-# Make sure session and CSRF cookies are only sent over HTTPS
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
