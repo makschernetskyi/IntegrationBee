@@ -107,7 +107,7 @@ export const useAuthStore = defineStore('auth', {
             try{
                 const response = await noAuthApi.post('/reset-password-confirm/', {
                     token: token,
-                    password: newPassword
+                    new_password: newPassword
                 })
                 useToastStore().addToast({
                     type: 'success',
