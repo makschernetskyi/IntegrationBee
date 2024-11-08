@@ -85,7 +85,7 @@ class CompetitionPost(Page):
     short_description = RichTextField(features=["bold", "link"], null=True)
     description = RichTextField(features=["bold", "link"], null=True)
     place = models.CharField(max_length=100, blank=False, null=False)
-    rules = RichTextField(features=["bold", "link", "italic", "ol", "ul"], null=True)
+    rules = RichTextField(features=["bold", "link", "italic", "ol", "ul"], null=True, blank=True)
     location = models.CharField(max_length=250, blank=True, null=True)
 
     competition = models.OneToOneField(
@@ -139,6 +139,7 @@ class CompetitionPost(Page):
         APIField("title"),
         APIField("edition"),
         APIField("description"),
+        APIField("short_description"),
         APIField("sections"),
         APIField("place"),
         APIField("latitude"),
