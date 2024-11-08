@@ -34,21 +34,11 @@ export async function signUpRequestResolver(this: any, firstName:string, lastNam
         this.registerRequest.code = response.status;
         this.registerRequest.error = null;
         this.registerRequest.errorMSG = null;
-    } catch (error) {
-        //const errorStore = useErrorStore()
-
-        //if(error.response.data.error && error.response.data.error[0] === "User with this email already exists."){
-        //    errorStore.addError({text:"User with this email already exists."})
-        //}else{
-        //    errorStore.addError({text:"Error during registration. try later."})
-        //}
-
-
-
-
-        //this.registerRequest.status = 'rejected';
-        //this.registerRequest.error = error;
-        //this.registerRequest.errorMSG = error.message;
+    } catch (error:any) {
+        this.registerRequest.status = 'rejected';
+        this.registerRequest.error = error;
+        this.registerRequest.errorMSG = error.message;
+        throw error;
     }
 }
 

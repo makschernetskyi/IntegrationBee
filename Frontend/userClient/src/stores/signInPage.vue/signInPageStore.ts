@@ -61,14 +61,26 @@ export const useSignInPageStore = defineStore('useSignInPageStore', {
         useToastStore().addToast({
           type: 'info',
           title: "Check your email",
-          message: "we've sent recovery link to your e-mail, follow it to continue."
+          message: "we've sent recovery link to your e-mail, follow it to continue.",
+          duration: 10000
         })
-      }catch(err){
-        useToastStore().addToast({
-          type: 'error',
-          title: "Something went wrong",
-          message: "error has occured, is the email you provided correct?"
-        })
+      }catch(err:any){
+        
+        if(err.status == 404){
+          useToastStore().addToast({
+            type: 'error',
+            title: "User doesn't exist",
+            message: "User with fiven email doesn't exist. Check spelling or create a new account."
+          })
+        }else{
+          useToastStore().addToast({
+            type: 'error',
+            title: "Something went wrong",
+            message: "error has occured, try again later"
+          })
+        }
+
+        
       }
     }
   },
