@@ -92,8 +92,8 @@ const {isAuthenticated} = useAuthStore()
 				
 				<div>
 					<div class="flex flex-col justify-center lg:h-[75rem] relative ">
-						<div class="flex flex-col items-end gap-[2rem] lg:absolute -left-[12rem] pr-[4rem]">
-							<h2 class="text-white font-heading text-title lg:text-heading text-center lg:text-right w-full pl-[2rem] lg:pl-[12rem]">
+						<div class="flex flex-col items-end gap-[2rem] lg:absolute -left-[10vw] pr-[4rem]">
+							<h2 class="text-white font-heading text-title lg:text-heading text-center lg:text-right w-full pl-[10vw] lg:pl-[12rem]">
 								3 steps to participate
 							</h2>
 							<div class="w-full flex justify-start">
@@ -171,8 +171,8 @@ const {isAuthenticated} = useAuthStore()
 				
 				<div>
 					<div class="flex flex-col justify-center h-[45rem] relative w-full">
-						<div class="flex flex-col items-end gap-[2rem] absolute lg:-left-[12rem] pr-[4rem] w-full">
-							<h2 class="text-white font-heading text-title lg:text-heading text-center lg:text-right w-full pl-[2rem] lg:pl-[12rem]">
+						<div class="flex flex-col items-end gap-[2rem] absolute lg:-left-[10vw] pr-[4rem] w-full">
+							<h2 class="text-white font-heading text-title lg:text-heading text-center lg:text-right w-full pl-[2rem] lg:pl-[10vw]">
 								Our next event:
 							</h2>
 							<div class="w-full flex justify-start">

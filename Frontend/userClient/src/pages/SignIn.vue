@@ -17,7 +17,7 @@ const query = route.query
 const handleSubmit = (e:any)=>{
 	e.preventDefault();
 	if(store.validateForm()){
-		let next = '/'
+		let next = '/myprofile'
 		if('next' in query && query.next?.toString() !== undefined){
 			next = query.next?.toString()
 		}
