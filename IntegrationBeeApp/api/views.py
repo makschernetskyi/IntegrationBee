@@ -22,7 +22,6 @@ from django.conf import settings
 from api.services.send_email import send_email
 from .models import PasswordResetToken, EmailVerificationToken, \
     UserToCompetitionRelationship, Competition, User  # Ensure you have PasswordResetToken model
-from .permissions import IsPublishedCompetitionPost
 from .serializers import UserSerializer, UserToCompetitionRelationshipSerializer
 
 from rest_framework.views import APIView
