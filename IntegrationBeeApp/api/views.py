@@ -197,7 +197,7 @@ class UpdateUserView(APIView):
 
 
 class CompetitionView(APIView):
-    permission_classes = [IsAuthenticated, IsPublishedCompetitionPost]
+    permission_classes = [IsAuthenticated]
 
     def patch(self, request, pk):
         action = request.data.get('action', 'register')  # Default action is 'register'

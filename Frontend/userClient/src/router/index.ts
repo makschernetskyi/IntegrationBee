@@ -40,7 +40,8 @@ const router = createRouter({
         {path: '/sign_in', component: SignIn, name: "sign_in"},
         {path: '/imprint', component: Imprint, name: "imprint"},
         {path: '/terms_of_use', component: TermsOfUse, name: "terms_of_use"},
-        {path: '/reset_password', component: PasswordReset, name: 'reset_password'}
+        {path: '/reset_password', component: PasswordReset, name: 'reset_password'},
+        {path: '*', redirect: {name: 'home'}, name: 'not_found'}
 	],
 })
 

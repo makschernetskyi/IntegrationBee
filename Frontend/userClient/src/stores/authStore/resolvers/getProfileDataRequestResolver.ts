@@ -38,7 +38,6 @@ export async function getProfileDataRequestResolver(this: any) {
             id: competition.id
         }));
 
-        console.log(this.$state)
 
         //return data;
     } catch (error:any) {

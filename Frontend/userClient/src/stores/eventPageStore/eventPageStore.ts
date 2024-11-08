@@ -120,7 +120,6 @@ export const useEventPageStore = defineStore('eventPageStore', {
       try {
         const response = await noAuthApi.get(`/cms/pages/${id}/`); // Update with your API endpoint
         const data = response.data
-        console.log(data);
 
         // Populate state with fetched data
         this.competitionId = data.competition.id;
@@ -212,7 +211,6 @@ export const useEventPageStore = defineStore('eventPageStore', {
         
         //this.tournamentBracket = data.tournamentBracket;
       } catch (error) {
-        console.log('event', error)
         toastStore.addToast({
           type: 'error',
           title: "Error has occured",

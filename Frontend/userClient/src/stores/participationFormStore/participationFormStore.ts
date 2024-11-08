@@ -64,15 +64,11 @@ export const useParticipationFormStore = defineStore('participationFormStore', {
       this.loading = true;
 
       try {
-        console.log("I AM TRYING! REALLY!")
+
         
         const id = useEventPageStore().competitionId
 
-        console.log("I HAVE EVEN GOT a COMP ID!!!")
 
-        console.log(this.namePronunciation, await blobToBase64(this.namePronunciation as Blob))
-
-        console.log("I got audio")
 
         const namePronunciationBase64 = await blobToBase64(this.namePronunciation as Blob)
 
