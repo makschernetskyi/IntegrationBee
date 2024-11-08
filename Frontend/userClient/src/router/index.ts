@@ -41,7 +41,7 @@ const router = createRouter({
         {path: '/imprint', component: Imprint, name: "imprint"},
         {path: '/terms_of_use', component: TermsOfUse, name: "terms_of_use"},
         {path: '/reset_password', component: PasswordReset, name: 'reset_password'},
-        {path: '*', redirect: {name: 'home'}, name: 'not_found'}
+        {path: "/:pathMatch(.*)*", redirect: {name: 'home'}, name: 'not_found'}
 	],
 })
 
