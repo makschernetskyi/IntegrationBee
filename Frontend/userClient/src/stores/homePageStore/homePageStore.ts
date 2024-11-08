@@ -131,6 +131,7 @@ export const useHomePageStore = defineStore('homePageStore', {
 		}));
 
 		} catch (error) {
+			console.log("VERY UNEXPECTED HOME PAGE ERROR", error)
 			const toastStore = useToastStore();
 			toastStore.addToast({
 				title: "Error has occured",
