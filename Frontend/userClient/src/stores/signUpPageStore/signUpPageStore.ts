@@ -67,13 +67,15 @@ export const useSignUpPageStore = defineStore('signUpPageStore', {
 				useToastStore().addToast({
 					type: "info",
 					title: "Check your e-mail",
-					message: "We sent a message to the e-mail you provided, use the link there to validate your e-mail address"
+					message: "We sent a message to the e-mail you provided, use the link there to validate your e-mail address",
+					duration: 10000,
 				})
 			}catch(e:any){
 				useToastStore().addToast({
 					type: "error",
 					title: "Error has occured",
-					message: "try again later"
+					message: "try again later",
+					duration: 10000,
 				})
 				throw e;
 			}
