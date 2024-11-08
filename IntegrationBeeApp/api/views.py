@@ -139,8 +139,8 @@ class VerifyEmailView(APIView):
         try:
             with transaction.atomic():
                 user = token.User
-                if not user.is_confirmed:
-                    user.is_confirmed = True
+                if not user.is_verified:
+                    user.is_verified = True
                     user.save()
                     token.delete()
                 else:
