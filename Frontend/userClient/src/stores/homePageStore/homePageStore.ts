@@ -104,7 +104,7 @@ export const useHomePageStore = defineStore('homePageStore', {
 			id: competitionData.id,
 			title: competitionData.title,
 			edition: competitionData.edition,
-			description: competitionData.description.slice(0,300),
+			description: competitionData.short_description.slice(0,300),
 			imageSrc: competitionData.picture?.meta.download_url || '',
 			link: 'event/' + competitionData.id
 		}
@@ -131,7 +131,6 @@ export const useHomePageStore = defineStore('homePageStore', {
 		}));
 
 		} catch (error) {
-			console.log("VERY UNEXPECTED HOME PAGE ERROR", error)
 			const toastStore = useToastStore();
 			toastStore.addToast({
 				title: "Error has occured",
