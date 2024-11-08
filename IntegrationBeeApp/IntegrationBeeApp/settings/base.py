@@ -219,3 +219,9 @@ SIMPLE_JWT = {
 
 
 AUTH_USER_MODEL = 'api.User'
+SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Make sure session and CSRF cookies are only sent over HTTPS
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
