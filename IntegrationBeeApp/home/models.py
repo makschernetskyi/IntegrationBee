@@ -139,6 +139,7 @@ class CompetitionPost(Page):
         APIField("title"),
         APIField("edition"),
         APIField("description"),
+        APIField("short_description"),
         APIField("sections"),
         APIField("place"),
         APIField("latitude"),
