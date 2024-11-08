@@ -22,10 +22,8 @@
 </script>
 <template>
   <nav class="Header-ActionButtons">
-          <router-link to="/" class="Header-ActionButtons-Button">
-              <span class="Header-ActionButtons-Button-text">Home</span>
-          </router-link>
-          <router-link to="/news" class="Header-ActionButtons-Button">
+        <div>
+            <router-link to="/news" class="Header-ActionButtons-Button">
               <span class="Header-ActionButtons-Button-text">News</span>
           </router-link>
           <router-link to="/competitions" class="Header-ActionButtons-Button">
@@ -34,6 +32,8 @@
           <router-link to="/contact" class="Header-ActionButtons-Button">
               <span class="Header-ActionButtons-Button-text">Contact</span>
           </router-link>
+        </div>
+          
           <!-- for not authenticated user -->
           <template v-if="!isAuth">
               <router-link to="/signIn" class="Header-ActionButtons-Button Header-ActionButtons-SignInButton">

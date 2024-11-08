@@ -1,155 +1,39 @@
+
 from django.db import models
+from django.shortcuts import redirect
 
 from wagtail.models import Page
 from wagtail.fields import RichTextField
-from wagtail.admin.panels import FieldPanel
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.fields import StreamField
 from wagtail.api import APIField
 from wagtail.search import index
+from wagtailgeowidget.panels import LeafletPanel
 
+from api.serializers import CompetitionSerializer, LocationSerializer
 from . import blocks
 
 from api import models as api_models
-
-
-class HomePage(Page):
-    """Home Page Model"""
-
-    template = "home/home.html"
-    max_count = 1
-
-    title_section_header = models.CharField(max_length=50, blank=False, null=True)
-    title_section_description = RichTextField(features=["bold", "link"], null=True)
-
-    bullet_points_section_header = models.CharField(max_length=50, blank=False, null=True)
-
-    bullet_points = StreamField(
-        [
-            ("home_bullet_point", blocks.HomeBulletPointBlock())
-        ],
-        use_json_field=True,
-        null=True,
-        blank=True
-    )
-
-    homepage_picture = models.ForeignKey(
-        "wagtailimages.Image",
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name="+"
-    )
-
-    project_description = RichTextField(features=["bold", "link"], null=True)
-
-    example_youtube_video_link = models.CharField(max_length=150, blank=True, null=True)
-
-    main_sponsor_picture = models.ForeignKey(
-        "wagtailimages.Image",
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-    )
-
-    main_sponsor_description = RichTextField(features=["bold", "link"], null=True)
-
-    sponsors = StreamField(
-        [
-            ("sponsor", blocks.HomeSponsorBlock())
-        ],
-        use_json_field=True,
-        null=True,
-        blank=True
-    )
-
-    acknowledgements = StreamField(
-        [
-            ("thanks_to", blocks.HomeAcknowledgementBlock())
-        ],
-        use_json_field=True,
-        null=True,
-        blank=True
-    )
-
-
-    content_panels = Page.content_panels + [
-        FieldPanel("title_section_header"),
-        FieldPanel("title_section_description"),
-        FieldPanel("bullet_points_section_header"),
-        FieldPanel("bullet_points"),
-        FieldPanel("homepage_picture"),
-        FieldPanel("sponsors"),
-        FieldPanel("acknowledgements"),
-        FieldPanel("project_description"),
-        FieldPanel("example_youtube_video_link"),
-        FieldPanel("main_sponsor_picture"),
-        FieldPanel("main_sponsor_description"),
-
-    ]
-
-    api_fields = [
-        APIField("title_section_header"),
-        APIField("title_section_description"),
-        APIField("bullet_points_section_header"),
-        APIField("bullet_points"),
-        APIField("homepage_picture"),
-        APIField("sponsors"),
-        APIField("acknowledgements"),
-        APIField("project_description"),
-        APIField("example_youtube_video_link"),
-        APIField("main_sponsor_picture"),
-        APIField("main_sponsor_description"),
-    ]
-
-    search_fields = Page.search_fields + [
-        index.SearchField('title_section_header', partial_match=True),
-        index.SearchField('title_section_description', partial_match=True),
-        index.SearchField('bullet_points_section_header', partial_match=True),
-        index.SearchField('project_description', partial_match=True),
-        index.SearchField('example_youtube_video_link', partial_match=True),
-        index.SearchField('main_sponsor_description', partial_match=True),
-    ]
-
-    subpage_types = ["home.NewsPage", "home.CompetitionsPage", "home.ContactsPage"]
-
-
-
-
-
-
+from .blocks import CompetitionPostSectionBlock
 
 class NewsPage(Page):
-    """News Page Model"""
-
-    template = "home/home.html"
-
-    page_title = models.CharField(max_length=50, blank=False, null=True)
-
-
-    content_panels = Page.content_panels + [
-        FieldPanel("page_title"),
-    ]
 
     api_fields = [
-        APIField("page_title"),
+        APIField("title"),
     ]
 
     search_fields = Page.search_fields + [
-        index.SearchField('page_title', partial_match=True),
+        index.SearchField('title', partial_match=True),
     ]
 
     subpage_types = ["home.NewsPost"]
 
-    def get_url_parts(self, request=None):
-        return self.get_parent().get_url_parts()
-
-
+    def serve(self, request, *args, **kwargs):
+        return redirect('/')
 
 
 class NewsPost(Page):
 
-
-    header = models.CharField(max_length=100, blank=False, null=False)
     text = RichTextField(features=["bold", "link", "italic"], null=True)
     picture = models.ForeignKey(
         "wagtailimages.Image",
@@ -160,66 +44,57 @@ class NewsPost(Page):
     )
 
     content_panels = Page.content_panels + [
-        FieldPanel("header"),
         FieldPanel("text"),
         FieldPanel("picture"),
     ]
 
     api_fields = [
-        APIField("header"),
+        APIField("title"),
         APIField("text"),
         APIField("picture"),
     ]
 
     search_fields = Page.search_fields + [
-        index.SearchField('header', partial_match=True),
+        index.SearchField('title', partial_match=True),
         index.SearchField('text', partial_match=True),
     ]
 
-    def get_url_parts(self, request=None):
-        return self.get_parent().get_url_parts()
+    def serve(self, request, *args, **kwargs):
+        return redirect('/')
 
 
 class CompetitionsPage(Page):
 
-    header = models.CharField(max_length=50, null=False, blank=False)
-
-    content_panels = Page.content_panels + [
-        FieldPanel("header"),
-    ]
-
     api_fields = [
-        APIField("header"),
+        APIField("title"),
     ]
 
     search_fields = Page.search_fields + [
-        index.SearchField('header', partial_match=True),
+        index.SearchField('title', partial_match=True),
     ]
 
-    subpage_types = ["home.Competition"]
+    subpage_types = ["home.CompetitionPost"]
 
-    def get_url_parts(self, request=None):
-        return self.get_parent().get_url_parts()
-
-
-class Competition(Page):
+    def serve(self, request, *args, **kwargs):
+        return redirect('/')
 
 
-    header = models.CharField(max_length=100, blank=False, null=False)
+class CompetitionPost(Page):
+
+    edition = models.CharField(max_length=100, blank=False, null=False)
     short_description = RichTextField(features=["bold", "link"], null=True)
     description = RichTextField(features=["bold", "link"], null=True)
-    event_date = models.DateTimeField(blank=True, null=True)
     place = models.CharField(max_length=100, blank=False, null=False)
-    place_maps_url = models.CharField(max_length=100, blank=True, null=True)
+    rules = RichTextField(features=["bold", "link", "italic", "ol", "ul"], null=True)
+    location = models.CharField(max_length=250, blank=True, null=True)
 
-    related_competition_id = models.IntegerField(blank=True, null=True)
-    related_competition_test = models.ForeignKey(
+    competition = models.OneToOneField(
         api_models.Competition,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='+',
-        verbose_name='api_competition'
+        verbose_name='competition',
+        related_name='competition_page'
     )
 
     picture = models.ForeignKey(
@@ -227,55 +102,84 @@ class Competition(Page):
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name="+"
+    )
+
+    sections = StreamField(
+        [
+            ("section", CompetitionPostSectionBlock())
+        ],
+        use_json_field=True,
+        null=True,
+        blank=True,
+    )
+
+    sponsors = StreamField(
+        [
+            ("sponsor", blocks.SponsorBlock()),
+        ],
+        use_json_field=True,
+        null=True,
+        blank=True
     )
 
     content_panels = Page.content_panels + [
-        FieldPanel("header"),
+        FieldPanel("edition"),
         FieldPanel("short_description"),
         FieldPanel("description"),
-        FieldPanel("event_date"),
+        FieldPanel("sections"),
         FieldPanel("place"),
-        FieldPanel("place_maps_url"),
+        LeafletPanel('location'),
         FieldPanel("picture"),
-        FieldPanel("related_competition_id"),
-        FieldPanel("related_competition_test"),
+        FieldPanel("competition"),
+        FieldPanel("rules"),
+        FieldPanel("sponsors"),
     ]
 
     api_fields = [
-        APIField("header"),
-        APIField("header"),
-        APIField("short_description"),
+        APIField("title"),
+        APIField("edition"),
         APIField("description"),
-        APIField("event_date"),
+        APIField("sections"),
         APIField("place"),
-        APIField("place_maps_url"),
+        APIField("latitude"),
+        APIField("longitude"),
         APIField("picture"),
-        APIField("related_competition_id"),
-        APIField("related_competition_test"),
+        APIField("competition", serializer=CompetitionSerializer(competition)),
+        APIField("rules"),
+        APIField("sponsors"),
     ]
 
     search_fields = Page.search_fields + [
-        index.SearchField('header', partial_match=True),
+        index.SearchField('title', partial_match=True),
+        index.SearchField('edition', partial_match=True),
         index.SearchField('short_description', partial_match=True),
         index.SearchField('description', partial_match=True),
-        index.SearchField('event_date'),
         index.SearchField('place', partial_match=True),
+        index.SearchField('rules', partial_match=True),
     ]
 
-    def get_url_parts(self, request=None):
-        return None, None, None, None
+    @property
+    def longitude(self):
+        try:
+            return float(self.location.split(" ")[0].split("(")[1])
+        except (AttributeError, IndexError):
+            return None
+
+    @property
+    def latitude(self):
+        try:
+            return float(self.location.split(" ")[1].split(")")[0])
+        except (AttributeError, IndexError):
+            return None
+
+    def serve(self, request, *args, **kwargs):
+        return redirect('/')
 
 
 class ContactsPage(Page):
-    """Contacts Page Model"""
 
-    # template = "home/home.html"
-
-    about_us = models.TextField(blank=False, null=True)
-    contacts = models.TextField(blank=False, null=True)
-    socials = models.TextField (blank=True, null=True)
-
+    about_us = models.CharField(blank=False, null=True, max_length=500)
+    inquiry_email = models.CharField(blank=False, null=True, max_length=100)
 
     our_team = StreamField(
         [
@@ -286,26 +190,182 @@ class ContactsPage(Page):
         use_json_field=True
     )
 
-
     content_panels = Page.content_panels + [
         FieldPanel("about_us"),
-        FieldPanel("contacts"),
-        FieldPanel("socials"),
+        FieldPanel("inquiry_email"),
         FieldPanel("our_team")
     ]
 
     api_fields = [
+        APIField("title"),
         APIField("about_us"),
-        APIField("contacts"),
-        APIField("socials"),
+        APIField("inquiry_email"),
         APIField("our_team")
     ]
 
     search_fields = Page.search_fields + [
+        index.SearchField('title', partial_match=True),
         index.SearchField('about_us', partial_match=True),
-        index.SearchField('contacts', partial_match=True),
-        index.SearchField('socials', partial_match=True),
+        index.SearchField('inquiry_email', partial_match=True),
     ]
 
-    def get_url_parts(self, request=None):
-        return None, None, None, None
+    def serve(self, request, *args, **kwargs):
+        return redirect('/')
+
+
+class ImprintPage(Page):
+
+    imprint = RichTextField(features=["bold", "link", "italic", "ol", "ul"], null=True)
+
+    content_panels = Page.content_panels + [
+        FieldPanel("imprint"),
+    ]
+
+    api_fields = [
+        APIField("imprint"),
+    ]
+
+    search_fields = Page.search_fields + [
+        index.SearchField('imprint', partial_match=True),
+    ]
+
+    def serve(self, request, *args, **kwargs):
+        return redirect('/')
+
+
+class TermsOfUsePage(Page):
+
+    terms_of_use = RichTextField(features=["bold", "link", "italic", "ol", "ul"], null=True)
+
+    content_panels = Page.content_panels + [
+        FieldPanel("terms_of_use"),
+    ]
+
+    api_fields = [
+        APIField("terms_of_use"),
+    ]
+
+    search_fields = Page.search_fields + [
+        index.SearchField('terms_of_use', partial_match=True),
+    ]
+
+    def serve(self, request, *args, **kwargs):
+        return redirect('/')
+
+
+class PrivacyPolicyPage(Page):
+
+    privacy_policy = RichTextField(features=["bold", "link", "italic", "ol", "ul"], null=True)
+
+    content_panels = Page.content_panels + [
+        FieldPanel("privacy_policy"),
+    ]
+
+    api_fields = [
+        APIField("privacy_policy"),
+    ]
+
+    search_fields = Page.search_fields + [
+        index.SearchField('privacy_policy', partial_match=True),
+    ]
+
+    def serve(self, request, *args, **kwargs):
+        return redirect('/')
+
+
+class HomePage(Page):
+    """Home Page Model"""
+
+    template = "home/home.html"
+    max_count = 1
+
+    competition = models.ForeignKey(
+        CompetitionPost,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='+',
+        verbose_name='competitionpost',
+    )
+
+    youtube_video_link = models.CharField(max_length=150, blank=True, null=True)
+
+    sponsors = StreamField(
+        [
+            ("sponsor", blocks.SponsorBlock()),
+        ],
+        use_json_field=True,
+        null=True,
+        blank=True
+    )
+
+    steps_to_participate = StreamField(
+        [
+            ("step_to_participate", blocks.StepToParticipateBlock()),
+        ],
+        use_json_field=True,
+        null=True,
+        blank=True
+    )
+
+    social_media_links = StreamField(
+        [
+            ("social_media_link", blocks.SocialMediaLinkBlock())
+        ],
+        use_json_field=True,
+        null=True,
+        blank=True
+    )
+
+    why_participate = StreamField(
+        [
+            ("reason", blocks.ReasonBlock()),
+        ],
+        use_json_field=True,
+        null=True,
+        blank=True
+    )
+
+    slogan = RichTextField(features=["italic"], null=False)
+    what_is_it_content = models.CharField(max_length=500, blank=False, null=True)
+
+    title_background_image = models.ForeignKey(
+        'wagtailimages.Image',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='+',
+        verbose_name="Title Background Image"
+    )
+
+    content_panels = Page.content_panels + [
+        FieldPanel("youtube_video_link"),
+        FieldPanel("sponsors"),
+        FieldPanel("competition"),
+        FieldPanel("steps_to_participate"),
+        FieldPanel("why_participate"),
+        FieldPanel("slogan"),
+        FieldPanel("what_is_it_content"),
+        FieldPanel("title_background_image"),
+        FieldPanel("social_media_links"),
+    ]
+
+    api_fields = [
+        APIField("sponsors"),
+        APIField("youtube_video_link"),
+        APIField("competition"),
+        APIField("steps_to_participate"),
+        APIField("why_participate"),
+        APIField("slogan"),
+        APIField("what_is_it_content"),
+        APIField("title_background_image"),
+        APIField("social_media_links"),
+    ]
+
+    search_fields = Page.search_fields + [
+        index.SearchField('slogan', partial_match=True),
+        index.SearchField('what_is_it_content', partial_match=True),
+        index.SearchField('why_participate', partial_match=True),
+    ]
+
+    subpage_types = ["home.NewsPage", "home.CompetitionsPage", "home.ContactsPage", "home.ImprintPage", "home.TermsOfUsePage"]

@@ -1,40 +1,145 @@
+from pprint import pprint
+
+from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import Serializer, ModelSerializer
 
-from .models import User, Competition, EmailVerificationToken, ForgotPasswordToken, IntegralsSeries, Integral, IntegralSolution
+from .models import User, Competition, EmailVerificationToken, ForgotPasswordToken, UserToCompetitionRelationship, \
+    Round, Match
+from rest_framework import serializers
+from .models import User
 
 
-class UserSerializer(ModelSerializer):
+from wagtail.users.models import UserProfile as WagtailUserProfile
+
+
+class CompetitionUserSerializer(serializers.ModelSerializer):
+    status = serializers.SerializerMethodField()
+    page_id = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Competition
+        fields = ['id', 'name', 'event_date_start', 'event_date_end', 'status', 'page_id']
+
+    def get_status(self, obj):
+        user = self.context['user']
+        try:
+            relationship = UserToCompetitionRelationship.objects.get(user=user, competition=obj)
+            return relationship.get_status_display()
+        except UserToCompetitionRelationship.DoesNotExist:
+            return None
+
+    def get_page_id(self, obj):
+        return obj.competition_page.id if hasattr(obj, 'competition_page') else None
+
+
+class UserSerializer(serializers.ModelSerializer):
+    profile_picture = serializers.ImageField(required=False, allow_null=True)
+    competitions = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ["email", "first_name", "second_name", "school", "profile_picture", "date_joined", "is_admin", "role", "gender", "studies_profile", "email_verified", "degree_of_studies", "semester_of_studies", "password"]
+        fields = [
+            "email",
+            "first_name",
+            "last_name",
+            "institution",
+            "phone_number",
+            "is_verified",
+            "is_superuser",
+            "password",
+            "program_of_study",
+            "profile_picture",
+            "competitions",
+        ]
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'is_verified': {'read_only': True},
+            'is_superuser': {'read_only': True},
+        }
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        try:
+            profile = instance.wagtail_userprofile
+            if profile.avatar:
+                request = self.context.get('request', None)
+                avatar_url = profile.avatar.url
+                if request is not None:
+                    avatar_url = request.build_absolute_uri(avatar_url)
+                ret['profile_picture'] = avatar_url
+            else:
+                ret['profile_picture'] = None
+        except WagtailUserProfile.DoesNotExist:
+            ret['profile_picture'] = None
+
+        # Add competitions data
+        ret['competitions'] = self.get_competitions(instance)
+
+        return ret
+
+    def get_competitions(self, obj):
+        relationships = UserToCompetitionRelationship.objects.filter(user=obj)
+        competitions = [relationship.competition for relationship in relationships]
+        serializer = CompetitionUserSerializer(competitions, many=True, context={'user': obj})
+        return serializer.data
 
     def create(self, validated_data):
-
-        if validated_data['first_name'] == 'Eva' and validated_data['second_name'] == 'Luo':
-            validated_data['first_name'] = 'Bitch'
-            validated_data['second_name'] = 'Bitch'
-
-
+        profile_picture = validated_data.pop('profile_picture', None)
         user = User.objects.create(
             email=validated_data["email"],
             username=validated_data["email"],
             first_name=validated_data["first_name"],
-            second_name=validated_data["second_name"],
-            school=validated_data["school"],
-            role=User.USER
+            last_name=validated_data["last_name"],
+            institution=validated_data.get("institution", ""),
         )
         user.set_password(validated_data["password"])
         user.save()
+
+        if profile_picture:
+            profile, created = WagtailUserProfile.objects.get_or_create(user=user)
+            profile.avatar = profile_picture
+            profile.save()
         return user
 
+    def update(self, instance, validated_data):
+        profile_picture = validated_data.pop('profile_picture', None)
 
-class CompetitionSerializer(ModelSerializer):
-    participants = UserSerializer(read_only=True, many=True)
+        instance.institution = validated_data.get("institution", instance.institution)
+        instance.phone_number = validated_data.get("phone_number", instance.phone_number)
+        instance.program_of_study = validated_data.get("program_of_study", instance.program_of_study)
+        instance.first_name = validated_data.get("first_name", instance.first_name)
+        instance.last_name = validated_data.get("last_name", instance.last_name)
+        instance.save()
 
+        profile, created = WagtailUserProfile.objects.get_or_create(user=instance)
+        if profile_picture is not None:
+            profile.avatar = profile_picture
+            profile.save()
+        return instance
+
+
+class UserToCompetitionRelationshipSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Competition
-        fields = ('id', 'name', 'participants', 'max_participants')
+        model = UserToCompetitionRelationship
+        fields = [
+            'emergency_phone_number', 'name_pronunciation', 'additional_info'
+        ]
+
+    def create(self, validated_data):
+        user = self.context['user']
+        competition = self.context['competition']
+        validated_data['user'] = user
+        validated_data['competition'] = competition
+        validated_data['status'] = 'PENDING_REQUEST'
+
+        relationship, created = UserToCompetitionRelationship.objects.get_or_create(
+            user=user,
+            competition=competition,
+            defaults=validated_data
+        )
+        if not created:
+            raise serializers.ValidationError('User is already registered for this competition.')
+        return relationship
 
 
 class EmailVerificationTokenSerializer(ModelSerializer):
@@ -43,6 +148,7 @@ class EmailVerificationTokenSerializer(ModelSerializer):
         model = EmailVerificationToken
         fields = ("User", "token", "date_created")
 
+
 class ForgotPasswordTokenSerializer(ModelSerializer):
     User = UserSerializer(read_only=True, many=False)
     class Meta:
@@ -50,36 +156,89 @@ class ForgotPasswordTokenSerializer(ModelSerializer):
         fields = ("User", "token", "date_created")
 
 
-
-
-
-class IntegralSolutionSerializer(ModelSerializer):
-    class Meta:
-        model = IntegralSolution
-        fields = '__all__'
-
-
-class IntegralSerializer(ModelSerializer):
-    solution = IntegralSolutionSerializer(read_only=True)
+class MatchSerializer(ModelSerializer):
+    player1 = serializers.SerializerMethodField()
+    player2 = serializers.SerializerMethodField()
+    match_winner = serializers.SerializerMethodField()
 
     class Meta:
-        model = Integral
-        fields = '__all__'
+        model = Match
+        fields = ['id', 'player1', 'player2', 'match_winner', 'sort_order']
 
-    def create(self, validated_data):
-        solution_data = validated_data.pop('solution', None)
-        integral = Integral.objects.create(**validated_data)
-        if solution_data:
-            solution = IntegralSolution.objects.create(**solution_data)
-            integral.solution = solution
-            integral.save()
-        return integral
+    @staticmethod
+    def get_player1(obj):
+        if obj.player1:
+            return f"{obj.player1.first_name.title()[:1]}. {obj.player1.last_name.title()}."
+        return None
+
+    @staticmethod
+    def get_player2(obj):
+        if obj.player2:
+            return f"{obj.player2.first_name.title()[:1]}. {obj.player2.last_name.title()}."
+        return None
+
+    def get_match_winner(self, obj):
+        if obj.match_winner == "player1":
+            return self.get_player1(obj)
+
+        if obj.match_winner == "player2":
+            return self.get_player2(obj)
+
+        return None
 
 
-class IntegralSeriesSerializer(ModelSerializer):
-    integrals = IntegralSerializer(many=True, read_only=True)
+class RoundSerializer(ModelSerializer):
+    matches = serializers.SerializerMethodField()
 
     class Meta:
-        model = IntegralsSeries
-        fields = '__all__'
+        model = Round
+        fields = ['id', 'name', 'matches']
 
+    @staticmethod
+    def get_matches(obj):
+        matches = obj.matches.all().order_by('sort_order')
+        return MatchSerializer(matches, many=True).data
+
+
+class CompetitionSerializer(ModelSerializer):
+    rounds = RoundSerializer(many=True, read_only=True)
+    users_count = SerializerMethodField()
+
+    class Meta:
+        model = Competition
+        fields = ['id', 'name', 'max_participants', 'event_date_start', 'event_date_end', 'rounds', 'close_registration', 'users_count']
+
+    def get_users_count(self, obj):
+        return obj.participants_relationships.count()
+
+
+class CompetitionListSerializer(ModelSerializer):
+    class Meta:
+        model = Competition
+        fields = ['event_date_start', 'event_date_end', 'close_registration']
+
+
+class LocationSerializer(serializers.ModelSerializer):
+    # Define fields for latitude and longitude
+    latitude = serializers.SerializerMethodField()
+    longitude = serializers.SerializerMethodField()
+
+    class Meta:
+        fields = [
+            "latitude",
+            "longitude",
+        ]
+
+    def get_latitude(self, obj):
+        # Split the location string by comma and return the latitude part
+        try:
+            return obj.location.split(",")[0].strip()
+        except (AttributeError, IndexError):
+            return None
+
+    def get_longitude(self, obj):
+        # Split the location string by comma and return the longitude part
+        try:
+            return obj.location.split(",")[1].strip()
+        except (AttributeError, IndexError):
+            return None

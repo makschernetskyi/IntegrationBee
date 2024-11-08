@@ -1,25 +1,27 @@
 from django.conf import settings
 from django.urls import include, path, re_path
 from django.contrib import admin
+from django.views.generic import TemplateView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
+
 
 from search import views as search_views
 
 from .api import api_router
 
 
-
 urlpatterns = [
     path('api/v2/cms/', api_router.urls),
-    path("django-admin/", admin.site.urls),
-    path("cms/", include(wagtailadmin_urls)),
+    path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
     path("api/v2/", include("api.urls")),
-    re_path(r'^admin_page/', include("admin_panel.urls")),
+    path("api/v2/cms/", include("home.urls")),
+    re_path(r'^(?!api/v2/|cms/|documents/|search/|django-admin/|media).*$', TemplateView.as_view(template_name="home/home.html")),
     re_path(r'^', include(wagtail_urls))
 ]
 

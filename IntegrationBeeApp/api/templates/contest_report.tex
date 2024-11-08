@@ -1,0 +1,39 @@
+\documentclass{article}
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{enumitem} % Required for customizing lists
+\usepackage{titlesec} % Required for custom section formatting
+\geometry{a4paper, margin=1in}
+
+% Redefine the standard \hrule to extend to the desired width and thickness
+\renewcommand{\hrulefill}{\leavevmode\leaders\hrule height 0.5pt depth 0pt \hfill\kern 0pt}
+
+% Redefine \rule to extend with custom width and thickness
+\renewcommand{\rule}[2]{\leavevmode\leaders\hrule height #2 \hfill \kern 0pt}
+
+% Customize itemize to remove bullets and indentation
+\setlist[itemize]{label={},left=0pt}
+
+% Tighten the list spacing without causing errors
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+% Customize section heading sizes
+\titleformat{\section}
+  {\normalfont\LARGE\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}
+  {\normalfont\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+  {\normalfont\large\bfseries}{\thesubsubsection}{1em}{}
+
+\begin{document}
+
+\title{Contest Report: \textbf{ {{ name }} }}
+\author{Integration Bee}
+\date{ {{ date }} }
+\maketitle
+
+% Insert dynamic body content here
+{{ body }}
+
+\end{document}

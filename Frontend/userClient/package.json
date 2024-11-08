@@ -1,0 +1,44 @@
+{
+  "name": "userclient",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build:prod": "vue-tsc -b && vite build --mode production",
+    "build:dev": "vue-tsc -b && vite build --mode development",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@types/aos": "^3.0.7",
+    "@types/dompurify": "^3.0.5",
+    "@types/js-cookie": "^3.0.6",
+    "@types/node": "^22.9.0",
+    "@types/videojs": "^5.16.2",
+    "@vue-leaflet/vue-leaflet": "^0.10.1",
+    "@yeger/vue-masonry-wall": "^5.0.16",
+    "aos": "^2.3.4",
+    "axios": "^1.7.7",
+    "dompurify": "^3.1.7",
+    "js-cookie": "^3.0.5",
+    "leaflet": "^1.9.4",
+    "lingua-recorder": "^2.2.1",
+    "pinia": "^2.2.3",
+    "postcss-nested": "^6.2.0",
+    "video.js": "^8.17.4",
+    "videojs-youtube": "^3.0.1",
+    "vue": "^3.4.37",
+    "vue-router": "4",
+    "yarn": "^1.22.22"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.1.2",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.11",
+    "typescript": "^5.5.3",
+    "vite": "^5.4.1",
+    "vue-tsc": "^2.0.29"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+}

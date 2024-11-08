@@ -1,0 +1,79 @@
+/* importing Google fonts*/
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+/* setting up tailwind*/
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* general css set up*/
+*{
+  box-sizing: border-box;
+}
+
+html{
+  font-size: 10px;
+}
+
+html, body, #app{
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+  font-size: 10px;
+}
+
+::-moz-selection { /* Code for Firefox */
+  background: rgba(251, 193, 81 1);
+  color: white;
+}
+
+::selection {
+  background: rgba(251, 193, 81, 1);
+  color: white;
+}
+
+
+::-webkit-scrollbar {
+	width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+	background: #242424;
+	border-top: 0;
+}
+
+body::-webkit-scrollbar-track {
+	border-top: 3.5px solid #242424;
+}
+
+body::-webkit-scrollbar {
+	width: 12px;
+}
+
+body::-webkit-scrollbar-thumb {
+	border-radius: 4px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: rgba(251, 193, 81, 1);
+	cursor: pointer;
+  border-radius: 100px;
+}
+
+/* firefox */
+@-moz-document url-prefix() {
+	* {
+		scrollbar-width: thin;
+		scrollbar-color: rgba(251, 193, 81, 1) #242424;
+	}
+
+	html,
+	body {
+		scrollbar-width: auto;
+	}
+}
+

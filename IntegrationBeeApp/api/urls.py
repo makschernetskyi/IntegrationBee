@@ -1,28 +1,25 @@
-
 from django.urls import path
-
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
 
-from .views import RegisterView, UserDataView, CompetitionView, CompetitionsView, PublicCompetitionView, UsersView, \
-    VerifyEmailView, AllIntegralSeriesView, IntegralSeriesView, IntegralView, IntegralSolutionView
+from .views import RegisterView, UserDataView, CompetitionView, VerifyEmailView, DownloadLatexPdfReportView, \
+    DownloadLatexTexReportView, DownloadParticipantsCsvView, GenerateBracketView, UpdateUserView, \
+    PasswordResetConfirmView, RequestPasswordResetView
 
 urlpatterns = [
     path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('register/', RegisterView.as_view(), name="sign_up"),
+    path('request-password-reset/', RequestPasswordResetView.as_view(), name='request_password_reset'),
+    path('reset-password-confirm/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('userData/', UserDataView.as_view(), name="user_data"),
-    path('competition/', CompetitionView.as_view(), name="competition"),
-    path('publicCompetition/', PublicCompetitionView.as_view(), name="public_competition"),
-    path('allCompetitions/', CompetitionsView.as_view(), name="all_competitions"),
-    path('allUsers/', UsersView.as_view(), name="all_users"),
+    path('competition/<int:pk>/', CompetitionView.as_view(), name='competition_detail'),
     path('verifyemail/', VerifyEmailView.as_view(), name="verify_email"),
-    path('integralSeriesList/', AllIntegralSeriesView.as_view(), name="integral_series_list"),
-    path('integralSeries/', IntegralSeriesView.as_view(), name='integral_series_no_pk'),
-    path('integralSeries/<int:pk>/', IntegralSeriesView.as_view(), name="integral_series"),
-    path('integral/', IntegralView.as_view(), name="integral"),
-    path('integral/<int:pk>/', IntegralView.as_view(), name="integral"),
-    path('integralSolution/<int:pk>/', IntegralSolutionView.as_view(), name="integral_solution"),
+    path('contestReport/<int:pk>/download_pdf/', DownloadLatexPdfReportView.as_view(), name='download_pdf'),
+    path('contestReport/<int:pk>/download_tex/', DownloadLatexTexReportView.as_view(), name='download_tex'),
+    path('participantsReport/<int:pk>/download_csv/', DownloadParticipantsCsvView.as_view(), name='download_csv'),
+    path('contestBracket/<int:pk>/generate/', GenerateBracketView.as_view(), name='generate_bracket'),
+    path('updateUser/', UpdateUserView.as_view(), name="update_user"),
 ]
