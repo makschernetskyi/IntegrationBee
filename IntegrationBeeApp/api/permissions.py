@@ -13,21 +13,6 @@ from rest_framework.authentication import TokenAuthentication
 from wagtail.admin.models import Admin
 
 
-class IsPublishedCompetitionPost(BasePermission):
-    """
-    Custom permission to only allow access to competitions with published CompetitionPost entries.
-    """
-
-    def has_permission(self, request, view):
-        return request.method == 'GET'
-
-    def has_object_permission(self, request, view, obj):
-        is_live = CompetitionPost.objects.filter(
-            competition=obj, live=True
-        ).exists()
-        return is_live
-
-
 @hooks.register('register_permissions')
 def register_my_custom_permissions():
     content_type = ContentType.objects.get_for_model(Competition)
