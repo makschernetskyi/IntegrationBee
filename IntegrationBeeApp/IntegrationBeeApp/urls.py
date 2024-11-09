@@ -2,6 +2,7 @@ from django.conf import settings
 from django.urls import include, path, re_path
 from django.contrib import admin
 from django.views.generic import TemplateView
+from django.views.static import serve
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from wagtail.admin import urls as wagtailadmin_urls
@@ -13,6 +14,14 @@ from search import views as search_views
 
 from .api import api_router
 
+from django.contrib.sitemaps.views import sitemap
+from .sitemaps import VueStaticSitemap
+
+
+sitemaps = {
+    'vue': VueStaticSitemap,
+}
+
 
 urlpatterns = [
     path('api/v2/cms/', api_router.urls),
@@ -21,7 +30,15 @@ urlpatterns = [
     path("search/", search_views.search, name="search"),
     path("api/v2/", include("api.urls")),
     path("api/v2/cms/", include("home.urls")),
-    re_path(r'^(?!api/v2/|cms/|documents/|search/|django-admin/|media).*$', TemplateView.as_view(template_name="home/home.html")),
+
+    re_path(r'^robots\.txt$', serve, {'path': 'robots.txt', 'document_root': settings.BASE_DIR}),
+
+    # Automatically generated sitemap
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='sitemap'),
+
+    # Catch-all route for the main Vue app
+    re_path(r'^(?!api/v2/|cms/|documents/|search/|django-admin/|media|robots\.txt|sitemap\.xml).*$',
+            TemplateView.as_view(template_name="home/home.html")),
     re_path(r'^', include(wagtail_urls))
 ]
 
