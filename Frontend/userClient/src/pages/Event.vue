@@ -100,7 +100,7 @@ const closeParticipationForm = () =>{
 				
 			</section>
 			<!--sponsors-->
-			<section class="w-full h-max bg-screenBlack overflow-x-hidden">
+			<section :class="{'w-full h-max bg-screenBlack overflow-x-hidden':true, '[clip-path:polygon(0_5rem,100%_0,100%_100%,0%_100%)] pt-[5rem]': !(store.silverSponsors.length || store.bronzeSponsors.length || store.mainSponsorExists || store.mainSponsorExists)}">
 					<div class="w-full h-max relative flex justify-center items-center py-[10rem] bg-pearl-white">
 						<div class="relative h-[10rem] w-full flex justify-center items-center">
 							<!--TODO: change svg so vors on mobile-->
