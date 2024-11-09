@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /myProfile
+Disallow: /sign_up
+Disallow: /sign_in
+Disallow: /reset_password
+Disallow: /admin
+
+Sitemap: https://integrationbee.at/sitemap.xml
