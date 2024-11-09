@@ -2,7 +2,6 @@ from django.conf import settings
 from django.urls import include, path, re_path
 from django.contrib import admin
 from django.views.generic import TemplateView
-from django.views.static import serve
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from wagtail.admin import urls as wagtailadmin_urls
@@ -31,7 +30,7 @@ urlpatterns = [
     path("api/v2/", include("api.urls")),
     path("api/v2/cms/", include("home.urls")),
 
-    re_path(r'^robots\.txt$', serve, {'path': 'robots.txt', 'document_root': settings.BASE_DIR}),
+    path("robots.txt",TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
 
     # Automatically generated sitemap
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='sitemap'),
