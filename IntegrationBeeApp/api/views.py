@@ -183,10 +183,13 @@ class UpdateUserView(APIView):
 
                 image_data = base64.b64decode(imgstr)
                 wagtail_profile = user.wagtail_userprofile
-                avatar = wagtail_profile.avatar
-                avatar.save("profile_picture.png", ContentFile(image_data), save=False)
+                # Directly save to wagtail_profile.avatar
+                wagtail_profile.avatar.save(
+                    "profile_picture.png",
+                    ContentFile(image_data),
+                    save=False
+                )
                 wagtail_profile.save()
-                user.save()
 
             except Exception as e:
                 return Response({"error": "Invalid image data"}, status=status.HTTP_400_BAD_REQUEST)
