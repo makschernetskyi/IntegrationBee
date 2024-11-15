@@ -13,6 +13,7 @@ import MasonryWall from '@yeger/vue-masonry-wall'
 
 
 
+
 //set up pinia store manager
 const pinia = createPinia();
 const app = createApp(App)

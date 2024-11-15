@@ -11,7 +11,7 @@
 	};
 </script>
 <template>
-	<div class="aspect-square flex flex-col justify-between cursor-pointer" @click="handleClick">
+	<div class="flex flex-col justify-between cursor-pointer" @click="handleClick">
 		<div
 			class="h-[15%] w-full bg-primary rounded-sm transition-all origin-left duration-1000"
 			:class="{

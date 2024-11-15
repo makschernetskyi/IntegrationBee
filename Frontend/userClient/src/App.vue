@@ -72,6 +72,7 @@ function endMenuAction(){
 				:should-menu-be-visible="shouldMobileMenuBeVisible"
 				@end-action="endMenuAction"
 				@close-menu="toggleShouldMenuBeVisible"
+				:is-menu-visible="isMobileMenuVisible"
 			/>
 		</transition>
 		<CookieBanner/>

@@ -11,6 +11,7 @@ export const useSignUpPageStore = defineStore('signUpPageStore', {
 		lastName: '',
 		institution: '',
 		password: '',
+		isTermsAccepted: false,
 		loading: false,
 		errors: {} as Record<string, string>,
 	}),
@@ -20,6 +21,10 @@ export const useSignUpPageStore = defineStore('signUpPageStore', {
 		// Validate form fields
 		validateForm() {
 			this.errors = {};
+
+			if(!this.isTermsAccepted){
+				this.errors.isTermsAccepted = 'This field is required'
+			}
 
 			// Email validation
 			if (!this.email.trim()) {

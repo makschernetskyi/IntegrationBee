@@ -6,11 +6,12 @@ import { useSignUpPageStore } from '@/stores/signUpPageStore/signUpPageStore';
 import {ref} from "vue";
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
+import CheckBox from '@/components/CheckBox.vue';
 
 const testInputModel = ref('')
 
 const store = useSignUpPageStore()
-const {email, password, firstName, lastName, institution, errors} = storeToRefs(store)
+const {email, password, firstName, lastName, institution, isTermsAccepted, errors} = storeToRefs(store)
 
 
 const router = useRouter();
@@ -62,6 +63,13 @@ const handleSubmit = async (e:any) =>{
 					<div class="flex flex-col w-full">
 						<FormInput v-model="password" class="w-full" type="password" label="Password" name="password" :invalid="Boolean(errors.password)"/>
 						<div v-if="errors.password" class="text-text-sm font-body text-red pl-[0rem]">{{errors.password}}</div>
+					</div>
+					<div class="flex flex-col w-full gap-[1rem] py-[2rem]">
+						<div class="flex items-center justify-center gap-[2rem]">
+							<CheckBox v-model="isTermsAccepted"/>
+							<p :class="`${errors.isTermsAccepted? 'text-red': 'text-screenBlack'}`">I accept <RouterLink to="/terms_of_use" class="underline lg:hover:text-primary lg:transition-colors">Terms of use</RouterLink></p>
+						</div>
+						<div v-if="errors.isTermsAccepted" class="text-text-sm font-body text-center text-red pl-[0rem]">{{errors.isTermsAccepted}}</div>
 					</div>
 					<div class="w-full flex justify-center mt-[4rem]">
 						<button 
