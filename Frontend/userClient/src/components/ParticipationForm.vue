@@ -67,7 +67,7 @@ const handleSubmit = async (e: any) =>{
 					<div v-if="errors.studyProgram" class="text-text-sm font-body text-red pl-[0rem]">{{errors.studyProgram}}</div>
 				</div>
 				<div class="flex flex-col">
-					<VoiceInput v-model="namePronunciation" label="Name pronunciation" :invalid="Boolean(errors.namePronunciation)"/>
+					<VoiceInput v-model="namePronunciation" label="Name pronunciation*" :invalid="Boolean(errors.namePronunciation)"/>
 					<div v-if="errors.namePronunciation" class="text-text-sm font-body text-red pl-[0rem]">{{errors.namePronunciation}}</div>
 				</div>
 				<h5 class="font-heading pl-[2rem] mt-[5rem]">

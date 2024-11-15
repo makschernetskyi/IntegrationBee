@@ -15,17 +15,18 @@ import CookieBanner from "./components/CookieBanner.vue";
 
 const isLoading = ref(true)
 
-onBeforeMount(()=>{
-	Promise.all([
-		useHomePageStore().fetchHomePageData(),
-		useNewsPageStore().fetchNewsPage(),
-		useContactPageStore().fetchContactData(),
-		useEventsPageStore().fetchTitle(),
-	]).finally(()=>{
-		isLoading.value = false
-	})
+// onBeforeMount(()=>{
+// 	Promise.all([
+// 		useHomePageStore().fetchHomePageData(),
+// 		useNewsPageStore().fetchNewsPage(),
+// 		useContactPageStore().fetchContactData(),
+// 		useEventsPageStore().fetchTitle(),
+// 	]).finally(()=>{
+// 		isLoading.value = false
+// 	})
 
-})
+// })
+isLoading.value = false
 
 
 
@@ -72,6 +73,7 @@ function endMenuAction(){
 				:should-menu-be-visible="shouldMobileMenuBeVisible"
 				@end-action="endMenuAction"
 				@close-menu="toggleShouldMenuBeVisible"
+				:is-menu-visible="isMobileMenuVisible"
 			/>
 		</transition>
 		<CookieBanner/>

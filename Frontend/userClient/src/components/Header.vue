@@ -34,8 +34,8 @@ const handleLogout = async () => {
 				
 				<!-- mobile-only menu button-->
 				 <teleport to='body'>
-					<div class="fixed left-[1rem] top-[0.5rem] h-[5rem] lg:hidden flex z-[500] p-[1rem]">
-						<MenuButton :is-menu-visible="isMenuVisible" @toggle-menu-visibility="emit('switchMenuVisibility')"/>
+					<div class="fixed left-[1rem] top-[0.5rem] h-[5rem] w-[5rem] lg:hidden flex z-[500] p-[1rem]">
+						<MenuButton :is-menu-visible="isMenuVisible" @toggle-menu-visibility="emit('switchMenuVisibility')" class="h-[3rem] w-[3rem]"/>
 					</div>
 				</teleport>
 				
