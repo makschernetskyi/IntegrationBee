@@ -9,6 +9,7 @@ import { useNewsPageStore } from "./stores/newsPageStore/newsPageStore";
 import { useContactPageStore } from "./stores/contactPageStore/contactPageStore";
 import { useEventsPageStore } from "./stores/eventsPageStore/eventsPageStore";
 import LoadingScreen from "./components/LoadingScreen.vue";
+import CookieBanner from "./components/CookieBanner.vue";
 
 
 
@@ -73,8 +74,8 @@ function endMenuAction(){
 				@close-menu="toggleShouldMenuBeVisible"
 			/>
 		</transition>
+		<CookieBanner/>
 	</teleport>
-
 	<Toast/>
 
 </template>

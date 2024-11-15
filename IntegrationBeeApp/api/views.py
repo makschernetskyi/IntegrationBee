@@ -32,6 +32,8 @@ from django.utils import timezone
 from datetime import timedelta
 from .models import PasswordResetToken
 
+from wagtail.users.models import UserProfile as WagtailUserProfile
+
 
 class PasswordResetConfirmView(APIView):
 
@@ -100,6 +102,8 @@ class RegisterView(APIView):
             serializer.is_valid(raise_exception=True)
             user = serializer.save()
 
+            WagtailUserProfile.objects.create(user=user)
+
             verification_token = str(uuid4())
 
             EmailVerificationToken.objects.create(
@@ -150,7 +154,7 @@ class VerifyEmailView(APIView):
             return Response({"error": "Database integrity error during user activation."},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        redirect_url = 'https://integrationbee.at/#/signIn?emailVerified=true'
+        redirect_url = 'https://integrationbee.at/sign_in?emailVerified=true'
         return redirect(redirect_url)
 
 
@@ -182,7 +186,7 @@ class UpdateUserView(APIView):
                 format_str, imgstr = data['profile_picture'].split(';base64,')
 
                 image_data = base64.b64decode(imgstr)
-                wagtail_profile = user.wagtail_userprofile
+                wagtail_profile, created = WagtailUserProfile.objects.get_or_create(user=user)
                 # Directly save to wagtail_profile.avatar
                 wagtail_profile.avatar.save(
                     "profile_picture.png",
@@ -192,6 +196,7 @@ class UpdateUserView(APIView):
                 wagtail_profile.save()
 
             except Exception as e:
+                print(e)
                 return Response({"error": "Invalid image data"}, status=status.HTTP_400_BAD_REQUEST)
 
         user.save()

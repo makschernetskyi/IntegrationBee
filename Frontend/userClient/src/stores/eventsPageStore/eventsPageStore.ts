@@ -1,7 +1,7 @@
 import { noAuthApi } from '@/api';
 import { defineStore } from 'pinia';
 import { useToastStore } from '../toastStore/toastStore';
-import { formatDateToLocal } from '@/utils/formatDateToLocal';
+import { formatDateToUTC } from '@/utils/formatDateToUTC';
 
 
 export interface Event {
@@ -79,7 +79,7 @@ export const useEventsPageStore = defineStore('eventsPageStore', {
           name: item.title,
           edition: item.edition,
           location: item.place,
-          date: formatDateToLocal(item.competition.event_date_start),
+          date: formatDateToUTC(item.competition.event_date_start),
           pictureSrc: item.picture?.meta.download_url,
           status: getStatus(item.competition.event_date_start, item.competition.event_date_end)
         }));

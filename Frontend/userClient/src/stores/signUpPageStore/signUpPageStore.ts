@@ -23,31 +23,31 @@ export const useSignUpPageStore = defineStore('signUpPageStore', {
 
 			// Email validation
 			if (!this.email.trim()) {
-			this.errors.email = 'Email is required.';
+				this.errors.email = 'Email is required.';
 			} else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email)) {
-			this.errors.email = 'Invalid email address.';
+				this.errors.email = 'Invalid email address.';
 			}
 
 			// First Name validation
 			if (!this.firstName.trim()) {
-			this.errors.firstName = 'First Name is required.';
+				this.errors.firstName = 'First Name is required.';
 			}
 
 			// Last Name validation
 			if (!this.lastName.trim()) {
-			this.errors.lastName = 'Last Name is required.';
+				this.errors.lastName = 'Last Name is required.';
 			}
 
-			// Institution validation
-			if (!this.institution.trim()) {
-			this.errors.institution = 'Institution is required.';
-			}
+			// // Institution validation
+			// if (!this.institution.trim()) {
+			// this.errors.institution = 'Institution is required.';
+			// }
 
 			// Password validation
 			if (!this.password.trim()) {
-			this.errors.password = 'Password is required.';
+				this.errors.password = 'Password is required.';
 			} else if (this.password.length < 8) {
-			this.errors.password = 'Password must be at least 8 characters long.';
+				this.errors.password = 'Password must be at least 8 characters long.';
 			}
 
 			// Return true if no errors
@@ -61,7 +61,8 @@ export const useSignUpPageStore = defineStore('signUpPageStore', {
 					last_name: this.lastName,
 					school: this.institution,
 					email: this.email,
-					password: this.password
+					password: this.password,
+					...(this.institution ? {institution: this.institution} : {})
 				})
 
 				useToastStore().addToast({

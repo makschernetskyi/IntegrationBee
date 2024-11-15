@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import { useToastStore } from '../toastStore/toastStore';
 import { noAuthApi } from '@/api';
-import { formatDateToLocal } from '@/utils/formatDateToLocal';
+import { formatDateToUTC } from '@/utils/formatDateToUTC';
 import { sanitizeHtml } from '@/utils/htmlSanitizers';
 
 export interface Comment {
@@ -67,7 +67,7 @@ export const useNewsPageStore = defineStore('newsPageStore', {
           title: newsItem.title,
           content: newsItem.text,
           pictureSrc: newsItem.picture?.meta.download_url,
-          date: formatDateToLocal(newsItem.meta.first_published_at)
+          date: formatDateToUTC(newsItem.meta.first_published_at)
         }))
         
 

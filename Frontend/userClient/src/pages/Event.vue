@@ -46,7 +46,7 @@ const showParticipationForm = () =>{
 	}
 }
 const closeParticipationForm = () =>{
-	const confirmResponse = !isAuthenticated || confirm("Are you sure you want to leave this form? All entered data will be lost")
+	const confirmResponse = !isAuthenticated.value || confirm("Are you sure you want to leave this form? All entered data will be lost")
 	if(confirmResponse){
 		isParticipationFormShown.value = false
 		window.onbeforeunload = null
@@ -100,8 +100,8 @@ const closeParticipationForm = () =>{
 				
 			</section>
 			<!--sponsors-->
-			<section :class="{'w-full h-max bg-screenBlack overflow-x-hidden':true, '[clip-path:polygon(0_5rem,100%_0,100%_100%,0%_100%)] pt-[5rem]': !(store.silverSponsors.length || store.bronzeSponsors.length || store.mainSponsorExists || store.mainSponsorExists)}">
-					<div class="w-full h-max relative flex justify-center items-center py-[10rem] bg-pearl-white">
+			<section class="w-full h-max bg-screenBlack overflow-x-hidden">
+					<div :class="`w-full h-max relative flex justify-center items-center bg-pearl-white ${!(store.silverSponsors.length || store.bronzeSponsors.length || store.mainSponsorExists || store.mainSponsorExists) ? '[clip-path:polygon(0_0,100%_0,100%_calc(100%-5rem),0_100%)] pt-[10rem] pb-[15rem]' : 'py-[10rem]'}`">
 						<div class="relative h-[10rem] w-full flex justify-center items-center">
 							<!--TODO: change svg so vors on mobile-->
 							<div class="w-full absolute top-[2rem] left-0 hidden lg:flex">
@@ -147,6 +147,7 @@ const closeParticipationForm = () =>{
 								</h3>
 							</div>
 						</div>
+						<div v-else class="w-full h-[5rem]"/>
 						<div class="px-[2rem] lg:px-[12rem] xl:px-[10vw]">
 							<div class="flex flex-row justify-center lg:justify-between flex-wrap ">
 								<GoldSponsorLogo v-for="(sponsor, i) in store.goldSponsors" :key="i" :logo-src="sponsor.logoSrc" :sponsor-name="sponsor.sponsorName" :index="i" :logo-size="sponsor.logoSize"/>

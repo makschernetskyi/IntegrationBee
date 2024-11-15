@@ -33,6 +33,7 @@ const handleSubmit = async (e: any) =>{
 		try{
 			await store.submitForm()
 			await getProfileData()
+			window.onbeforeunload = null
 			emit('closeForm')
 		}catch(err:any){
 			emit('closeForm')

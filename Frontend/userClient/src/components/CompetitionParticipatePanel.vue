@@ -18,13 +18,14 @@ const eventPageStore = useEventPageStore();
 const {competitionId} = storeToRefs(eventPageStore)
 
 const {deregisterParticipant, fetchEventData}= eventPageStore
-const {competitions, getProfileData, isAuthenticated} = useAuthStore()
+const {getProfileData} = useAuthStore()
+const {competitions, isAuthenticated} = storeToRefs(useAuthStore())
 
 const zoom = ref(data.value.zoom)
 
 const emit = defineEmits(['showParticipationForm'])
 
-const isParticipating = computed(()=>competitions.find(competition=>competition.id == competitionId.value))
+const isParticipating = computed(()=>competitions.value.find(competition=>competition.id == competitionId.value))
 
 const handleCancellation = async() =>{
 	if(confirm("Are you sure you want to cancel your participation?")){

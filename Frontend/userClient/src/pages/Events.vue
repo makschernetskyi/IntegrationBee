@@ -77,7 +77,7 @@ const handleSearchClick = async () =>{
 										</svg>
 									</div>
 								</div>
-								<p class="font-body text-body text-gray">
+								<p class="font-body text-text-sm md:text-body text-gray">
 									{{ event.location }}
 								</p>
 							</div>
@@ -90,7 +90,7 @@ const handleSearchClick = async () =>{
 										</svg>
 									</div>
 								</div>
-								<p class="font-body text-body text-gray">
+								<p class="font-body text-text-sm md:text-body text-gray">
 									{{ event.date }}
 								</p>
 							</div>
