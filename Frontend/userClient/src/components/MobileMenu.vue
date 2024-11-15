@@ -1,5 +1,5 @@
 <script setup lang="ts">
-//@ts-expect-error vscode doesnt recognize types
+//@ts-ignore
 import MobileMenuLink from "./MobileMenuLink.vue"
 import {ref, watch, defineProps, defineEmits, toRefs, onMounted} from 'vue'
 
