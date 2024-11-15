@@ -10,6 +10,8 @@ from wagtailmath.blocks import MathBlock
 class IntegralBlock(blocks.StructBlock):
     integral = MathBlock(required=False)
     integral_solution = MathBlock(required=False)
+    integral_answer = MathBlock(required=False)
+    original_author = blocks.CharBlock(required=False, help_text="add author")
     difficulty_level = blocks.IntegerBlock(min_value=1, max_value=10, help_text="Difficulty level (1-10)",
                                            default=5, required=False)
 
