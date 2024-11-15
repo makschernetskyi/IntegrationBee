@@ -2,17 +2,28 @@
 import FormInput from '@/components/FormInput.vue';
 import DefaultLayout from '@/layouts/Default.vue';
 
-import {onBeforeUnmount, ref} from "vue";
+import {onBeforeUnmount, onMounted, ref} from "vue";
 
 import { useSignInPageStore } from '@/stores/signInPage.vue/signInPageStore';
 import { storeToRefs } from 'pinia';
 import { useRoute } from 'vue-router';
+import { useToastStore } from '@/stores/toastStore/toastStore';
 
 const store = useSignInPageStore()
 const {email, password, errors, resetPasswordEmail} = storeToRefs(store)
 
 const route = useRoute()
 const query = route.query
+
+onMounted(()=>{
+	if(query && query.emailVerified && query.emailVerified=='true')
+	useToastStore().addToast({
+		type: 'success',
+		title: "Email verified",
+		message: "Your email was successfully verified. You can sign into your account now.",
+		duration: 10000
+	})
+})
 
 const handleSubmit = (e:any)=>{
 	e.preventDefault();
@@ -120,12 +131,12 @@ function closePasswordRecovery (){
 					</svg>
 				</button>
 
-				<div @click="(e:any)=>e.stopImmediatePropagation()" class="absolute w-[90vw] md:w-[40rem] h-[30rem] rounded-3xl shadow-lg left-[calc(50%-45vw)] md:left-[calc(50%-20rem)] top-[calc(50%-15rem)] bg-pearl-white flex flex-col justify-center items-center text-screenBlack text-body font-body">
-					<div class="flex flex-col w-max justify-center items-center gap-8">
+				<div @click="(e:any)=>e.stopImmediatePropagation()" class="absolute w-[90vw] md:w-[40rem] h-[30rem] rounded-3xl shadow-lg left-[50%] -translate-x-[50%] top-[calc(50%-15rem)] bg-pearl-white flex flex-col justify-center items-center text-screenBlack text-body font-body px-[2rem]">
+					<div class="flex flex-col w-full justify-center items-center gap-8">
 						<h3 class="font-heading text-subtitle">Password recovery</h3>
-						<div class="flex flex-col items-start gap-4">
+						<div class="flex flex-col items-start gap-4 w-ful">
 							<p>provide your email.</p>
-							<input v-model="resetPasswordEmail" type="text" placeholder="email" class="px-6 py-4 outline-none rounded-2xl">
+							<input v-model="resetPasswordEmail" type="text" placeholder="email" class="px-6 py-4 outline-none rounded-2xl w-full">
 							<p v-if="store.resetPasswordEmailError" class="text-red">
 								{{ store.resetPasswordEmailError }}
 							</p>

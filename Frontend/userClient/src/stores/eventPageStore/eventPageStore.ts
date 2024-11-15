@@ -4,7 +4,7 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import { useToastStore } from '@/stores/toastStore/toastStore';
 import { api, noAuthApi } from '@/api';
-import { formatDateToLocal } from '@/utils/formatDateToLocal';
+import { formatDateToUTC } from '@/utils/formatDateToUTC';
 import { fetchImageUrl } from '@/services/fetchImageUrl';
 
 // Interfaces
@@ -162,7 +162,7 @@ export const useEventPageStore = defineStore('eventPageStore', {
           isRegistrationOpen: !Boolean(data.competition.close_registration), //TODO change to Backend Field
           reasonRegistrationClosed: data.competition.close_registration, //TODO change to Backend Field
           participantsCount: data.competition.users_count, //TODO change to Backend Field,
-          date: formatDateToLocal(data.competition.event_date_start) + '<br>' + formatDateToLocal(data.competition.event_date_end), //update to from_to,
+          date: formatDateToUTC(data.competition.event_date_start) + '<br>' + formatDateToUTC(data.competition.event_date_end), //update to from_to,
           location: data.place,
           locationMapsUrl: `https://www.google.com/maps/dir//${data.latitude},${data.longitude}`
         }

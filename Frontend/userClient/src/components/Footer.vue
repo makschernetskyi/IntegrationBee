@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { useAuthStore } from '@/stores/authStore/authStore';
+
+
+const {isAuthenticated} = useAuthStore()
 
 </script>
 <template>
@@ -29,16 +33,19 @@
 							Contact
 						</RouterLink>
 					</li>
-					<li>
-						<RouterLink to="/sign_in" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
-							Sign in
-						</RouterLink>
-					</li>
-					<li>
-						<RouterLink to="/sign_up" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
-							Sign up
-						</RouterLink>
-					</li>
+					<!--login and signup for not authenticated users-->
+					<template v-if="!isAuthenticated">
+						<li>
+							<RouterLink to="/sign_in" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
+								Sign in
+							</RouterLink>
+						</li>
+						<li>
+							<RouterLink to="/sign_up" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
+								Sign up
+							</RouterLink>
+						</li>
+					</template>
 				</ul>
 			</div>
 			<div class="w-full flex items-center justify-center lg:justify-end">

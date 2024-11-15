@@ -1,6 +1,6 @@
 import {api, BASE_URL} from "@/api"
 import { useToastStore } from "@/stores/toastStore/toastStore";
-import { formatDateToLocal } from "@/utils/formatDateToLocal";
+import { formatDateToUTC } from "@/utils/formatDateToUTC";
 
 const API_USER_DATA_URL = "/userData/"
 
@@ -31,7 +31,7 @@ export async function getProfileDataRequestResolver(this: any) {
         this.programOfStudy = data.program_of_study
         this.profilePicture = data.profile_picture;
         this.competitions = data.competitions.map((competition:any)=>({
-            date: formatDateToLocal(competition.event_date),
+            date: formatDateToUTC(competition.event_date_start),
             name: competition.name,
             result: competition.status,
             link: `/event/${competition.page_id}`,
