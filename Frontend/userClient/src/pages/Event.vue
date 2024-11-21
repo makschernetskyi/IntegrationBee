@@ -118,14 +118,12 @@ const closeParticipationForm = () =>{
 					<!--Main sponsor-->
 					<div v-if="store.mainSponsorExists" class="w-full h-max flex flex-col gap-[5rem] lg:gap-0 lg:grid lg:grid-cols-[1fr_25rem] lg:grid-rows-1 lg:gap-x-[10rem] px-[2rem] lg:px-[12rem] xl:px-[10vw] py-[12rem] bg-pearl-white [clip-path:polygon(0_0,100%_0,100%_calc(100%-5rem),0%_100%)]">
 						<div class="flex flex-col gap-[4rem]">
-							<h4 class="font-heading text-center text-title lg:text-heading">
+							<h4 class="font-heading text-center lg:text-left text-title lg:text-heading">
 								Main sponsor - {{ store.mainSponsor?.sponsorName }}
 							</h4>
-							<p class="font-body text-body lg:text-body text-center lg:text-left">
-								{{ store.mainSponsor?.description }}
-							</p>
+							<p class="font-body text-body lg:text-body text-center lg:text-left" v-html="sanitizeHtml(store.mainSponsor?.description)"/>
 						</div>
-						<div class="w-full h-full p-[20%] md:p-[30%] lg:p-0">
+						<div class="w-full h-full p-[20%] md:p-[30%] lg:p-0 flex justify-center items-center">
 							<img 
 								:src="store.mainSponsor?.logoSrc"
 								alt="main sponsor logo"
