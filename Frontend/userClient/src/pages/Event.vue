@@ -119,15 +119,15 @@ const closeParticipationForm = () =>{
 					<div v-if="store.mainSponsorExists" class="w-full h-max flex flex-col gap-[5rem] lg:gap-0 lg:grid lg:grid-cols-[1fr_25rem] lg:grid-rows-1 lg:gap-x-[10rem] px-[2rem] lg:px-[12rem] xl:px-[10vw] py-[12rem] bg-pearl-white [clip-path:polygon(0_0,100%_0,100%_calc(100%-5rem),0%_100%)]">
 						<div class="flex flex-col gap-[4rem]">
 							<h4 class="font-heading text-center text-title lg:text-heading">
-								Main sponsor - Huawei
+								Main sponsor - {{ store.mainSponsor?.sponsorName }}
 							</h4>
 							<p class="font-body text-body lg:text-body text-center lg:text-left">
-								Huawei is a leading global tech company, driving advancements in 5G networks, AI, and cloud solutions. With operations in over 170 countries, Huawei provides cutting-edge devices and infrastructure, connecting millions to smarter, faster technology.
+								{{ store.mainSponsor?.description }}
 							</p>
 						</div>
 						<div class="w-full h-full p-[20%] md:p-[30%] lg:p-0">
 							<img 
-								src="https://upload.wikimedia.org/wikipedia/en/thumb/0/04/Huawei_Standard_logo.svg/1200px-Huawei_Standard_logo.svg.png"
+								:src="store.mainSponsor?.logoSrc"
 								alt="main sponsor logo"
 								class="w-full max-h-full"
 							>
