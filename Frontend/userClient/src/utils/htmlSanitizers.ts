@@ -33,7 +33,8 @@ export function sanitizeHtml(rawHtml: string): string {
   });
 
   // Process the text content to linkify emails, phone numbers, and URLs
-  const linkedHtml = linkify(cleanHtml);
+  // const linkedHtml = linkify(cleanHtml);
 
-  return linkedHtml;
+  // return linkedHtml;
+  return cleanHtml
 }
