@@ -74,7 +74,7 @@ export const useEventsPageStore = defineStore('eventsPageStore', {
           }
         }
 
-        this.events = response.data.items.map((item:any)=>({
+        this.events = response.data.items.sort((a:any, b:any) => new Date(b.competition.event_date_start).getTime() - new Date(a.competition.event_date_start).getTime()).map((item:any)=>({
           id: item.id,
           name: item.title,
           edition: item.edition,
