@@ -62,14 +62,18 @@ export const useNewsPageStore = defineStore('newsPageStore', {
           }
         })
         const data = response.data.items;
-        this.newsItems = data.map((newsItem: any)=>({
+        this.newsItems = data
+        .sort((a: any, b: any) => 
+          new Date(b.meta.first_published_at).getTime() - new Date(a.meta.first_published_at).getTime()
+        )
+        .map((newsItem: any) => ({
           id: newsItem.id,
           title: newsItem.title,
           content: newsItem.text,
           pictureSrc: newsItem.picture?.meta.download_url,
           date: formatDateToUTC(newsItem.meta.first_published_at)
-        }))
-        
+        }));
+              
 
         //this.newsItems = data.;
         //this.currentPage = page
