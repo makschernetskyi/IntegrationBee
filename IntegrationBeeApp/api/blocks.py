@@ -32,7 +32,8 @@ class SeriesChoiceBlock(blocks.ChoiceBlock):
         ('preliminary', 'Preliminary'),
         ('practice', 'Practice'),
         ('spare', 'Spare'),
-        ('other', 'Other')
+        ('other', 'Other'),
+        ('tie-breakers', "Tie-Breakers"),
     ]
 
     def __init__(self, **kwargs):
