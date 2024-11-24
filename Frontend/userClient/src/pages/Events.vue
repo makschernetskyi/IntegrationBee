@@ -41,7 +41,7 @@ const handleSearchClick = async () =>{
 
 			<div class="w-full grid grid-cols-1 lg:grid-cols-3 auto-rows-auto gap-y-[2rem] lg:gap-x-[2rem] px-[2rem] py-[5rem] overflow-x-hidden">
 				<RouterLink v-for="event in store.events" :to="`/event/${event.id}`" >
-					<div class="w-full flex flex-col gap-[1rem] text-screenBlack p-4" data-aos="fade-left">
+					<div class="w-full flex flex-col gap-[1rem] text-screenBlack p-4" data-aos="fade-left" data-aos-offset="-50">
 						<div class="w-full aspect-[8/5] overflow-hidden rounded-3xl relative">
 							<img :src="event.pictureSrc" alt="" :class="`w-full h-full object-cover`">
 							<div  v-if="event.status == 'past'" class="w-full h-full flex justify-end items-end absolute top-0 left-0 z-[10]">
