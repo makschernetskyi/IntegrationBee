@@ -42,7 +42,7 @@ const randomId = "input" + Math.floor(Math.random()*100000).toString()
 				autocomplete="true"
 			>
 			<label :for="randomId" :class="{
-					'px-[2rem] font-heading absolute w-full h-full top-0 left-0 justify-start items-center pointer-events-none peer-focus:-translate-y-[100%] transition-all duration-100 peer-[:not(:placeholder-shown)]:-translate-y-[100%] peer-[:autofill]:-translate-y-[100%]': true,
+					'px-[2rem] font-heading absolute w-full h-full top-0 left-0 justify-start items-center pointer-events-none peer-focus:-translate-y-[100%] transition-all duration-100 peer-[:not(:placeholder-shown)]:-translate-y-[100%] peer-[:autofill]:-translate-y-[100%] whitespace-nowrap': true,
 					'peer-focus:text-primary': !invalid,
 					'text-red': invalid
 				}">
