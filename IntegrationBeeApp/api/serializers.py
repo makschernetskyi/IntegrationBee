@@ -122,7 +122,8 @@ class UserToCompetitionRelationshipSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserToCompetitionRelationship
         fields = [
-            'emergency_phone_number', 'name_pronunciation', 'additional_info'
+            'emergency_phone_number', 'name_pronunciation', 'additional_info',
+            'phone_number', 'program_of_study'
         ]
 
     def create(self, validated_data):
