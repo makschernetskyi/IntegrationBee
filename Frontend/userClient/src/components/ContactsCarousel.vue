@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import {ref, toRefs} from 'vue'
+import {ref, toRefs, computed} from 'vue'
 import { TeamMember } from '@/stores/contactPageStore/contactPageStore';
 
 
-const itemsNumber = 2
+
 const itemShown = ref(0)
 
 const props = defineProps<{
@@ -12,8 +12,10 @@ const props = defineProps<{
 
 const {teamMembers} = toRefs(props)
 
+const itemsNumber = computed(()=>teamMembers.value.length)
+
 const showNextCard = () =>{
-	if(itemShown.value < itemsNumber-1){
+	if(itemShown.value < itemsNumber.value-1){
 		itemShown.value+=1
 	}
 }
