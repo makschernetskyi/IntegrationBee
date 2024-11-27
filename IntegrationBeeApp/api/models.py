@@ -1,5 +1,6 @@
 import datetime
 import subprocess
+from html import unescape
 from pathlib import Path
 
 from django.contrib.auth.models import AbstractUser, BaseUserManager, Group
@@ -216,6 +217,21 @@ class Competition(RevisionMixin, ClusterableModel):
     def __str__(self):
         return self.name
 
+    @staticmethod
+    def escape_latex(s):
+        return s.translate(str.maketrans({
+            '#': r'\#',
+            '$': r'\$',
+            '%': r'\%',
+            '&': r'\&',
+            '_': r'\_',
+            '{': r'\{',
+            '}': r'\}',
+            '~': r'\textasciitilde{}',
+            '^': r'\^{}',
+            '\\': r'\textbackslash{}',
+        }))
+
     def generate_latex(self, full_latex_file):
         html_file = Path('competition_report.html')
         latex_file = Path('competition_report.tex')
@@ -224,11 +240,11 @@ class Competition(RevisionMixin, ClusterableModel):
             participants = self.participants_relationships.filter(status__in=['R', 'Q', 'E', 'F', 'S', 'T', 'W'])
             series = self.series
 
-            report_html = render_to_string('contest_report.html', {
+            report_html = unescape(render_to_string('contest_report.html', {
                 'competition': self,
                 'participants': participants,
                 'series': series,
-            })
+            }))
 
             with html_file.open('w') as f:
                 f.write(report_html)
