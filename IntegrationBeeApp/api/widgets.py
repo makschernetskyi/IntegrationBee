@@ -8,7 +8,7 @@ class Base64AudioWidget(forms.Textarea):
         html = super().render(name, value, attrs, renderer)
         if value:
             try:
-                audio_data_uri = f'data:audio/mp3;base64,{value}'
+                audio_data_uri = f'{value}'
                 audio_player = f'''
                     <audio controls>
                         <source src="{audio_data_uri}" type="audio/mp3">
