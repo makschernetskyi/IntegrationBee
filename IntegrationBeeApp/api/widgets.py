@@ -15,7 +15,7 @@ class Base64AudioWidget(forms.Textarea):
                         Your browser does not support the audio element.
                     </audio>
                 '''
-                return mark_safe(audio_player + html)
+                return mark_safe(audio_player)
             except Exception as e:
                 # Handle exception if needed
                 pass
