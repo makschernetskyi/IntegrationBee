@@ -229,7 +229,6 @@ class Competition(RevisionMixin, ClusterableModel):
                 'competition': self,
                 'participants': participants,
                 'series': series,
-                'print_difficulty': lambda difficulty: "● " * difficulty + "◌ " * (10 - difficulty),
             })
 
             report_html = unescape(report_html)
