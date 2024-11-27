@@ -1,3 +1,5 @@
+{% load custom_filters %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,7 +18,7 @@
                 {% for integral_block in block.value.integrals %}
                     {% if integral_block.block_type == 'integral' %}
                             <h2>Integral by {{ integral_block.value.original_author }}</h2>
-                            <strong>{{ print_difficulty(integral_block.value.difficulty_level) }}</strong><br>
+                            <strong>{{ integral_block.value.difficulty_level|print_difficulty }}</strong><br>
                             {{ integral_block.value.integral }}<br>
                             {% if integral_block.value.integral_solution %}
                                 <strong>Solution</strong><br>
