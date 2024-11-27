@@ -15,11 +15,11 @@
             <li style="list-style-type: none;">
                 {% for integral_block in block.value.integrals %}
                     {% if integral_block.block_type == 'integral' %}
-                            <h2>Integral</h2>
+                            <h2>Integral by {{ integral_block.value.original_author }}</h2>
                             <strong>(difficulty {{ integral_block.value.difficulty_level }})</strong><br>
                             {{ integral_block.value.integral }}<br>
                             {% if integral_block.value.integral_solution %}
-                                <h2>Solution:</h2><br>
+                                <h3>Solution:</h3><br>
                                 {{ integral_block.value.integral_solution }}<br>
                             {% endif %}
                             <hr>
