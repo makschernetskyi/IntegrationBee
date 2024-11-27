@@ -17,7 +17,7 @@ class IsWagtailAdminUser(IsAdminUser):
     def has_permission(self, request, view):
         user = request.user
         if user.is_authenticated:
-            return super().has_permission(request, view)
+            return user.is_superuser or user.is_staff
         return False
 
 
