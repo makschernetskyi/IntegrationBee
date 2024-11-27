@@ -238,8 +238,9 @@ class Competition(RevisionMixin, ClusterableModel):
 
             pandoc_latex_command = [
                 'pandoc',
-                '-f', 'html+tex_math_dollars+tex_math_single_backslash',
+                '-f', 'html+tex_math_dollars+tex_math_single_backslash+raw_tex',
                 '-t', 'latex',
+                '--wrap=none',
                 '-o', str(latex_file),
                 str(html_file)
             ]
