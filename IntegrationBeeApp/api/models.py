@@ -19,6 +19,7 @@ from wagtail.models import ClusterableModel, RevisionMixin
 from wagtail.models import Orderable
 
 from api.blocks import SeriesBlock
+from api.widgets import Base64AudioWidget
 
 
 class UserManager(BaseUserManager):
@@ -116,7 +117,7 @@ class UserToCompetitionRelationship(RevisionMixin, Orderable):
         FieldPanel('phone_number'),
         FieldPanel('emergency_phone_number'),
         FieldPanel('program_of_study'),
-        FieldPanel('name_pronunciation'),
+        FieldPanel('name_pronunciation', widget=Base64AudioWidget),
         FieldPanel('additional_info'),
     ]
 
@@ -367,7 +368,8 @@ class Competition(RevisionMixin, ClusterableModel):
 
     def generate_participants_csv(self):
         participants = self.participants_relationships.all()
-        csv_content = "First Name,Last Name\n"
+        csv_content = ("First Name,Last Name,Email,Status,Phone Number,Emergency Phone Number,"
+                       "Program of Study,Additional Info\n")
 
         for participant in participants:
             csv_content += (f"{participant.user.first_name},{participant.user.last_name},{participant.user.email},"
