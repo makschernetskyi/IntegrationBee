@@ -17,7 +17,7 @@
             <li style="list-style-type: none;">
                 {% for integral_block in block.value.integrals %}
                     {% if integral_block.block_type == 'integral' %}
-                            <h2>Integral by {{ integral_block.value.original_author }} | {{ integral_block.value.difficulty_level|print_difficulty|safe }}</h2>
+                            <h2>Integral by {{ integral_block.value.original_author }}  [{{ integral_block.value.difficulty_level|print_difficulty|safe }}]</h2>
                             {{ integral_block.value.integral|safe  }}<br><br>
                             {% if integral_block.value.integral_answer|safe  %}
                                 <strong>Answer</strong><br>
