@@ -240,11 +240,11 @@ class Competition(RevisionMixin, ClusterableModel):
             participants = self.participants_relationships.filter(status__in=['R', 'Q', 'E', 'F', 'S', 'T', 'W'])
             series = self.series
 
-            report_html = self.escape_latex_special_chars(unescape(render_to_string('contest_report.html', {
+            report_html = self.escape_latex_special_chars(render_to_string('contest_report.html', {
                 'competition': self,
                 'participants': participants,
                 'series': series,
-            })))
+            }))
 
             with html_file.open('w') as f:
                 f.write(report_html)
