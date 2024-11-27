@@ -370,7 +370,9 @@ class Competition(RevisionMixin, ClusterableModel):
         csv_content = "First Name,Last Name\n"
 
         for participant in participants:
-            csv_content += f"{participant.user.first_name},{participant.user.last_name}\n"
+            csv_content += (f"{participant.user.first_name},{participant.user.last_name},{participant.user.email},"
+                            f"{participant.status},{participant.phone_number},{participant.emergency_phone_number},"
+                            f"{participant.program_of_study}{participant.additional_info}\n")
 
         response = HttpResponse(csv_content, content_type='text/csv')
         response['Content-Disposition'] = f'attachment; filename="participants_{self.pk}.csv"'
