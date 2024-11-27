@@ -266,6 +266,8 @@ class Competition(RevisionMixin, ClusterableModel):
                 'name': self.name,
             })
 
+            latex_content = unescape(latex_content)
+
             with open(full_latex_file, 'w') as f:
                 f.write(latex_content)
 
