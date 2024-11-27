@@ -218,17 +218,17 @@ class Competition(RevisionMixin, ClusterableModel):
         return self.name
 
     @staticmethod
-    def escape_latex(s):
+    def escape_latex_special_chars(s):
         return s.translate(str.maketrans({
-            '#': r'\#',
-            '$': r'\$',
-            '%': r'\%',
             '&': r'\&',
+            '%': r'\%',
+            '$': r'\$',
+            '#': r'\#',
             '_': r'\_',
             '{': r'\{',
             '}': r'\}',
             '~': r'\textasciitilde{}',
-            '^': r'\^{}',
+            '^': r'\textasciicircum{}',
             '\\': r'\textbackslash{}',
         }))
 
@@ -240,11 +240,11 @@ class Competition(RevisionMixin, ClusterableModel):
             participants = self.participants_relationships.filter(status__in=['R', 'Q', 'E', 'F', 'S', 'T', 'W'])
             series = self.series
 
-            report_html = unescape(render_to_string('contest_report.html', {
+            report_html = self.escape_latex_special_chars(unescape(render_to_string('contest_report.html', {
                 'competition': self,
                 'participants': participants,
                 'series': series,
-            }))
+            })))
 
             with html_file.open('w') as f:
                 f.write(report_html)
