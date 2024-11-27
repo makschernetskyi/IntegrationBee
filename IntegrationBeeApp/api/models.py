@@ -217,21 +217,6 @@ class Competition(RevisionMixin, ClusterableModel):
     def __str__(self):
         return self.name
 
-    @staticmethod
-    def escape_latex_special_chars(s):
-        return s.translate(str.maketrans({
-            '&': r'\&',
-            '%': r'\%',
-            '$': r'\$',
-            '#': r'\#',
-            '_': r'\_',
-            '{': r'\{',
-            '}': r'\}',
-            '~': r'\textasciitilde{}',
-            '^': r'\textasciicircum{}',
-            '\\': r'\textbackslash{}',
-        }))
-
     def generate_latex(self, full_latex_file):
         html_file = Path('competition_report.html')
         latex_file = Path('competition_report.tex')
@@ -244,6 +229,7 @@ class Competition(RevisionMixin, ClusterableModel):
                 'competition': self,
                 'participants': participants,
                 'series': series,
+                'print_difficulty': lambda difficulty: "● " * difficulty + "◌ " * (10 - difficulty),
             })
 
             report_html = unescape(report_html)
