@@ -15,8 +15,9 @@ from wagtail.admin.models import Admin
 
 class IsWagtailAdminUser(IsAdminUser):
     def has_permission(self, request, view):
-        if request.user.is_authenticated:
-            return Admin.objects.filter(user=request.user).exists() or super().has_permission(request, view)
+        user = request.user
+        if user.is_authenticated:
+            return user.has_perm('wagtailadmin.access_admin') or super().has_permission(request, view)
         return False
 
 
