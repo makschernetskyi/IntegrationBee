@@ -22,6 +22,7 @@ from django.conf import settings
 from api.services.send_email import send_email
 from .models import PasswordResetToken, EmailVerificationToken, \
     UserToCompetitionRelationship, Competition, User  # Ensure you have PasswordResetToken model
+from .permissions import IsWagtailAdminUser
 from .serializers import UserSerializer, UserToCompetitionRelationshipSerializer
 
 from rest_framework.views import APIView
@@ -281,7 +282,7 @@ class DownloadLatexTexReportView(APIView):
 
 class GenerateBracketView(APIView):
     authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAuthenticated, IsWagtailAdminUser]
 
     def get(self, request, pk):
         competition = get_object_or_404(Competition, pk=pk)
@@ -295,7 +296,7 @@ class GenerateBracketView(APIView):
 
 class DownloadParticipantsCsvView(APIView):
     authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAuthenticated, IsWagtailAdminUser]
 
     def get(self, request, pk):
         competition = get_object_or_404(Competition, pk=pk)

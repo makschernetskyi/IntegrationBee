@@ -3,7 +3,7 @@ import logging
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from rest_framework.exceptions import AuthenticationFailed
-from rest_framework.permissions import BasePermission
+from rest_framework.permissions import BasePermission, IsAdminUser
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from wagtail import hooks
 
@@ -11,6 +11,13 @@ from home.models import CompetitionPost
 from .models import User, Competition
 from rest_framework.authentication import TokenAuthentication
 from wagtail.admin.models import Admin
+
+
+class IsWagtailAdminUser(IsAdminUser):
+    def has_permission(self, request, view):
+        if request.user.is_authenticated:
+            return Admin.objects.filter(user=request.user).exists() or super().has_permission(request, view)
+        return False
 
 
 @hooks.register('register_permissions')
