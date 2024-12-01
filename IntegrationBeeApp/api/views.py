@@ -22,10 +22,11 @@ from django.conf import settings
 from api.services.send_email import send_email
 from .models import PasswordResetToken, EmailVerificationToken, \
     UserToCompetitionRelationship, Competition, User  # Ensure you have PasswordResetToken model
-from .serializers import UserSerializer, UserToCompetitionRelationshipSerializer
+from .serializers import UserSerializer, UserToCompetitionRelationshipSerializer, CompetitionSerializer, CompetitionListSerializer
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.generics import ListAPIView
 from rest_framework import status
 from django.contrib.auth.hashers import make_password
 from django.utils import timezone
@@ -253,6 +254,55 @@ class CompetitionView(APIView):
 
         else:
             return Response({"error": "Invalid action specified"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CompetitionListView(ListAPIView):
+    queryset = Competition.objects.all()
+    serializer_class = CompetitionListSerializer
+
+class CompetitionSeriesDetailView(APIView):
+    def get(self, request, competition_id, series_id):
+        competition = get_object_or_404(Competition, id=competition_id)
+        for series_block in competition.series:
+            if str(series_block.id) == series_id:
+                integrals_list = []
+                for integral_block in series_block.value['integrals']:
+                    integral_data = {
+                        'id': str(integral_block.id),
+                        'integral': integral_block.value.get('integral', ''),
+                        'integral_answer': integral_block.value.get('integral_answer', ''),
+                        'original_author': integral_block.value.get('original_author', ''),
+                    }
+                    integrals_list.append(integral_data)
+                series_data = {
+                    'id': str(series_block.id),
+                    'series_name': series_block.value.get('series_name', ''),
+                    'integrals': integrals_list,
+                }
+                return Response(series_data, status=status.HTTP_200_OK)
+        return Response({"error": "Series not found"}, status=status.HTTP_404_NOT_FOUND)
+
+class CompetitionTieBreakersView(APIView):
+    def get(self, request, competition_id):
+        competition = get_object_or_404(Competition, id=competition_id)
+        for series_block in competition.series:
+            if series_block.value.get('series_name') == 'tie-breakers':
+                integrals_list = []
+                for integral_block in series_block.value['integrals']:
+                    integral_data = {
+                        'id': str(integral_block.id),
+                        'integral': integral_block.value.get('integral', ''),
+                        'integral_answer': integral_block.value.get('integral_answer', ''),
+                        'original_author': integral_block.value.get('original_author', ''),
+                    }
+                    integrals_list.append(integral_data)
+                series_data = {
+                    'id': str(series_block.id),
+                    'series_name': series_block.value.get('series_name', ''),
+                    'integrals': integrals_list,
+                }
+                return Response(series_data, status=status.HTTP_200_OK)
+        return Response({"error": "Tie-breakers series not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
 class DownloadLatexPdfReportView(APIView):
