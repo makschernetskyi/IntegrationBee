@@ -24,7 +24,7 @@ from .models import PasswordResetToken, EmailVerificationToken, \
     UserToCompetitionRelationship, Competition, User  # Ensure you have PasswordResetToken model
 
 from .serializers import UserSerializer, UserToCompetitionRelationshipSerializer, CompetitionSerializer, CompetitionListSerializer
-from .permissions import IsWagtailAdminUser
+from .permissions import IsWagtailAdminUser, HasCompetitionPermission
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -335,7 +335,7 @@ class DownloadLatexTexReportView(APIView):
 
 class GenerateBracketView(APIView):
     authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated, IsWagtailAdminUser]
+    permission_classes = [IsAuthenticated, HasCompetitionPermission]
 
     def get(self, request, pk):
         competition = get_object_or_404(Competition, pk=pk)
@@ -349,7 +349,7 @@ class GenerateBracketView(APIView):
 
 class DownloadParticipantsCsvView(APIView):
     authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated, IsWagtailAdminUser]
+    permission_classes = [IsAuthenticated, HasCompetitionPermission]
 
     def get(self, request, pk):
         competition = get_object_or_404(Competition, pk=pk)

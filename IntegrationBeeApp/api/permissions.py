@@ -13,6 +13,15 @@ from rest_framework.authentication import TokenAuthentication
 from wagtail.admin.models import Admin
 
 
+class HasCompetitionPermission(BasePermission):
+    def has_permission(self, request, view):
+        user = request.user
+        if user.is_authenticated:
+            if user.is_submission_editor or user.is_wagtail_admin:
+                return True
+        return
+
+
 class IsWagtailAdminUser(IsAdminUser):
     def has_permission(self, request, view):
         user = request.user
