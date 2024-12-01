@@ -8,7 +8,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from wagtail import hooks
 
 from home.models import CompetitionPost
-from .models import User, Competition
+from .models import User, Competition, UserToCompetitionRelationship
 from rest_framework.authentication import TokenAuthentication
 from wagtail.admin.models import Admin
 
@@ -22,7 +22,7 @@ class IsWagtailAdminUser(IsAdminUser):
 
 
 @hooks.register('register_permissions')
-def register_my_custom_permissions():
+def register_competition_permissions():
     content_type = ContentType.objects.get_for_model(Competition)
     Permission.objects.get_or_create(
         codename='edit_detail',
