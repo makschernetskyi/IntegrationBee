@@ -25,6 +25,7 @@ export const useAuthStore = defineStore('auth', {
         dateJoined: null,
         institution: null,
         isAdmin: null,
+        role: null,
         profilePicture: null,
         phoneNumber: null,
         programOfStudy: null,
@@ -63,6 +64,7 @@ export const useAuthStore = defineStore('auth', {
               dateJoined: state.dateJoined,
               institution: state.institution,
               isAdmin: state.isAdmin,
+              role: state.role,
               profilePicture: state.profilePicture,
               competitions: state.competitions,
               programOfStudy: state.programOfStudy

@@ -13,6 +13,9 @@ import PasswordReset from "@/pages/PasswordReset.vue"
 
 import { createRouter, createWebHashHistory, createWebHistory  } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore/authStore.ts'
+import Presenting from "@/pages/Presenting.vue"
+import MainMenu from "@/pages/Presenting/MainMenu.vue"
+import SeriesPresentation from "@/pages/Presenting/SeriesPresentation.vue"
 
 
 
@@ -41,7 +44,12 @@ const router = createRouter({
         {path: '/imprint', component: Imprint, name: "imprint"},
         {path: '/terms_of_use', component: TermsOfUse, name: "terms_of_use"},
         {path: '/reset_password', component: PasswordReset, name: 'reset_password'},
-        {path: "/:pathMatch(.*)*", redirect: {name: 'home'}, name: 'not_found'}
+        {path: "/presenting", component: Presenting, name: "presenting", children: [
+            {path: '', component: MainMenu, name: "presenting_main_menu" },
+            {path: 'series_presentation/:competition/:series', component: SeriesPresentation, name: "series_presentation" }
+        ]},
+        {path: "/:pathMatch(.*)*", redirect: {name: 'home'}, name: 'not_found'},
+        
 	],
 })
 
@@ -49,21 +57,27 @@ const router = createRouter({
 
 const protectedRoutes = ['profile']
 const adminRoutes = ['admin']
+const integralEditorRoutes = ['presenting', 'presenting_main_menu', 'series_presentation']
 
 router.beforeEach(async (to, from, next) => {
 
     const authStore = useAuthStore()
 
 
-	// if user data was not requested - make the request
+	//if user data was not requested - make the request
     if(authStore.userDataRequest.status == null){
         
         await authStore.getProfileData()
     }
 
     const isAuthenticated = authStore.isAuthenticated
-
     const isAdmin = authStore.user.isAdmin
+    const isIntegralEditor = authStore.user.role == 'IntegralEditor'
+
+    //!FOR DEVELOPMENT ONLY!
+    // const isAuthenticated = true
+    // const isAdmin = true
+    // const isIntegralEditor = true
 
 	// if user data was requested and user is not logged in
 	// and wants to see a protected route - redirect to login page
@@ -74,6 +88,11 @@ router.beforeEach(async (to, from, next) => {
 
 	// redirect non admins to home page when trying access admin-only routes
     if( adminRoutes.includes(to.name as string) && (!isAuthenticated || !isAdmin) && to.name !== 'home'){
+        next('/')
+        return
+    }
+
+    if(integralEditorRoutes.includes(to.name as string) && (!isAdmin || !isIntegralEditor || !isAuthenticated) && to.name !== 'home'){
         next('/')
         return
     }
