@@ -262,6 +262,7 @@ class CompetitionListView(ListAPIView):
     queryset = Competition.objects.all()
     serializer_class = CompetitionListSerializer
 
+
 class CompetitionSeriesDetailView(APIView):
     def get(self, request, competition_id, series_id):
         competition = get_object_or_404(Competition, id=competition_id)
@@ -283,6 +284,7 @@ class CompetitionSeriesDetailView(APIView):
                 }
                 return Response(series_data, status=status.HTTP_200_OK)
         return Response({"error": "Series not found"}, status=status.HTTP_404_NOT_FOUND)
+
 
 class CompetitionTieBreakersView(APIView):
     def get(self, request, competition_id):

@@ -56,6 +56,10 @@ class User(AbstractUser):
     objects = UserManager()
 
     @property
+    def is_wagtail_admin(self):
+        return self.is_superuser or self.is_staff
+
+    @property
     def is_page_editor(self):
         return self.groups.filter(name='Editors').exists()
 
@@ -64,15 +68,19 @@ class User(AbstractUser):
         return self.groups.filter(name='Moderators').exists()
 
     @property
+    def is_submission_editor(self):
+        return self.groups.filter(name='Submissions').exists()
+
+    @property
     def role(self):
-        if self.is_staff:
-            return 'Admin'
-        elif self.is_page_editor:
-            return 'PageEditor'
-        elif self.is_integral_editor:
-            return 'IntegralEditor'
-        else:
-            return 'User'
+        roles = {
+            'Admin': self.is_wagtail_admin,
+            'PageEditor': self.is_page_editor,
+            'IntegralEditor': self.is_integral_editor,
+            'SubmissionEditor': self.is_submission_editor,
+        }
+
+        return roles
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
