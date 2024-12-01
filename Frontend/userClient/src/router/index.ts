@@ -93,7 +93,7 @@ router.beforeEach(async (to, from, next) => {
         return
     }
 
-    console.log(isIntegralEditor, authStore.user.role, authStore.user.role['IntegralEditor'], to.name, integralEditorRoutes.includes(to.name as string), integralEditorRoutes.includes(to.name as string) && !(isAdmin || isIntegralEditor) && to.name !== 'home')
+    //console.log(isIntegralEditor, authStore.user.role, authStore.user.role['IntegralEditor'], to.name, integralEditorRoutes.includes(to.name as string), integralEditorRoutes.includes(to.name as string) && !(isAdmin || isIntegralEditor) && to.name !== 'home')
     if(integralEditorRoutes.includes(to.name as string) && !(isAdmin || isIntegralEditor) && to.name !== 'home'){
         next('/')
         return

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
-import "katex/dist/katex.min.css";
 //@ts-expect-error not meant for ts
 import katex from "katex";
 import { cleanLatex } from "@/utils/cleanLatex";
@@ -18,6 +17,7 @@ const latexFontSize = ref(`text-[${defaultFontSize}px]`);
 
 const formula = computed(() => {
 	const f = cleanLatex(props.integral);
+	console.log(f)
 	latexFontSize.value = `text-[${calculateLatexFontSize(f, defaultFontSize)}px]`;
 	return katex.renderToString(f, { throwOnError: false, displayMode: true });
 });
