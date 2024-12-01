@@ -72,7 +72,7 @@ router.beforeEach(async (to, from, next) => {
 
     const isAuthenticated = authStore.isAuthenticated
     const isAdmin = authStore.user.isAdmin
-    const isIntegralEditor = authStore.user.role.includes('IntegralEditor')
+    const isIntegralEditor = Boolean(authStore.user.role) && authStore.user.role['IntegralEditor']
 
     //!FOR DEVELOPMENT ONLY!
     // const isAuthenticated = true
