@@ -50,15 +50,3 @@ def register_competition_permissions():
 
     return Permission.objects.filter(content_type=content_type)
 
-
-@hooks.register('register_permissions')
-def register_submission_permissions():
-    content_type = ContentType.objects.get_for_model(UserToCompetitionRelationship)
-    Permission.objects.get_or_create(
-        codename='edit_submission',
-        name='Edit submission',
-        content_type=content_type,
-    )
-
-    return Permission.objects.filter(content_type=content_type)
-
