@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
-import "katex/dist/katex.min.css";
 //@ts-expect-error not meant for ts
 import katex from "katex";
 import { cleanLatex } from "@/utils/cleanLatex";
