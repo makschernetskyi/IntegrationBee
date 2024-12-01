@@ -53,7 +53,7 @@ onMounted(async()=>{
             </h2>
             <div class="col-start-2 col-span-1 h-[calc(100vh-30rem)] min-h-[25rem] flex flex-col-reverse justify-between">
                 <div class="flex flex-col gap-[2rem]">
-                    <RouterLink v-if="selectedCompetition !== null && selectedSeries !== null" :to="`presenting/series_presentation/${selectedCompetition}/${selectedSeries}`" class="flex justify-center font-heading text-title w-full rounded-xl bg-primary py-[1rem]">
+                    <RouterLink v-if="selectedCompetition !== null && selectedSeries !== null" :to="`/presenting/series_presentation/${selectedCompetition}/${selectedSeries}`" class="flex justify-center font-heading text-title w-full rounded-xl bg-primary py-[1rem]">
                         Start presenting
                     </RouterLink>
                     <div v-else class="flex justify-center font-heading text-title w-full rounded-xl bg-gray-100 py-[1rem]">
