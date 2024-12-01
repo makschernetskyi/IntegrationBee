@@ -20,6 +20,7 @@ export async function getProfileDataRequestResolver(this: any) {
 		this.userDataRequest.errorMSG = null;
 
 		const data = response.data;
+		console.log(data)
 		this.isAuthenticated = true;
 		this.email = data.email;
 		this.firstName = data.first_name;
@@ -27,7 +28,7 @@ export async function getProfileDataRequestResolver(this: any) {
 		this.phoneNumber = data.phone_number
 		this.dateJoined = data.registration_date;
 		this.institution = data.institution;
-		this.isAdmin = data.role === "Admin";
+		this.isAdmin = data.role.includes("Admin");
 		this.role = data.role
 		this.programOfStudy = data.program_of_study
 		this.profilePicture = data.profile_picture;

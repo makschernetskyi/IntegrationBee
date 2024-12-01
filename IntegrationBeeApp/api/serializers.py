@@ -45,7 +45,7 @@ class CompetitionUserSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     profile_picture = serializers.ImageField(required=False, allow_null=True)
     competitions = serializers.SerializerMethodField()
-    role = serializers.ReadOnlyField()  # Added this line to include the 'role' field
+    role = serializers.JSONField(read_only=True)
 
     class Meta:
         model = User
