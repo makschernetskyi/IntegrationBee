@@ -1,8 +1,15 @@
 \documentclass{article}
+\usepackage[utf8]{inputenc} % Allows UTF-8 encoding
+\usepackage[T1]{fontenc}    % Use modern font encoding
+\usepackage{lmodern}        % Latin Modern font
+\usepackage{pifont}         % Provides the \ding command
 \usepackage{geometry}
 \usepackage{amsmath}
-\usepackage{enumitem} % Required for customizing lists
-\usepackage{titlesec} % Required for custom section formatting
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{textcomp}       % Additional text symbols
 \geometry{a4paper, margin=1in}
 
 % Redefine the standard \hrule to extend to the desired width and thickness
@@ -32,6 +39,7 @@
 \author{Integration Bee}
 \date{ {{ date }} }
 \maketitle
+\tableofcontents
 
 % Insert dynamic body content here
 {{ body }}

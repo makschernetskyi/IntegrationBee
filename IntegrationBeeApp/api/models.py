@@ -1,5 +1,6 @@
 import datetime
 import subprocess
+from html import unescape
 from pathlib import Path
 
 from django.contrib.auth.models import AbstractUser, BaseUserManager, Group
@@ -18,6 +19,7 @@ from wagtail.models import ClusterableModel, RevisionMixin
 from wagtail.models import Orderable
 
 from api.blocks import SeriesBlock
+from api.widgets import Base64AudioWidget
 
 
 class UserManager(BaseUserManager):
@@ -115,7 +117,7 @@ class UserToCompetitionRelationship(RevisionMixin, Orderable):
         FieldPanel('phone_number'),
         FieldPanel('emergency_phone_number'),
         FieldPanel('program_of_study'),
-        FieldPanel('name_pronunciation'),
+        FieldPanel('name_pronunciation', widget=Base64AudioWidget),
         FieldPanel('additional_info'),
     ]
 
@@ -230,13 +232,16 @@ class Competition(RevisionMixin, ClusterableModel):
                 'series': series,
             })
 
+            report_html = unescape(report_html)
+
             with html_file.open('w') as f:
                 f.write(report_html)
 
             pandoc_latex_command = [
                 'pandoc',
-                '-f', 'html+tex_math_dollars+tex_math_single_backslash',
+                '-f', 'html+tex_math_dollars+tex_math_single_backslash+raw_tex',
                 '-t', 'latex',
+                '--wrap=none',
                 '-o', str(latex_file),
                 str(html_file)
             ]
@@ -247,6 +252,8 @@ class Competition(RevisionMixin, ClusterableModel):
                 'date': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 'name': self.name,
             })
+
+            latex_content = unescape(latex_content)
 
             with open(full_latex_file, 'w') as f:
                 f.write(latex_content)
@@ -361,10 +368,13 @@ class Competition(RevisionMixin, ClusterableModel):
 
     def generate_participants_csv(self):
         participants = self.participants_relationships.all()
-        csv_content = "First Name,Last Name\n"
+        csv_content = ("First Name,Last Name,Email,Status,Phone Number,Emergency Phone Number,"
+                       "Program of Study,Additional Info\n")
 
         for participant in participants:
-            csv_content += f"{participant.user.first_name},{participant.user.last_name}\n"
+            csv_content += (f"{participant.user.first_name},{participant.user.last_name},{participant.user.email},"
+                            f"{participant.status},{participant.phone_number},{participant.emergency_phone_number},"
+                            f"{participant.program_of_study}{participant.additional_info}\n")
 
         response = HttpResponse(csv_content, content_type='text/csv')
         response['Content-Disposition'] = f'attachment; filename="participants_{self.pk}.csv"'
