@@ -18,15 +18,25 @@ class CompetitionUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Competition
-        fields = ['id', 'name', 'event_date_start', 'event_date_end', 'status', 'page_id']
+        fields = [
+            'id',
+            'name',
+            'event_date_start',
+            'event_date_end',
+            'status',
+            'page_id',
+            # Include any other fields needed
+        ]
 
     def get_status(self, obj):
-        user = self.context['user']
-        try:
-            relationship = UserToCompetitionRelationship.objects.get(user=user, competition=obj)
-            return relationship.get_status_display()
-        except UserToCompetitionRelationship.DoesNotExist:
-            return None
+        user = self.context.get('user')
+        if user:
+            try:
+                relationship = UserToCompetitionRelationship.objects.get(user=user, competition=obj)
+                return relationship.get_status_display()
+            except UserToCompetitionRelationship.DoesNotExist:
+                return None
+        return None
 
     def get_page_id(self, obj):
         return obj.competition_page.id if hasattr(obj, 'competition_page') else None
@@ -35,7 +45,7 @@ class CompetitionUserSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     profile_picture = serializers.ImageField(required=False, allow_null=True)
     competitions = serializers.SerializerMethodField()
-    role = serializers.SerializerMethodField()
+    role = serializers.ReadOnlyField()  # Added this line to include the 'role' field
 
     class Meta:
         model = User
@@ -51,7 +61,7 @@ class UserSerializer(serializers.ModelSerializer):
             "program_of_study",
             "profile_picture",
             "competitions",
-            "role",
+            "role",  # Added 'role' to the fields
         ]
         extra_kwargs = {
             'password': {'write_only': True},
@@ -59,8 +69,20 @@ class UserSerializer(serializers.ModelSerializer):
             'is_superuser': {'read_only': True},
         }
 
-    def get_role(self, obj):
-        return obj.role
+    def get_competitions(self, obj):
+        relationships = UserToCompetitionRelationship.objects.filter(user=obj)
+        competitions_data = []
+        for relationship in relationships:
+            competition = relationship.competition
+            competitions_data.append({
+                'id': competition.id,
+                'name': competition.name,
+                'event_date_start': competition.event_date_start,
+                'event_date_end': competition.event_date_end,
+                'status': relationship.get_status_display(),
+                # Include other necessary fields if needed
+            })
+        return competitions_data
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
@@ -77,17 +99,10 @@ class UserSerializer(serializers.ModelSerializer):
         except WagtailUserProfile.DoesNotExist:
             ret['profile_picture'] = None
 
-        # Add competitions data
-        ret['competitions'] = self.get_competitions(instance)
-
+        # 'competitions' field is already populated via get_competitions
         return ret
 
-    def get_competitions(self, obj):
-        relationships = UserToCompetitionRelationship.objects.filter(user=obj)
-        competitions = [relationship.competition for relationship in relationships]
-        serializer = CompetitionUserSerializer(competitions, many=True, context={'user': obj})
-        return serializer.data
-
+    # The rest of the methods remain unchanged
     def create(self, validated_data):
         profile_picture = validated_data.pop('profile_picture', None)
         user = User.objects.create(
@@ -96,6 +111,8 @@ class UserSerializer(serializers.ModelSerializer):
             first_name=validated_data["first_name"],
             last_name=validated_data["last_name"],
             institution=validated_data.get("institution", ""),
+            phone_number=validated_data.get("phone_number", ""),
+            program_of_study=validated_data.get("program_of_study", ""),
         )
         user.set_password(validated_data["password"])
         user.save()
@@ -116,8 +133,8 @@ class UserSerializer(serializers.ModelSerializer):
         instance.last_name = validated_data.get("last_name", instance.last_name)
         instance.save()
 
-        profile, created = WagtailUserProfile.objects.get_or_create(user=instance)
         if profile_picture is not None:
+            profile, created = WagtailUserProfile.objects.get_or_create(user=instance)
             profile.avatar = profile_picture
             profile.save()
         return instance
@@ -211,25 +228,23 @@ class CompetitionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Competition
-        fields = ['id', 'name', 'series']
+        fields = [
+            'id',
+            'name',
+            'max_participants',
+            'event_date_start',
+            'event_date_end',
+            'close_registration',
+            'series',
+            # Include any other fields needed
+        ]
 
     def get_series(self, obj):
         series_list = []
         for series_block in obj.series:
-            # Each series_block is a StructValue
-            integrals_list = []
-            for integral_block in series_block.value['integrals']:
-                integral_data = {
-                    'id': str(integral_block.id),
-                    'integral': integral_block.value.get('integral', ''),
-                    'integral_answer': integral_block.value.get('integral_answer', ''),
-                    'original_author': integral_block.value.get('original_author', ''),
-                }
-                integrals_list.append(integral_data)
             series_data = {
                 'id': str(series_block.id),
                 'series_name': series_block.value.get('series_name', ''),
-                'integrals': integrals_list,
             }
             series_list.append(series_data)
         return series_list
