@@ -81,24 +81,24 @@ router.beforeEach(async (to, from, next) => {
 
 	// if user data was requested and user is not logged in
 	// and wants to see a protected route - redirect to login page
-    console.log('redirect 1')
+
     if( protectedRoutes.includes(to.name as string) && !isAuthenticated && to.name !== 'sign_in'){
         next('/sign_in') 
         return
     }
-    console.log('redirect 2')
+
 	// redirect non admins to home page when trying access admin-only routes
     if( adminRoutes.includes(to.name as string) && (!isAuthenticated || !isAdmin) && to.name !== 'home'){
         next('/')
         return
     }
-    console.log('redirect 3')
+
     console.log(isIntegralEditor, authStore.user.role, authStore.user.role['IntegralEditor'], to.name, integralEditorRoutes.includes(to.name as string), integralEditorRoutes.includes(to.name as string) && !(isAdmin || isIntegralEditor) && to.name !== 'home')
-    // if(integralEditorRoutes.includes(to.name as string) && !(isAdmin || isIntegralEditor) && to.name !== 'home'){
-    //     next('/')
-    //     return
-    // }
-    console.log('redirect 4')
+    if(integralEditorRoutes.includes(to.name as string) && !(isAdmin || isIntegralEditor) && to.name !== 'home'){
+        next('/')
+        return
+    }
+
 	// handle the case when trying to access log in page while being
 	// signed up
     if( ['sign_in', 'sign_up'].includes(to.name as string) && isAuthenticated ){
