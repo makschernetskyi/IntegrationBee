@@ -225,6 +225,8 @@ class RoundSerializer(ModelSerializer):
 
 class CompetitionSerializer(serializers.ModelSerializer):
     series = serializers.SerializerMethodField()
+    rounds = RoundSerializer(many=True, read_only=True)
+    users_count = SerializerMethodField()
 
     class Meta:
         model = Competition
@@ -233,11 +235,16 @@ class CompetitionSerializer(serializers.ModelSerializer):
             'name',
             'max_participants',
             'event_date_start',
+            'rounds',
             'event_date_end',
             'close_registration',
             'series',
+            'users_count',
             # Include any other fields needed
         ]
+
+    def get_users_count(self, obj):
+        return obj.participants_relationships.count()
 
     def get_series(self, obj):
         series_list = []
@@ -259,7 +266,7 @@ class CompetitionListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Competition
-        fields = ['id', 'name', 'series']
+        fields = ['id', 'name', 'series', 'event_date_start', 'event_date_end', 'close_registration']
 
     def get_series(self, obj):
         series_list = []
