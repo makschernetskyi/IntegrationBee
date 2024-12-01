@@ -41,7 +41,7 @@ const handleLogout = async () => {
 				
 				<!-- invisible on mobile-->
 				<div class="absolute left-0 h-full hidden lg:flex">
-					<!-- logo on the bookmark -->
+					<!-- logo -->
 					<RouterLink to="/" class="relative flex justify-center items-center h-full">
 						<div class="p-3">
 							<svg width="69" height="68" viewBox="0 0 69 68" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-full aspect-square">

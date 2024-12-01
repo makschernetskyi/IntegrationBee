@@ -35,6 +35,7 @@ class CompetitionUserSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     profile_picture = serializers.ImageField(required=False, allow_null=True)
     competitions = serializers.SerializerMethodField()
+    role = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -50,12 +51,16 @@ class UserSerializer(serializers.ModelSerializer):
             "program_of_study",
             "profile_picture",
             "competitions",
+            "role",
         ]
         extra_kwargs = {
             'password': {'write_only': True},
             'is_verified': {'read_only': True},
             'is_superuser': {'read_only': True},
         }
+
+    def get_role(self, obj):
+        return obj.role
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
@@ -201,23 +206,55 @@ class RoundSerializer(ModelSerializer):
         return MatchSerializer(matches, many=True).data
 
 
-class CompetitionSerializer(ModelSerializer):
-    rounds = RoundSerializer(many=True, read_only=True)
-    users_count = SerializerMethodField()
+class CompetitionSerializer(serializers.ModelSerializer):
+    series = serializers.SerializerMethodField()
 
     class Meta:
         model = Competition
-        fields = ['id', 'name', 'max_participants', 'event_date_start', 'event_date_end', 'rounds', 'close_registration', 'users_count']
+        fields = ['id', 'name', 'series']
 
-    def get_users_count(self, obj):
-        return obj.participants_relationships.count()
+    def get_series(self, obj):
+        series_list = []
+        for series_block in obj.series:
+            # Each series_block is a StructValue
+            integrals_list = []
+            for integral_block in series_block.value['integrals']:
+                integral_data = {
+                    'id': str(integral_block.id),
+                    'integral': integral_block.value.get('integral', ''),
+                    'integral_answer': integral_block.value.get('integral_answer', ''),
+                    'original_author': integral_block.value.get('original_author', ''),
+                }
+                integrals_list.append(integral_data)
+            series_data = {
+                'id': str(series_block.id),
+                'series_name': series_block.value.get('series_name', ''),
+                'integrals': integrals_list,
+            }
+            series_list.append(series_data)
+        return series_list
 
 
-class CompetitionListSerializer(ModelSerializer):
+class SeriesListSerializer(serializers.Serializer):
+    id = serializers.CharField()
+    series_name = serializers.CharField()
+
+class CompetitionListSerializer(serializers.ModelSerializer):
+    series = serializers.SerializerMethodField()
+
     class Meta:
         model = Competition
-        fields = ['event_date_start', 'event_date_end', 'close_registration']
+        fields = ['id', 'name', 'series']
 
+    def get_series(self, obj):
+        series_list = []
+        for series_block in obj.series:
+            series_data = {
+                'id': str(series_block.id),
+                'series_name': series_block.value.get('series_name', ''),
+            }
+            series_list.append(series_data)
+        return series_list
 
 class LocationSerializer(serializers.ModelSerializer):
     # Define fields for latitude and longitude
@@ -243,3 +280,16 @@ class LocationSerializer(serializers.ModelSerializer):
             return obj.location.split(",")[1].strip()
         except (AttributeError, IndexError):
             return None
+
+
+
+class IntegralSerializer(serializers.Serializer):
+    id = serializers.CharField()
+    integral = serializers.CharField(required=False, allow_blank=True)
+    integral_answer = serializers.CharField(required=False, allow_blank=True)
+    original_author = serializers.CharField(required=False, allow_blank=True)
+
+class SeriesSerializer(serializers.Serializer):
+    id = serializers.CharField()
+    series_name = serializers.CharField()
+    integrals = IntegralSerializer(many=True)

@@ -50,7 +50,7 @@ const {isAuthenticated} = useAuthStore()
 					<div class="flex flex-col gap-0" data-aos="fade-right" data-aos-offset="0">
 						<h1 class="font-heading text-title lg:text-heading">INTEGRATION BEE</h1>
 						<h2 class="font-heading text-primary text-subtitle lg:text-title">AUSTRIA</h2>
-						<h3 class="text-body lg:text-title" v-html="sanitizeHtml(store.slogan)"/>
+						<h3 class="text-body lg:text-title" v-html="store.slogan && sanitizeHtml(store.slogan)"/>
 					</div>
 					<div class="flex justify-between md:justify-start items-center w-full md:gap-[2.4rem] lg:text-body">
 						<!-- sign in/events and learn more buttons -->
@@ -202,7 +202,7 @@ const {isAuthenticated} = useAuthStore()
 							</div>
 						</div>
 						<div class="md:col-span-2 px-[2rem] py-[4rem] lg:py-[0] h-full w-full flex items-center">
-							<p class="font-body text-body text-center lg:text-left" v-html="sanitizeHtml(store.nextEvent?.description as string)"/>	
+							<p class="font-body text-body text-center lg:text-left" v-html="store.nextEvent && sanitizeHtml(store.nextEvent?.description as string)"/>	
 						</div>
 					</RouterLink>
 				</div>
