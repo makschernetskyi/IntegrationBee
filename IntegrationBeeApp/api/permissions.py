@@ -31,14 +31,6 @@ class HasIntegralEditorPermission(BasePermission):
         return
 
 
-class IsWagtailAdminUser(IsAdminUser):
-    def has_permission(self, request, view):
-        user = request.user
-        if user.is_authenticated:
-            return user.is_superuser or user.is_staff
-        return False
-
-
 @hooks.register('register_permissions')
 def register_competition_permissions():
     content_type = ContentType.objects.get_for_model(Competition)
