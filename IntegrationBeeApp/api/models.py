@@ -61,15 +61,15 @@ class User(AbstractUser):
 
     @property
     def is_page_editor(self):
-        return self.groups.filter(name='Editors').exists()
+        return self.groups.filter(name='PageEditor').exists()
 
     @property
     def is_integral_editor(self):
-        return self.groups.filter(name='Moderators').exists()
+        return self.groups.filter(name='IntegralEditor').exists()
 
     @property
     def is_submission_editor(self):
-        return self.groups.filter(name='Submissions').exists()
+        return self.groups.filter(name='SubmissionEditor').exists()
 
     @property
     def role(self):
