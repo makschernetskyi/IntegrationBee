@@ -24,7 +24,7 @@ from .models import PasswordResetToken, EmailVerificationToken, \
     UserToCompetitionRelationship, Competition, User  # Ensure you have PasswordResetToken model
 
 from .serializers import UserSerializer, UserToCompetitionRelationshipSerializer, CompetitionSerializer, CompetitionListSerializer
-from .permissions import IsWagtailAdminUser, HasCompetitionPermission
+from .permissions import HasCompetitionPermission, HasIntegralEditorPermission
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -264,6 +264,9 @@ class CompetitionListView(ListAPIView):
 
 
 class CompetitionSeriesDetailView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [HasIntegralEditorPermission]
+
     def get(self, request, competition_id, series_id):
         competition = get_object_or_404(Competition, id=competition_id)
         for series_block in competition.series:
@@ -287,6 +290,9 @@ class CompetitionSeriesDetailView(APIView):
 
 
 class CompetitionTieBreakersView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [HasIntegralEditorPermission]
+
     def get(self, request, competition_id):
         competition = get_object_or_404(Competition, id=competition_id)
         for series_block in competition.series:
@@ -349,7 +355,7 @@ class GenerateBracketView(APIView):
 
 class DownloadParticipantsCsvView(APIView):
     authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated, HasCompetitionPermission]
+    permission_classes = [HasCompetitionPermission]
 
     def get(self, request, pk):
         competition = get_object_or_404(Competition, pk=pk)
