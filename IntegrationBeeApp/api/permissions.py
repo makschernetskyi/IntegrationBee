@@ -22,6 +22,15 @@ class HasCompetitionPermission(BasePermission):
         return
 
 
+class HasIntegralEditorPermission(BasePermission):
+    def has_permission(self, request, view):
+        user = request.user
+        if user.is_authenticated:
+            if user.is_submission_editor or user.is_wagtail_admin or user.is_integral_editor:
+                return True
+        return
+
+
 class IsWagtailAdminUser(IsAdminUser):
     def has_permission(self, request, view):
         user = request.user
