@@ -89,7 +89,7 @@ const closeParticipationForm = () =>{
 					<h3 class="font-heading text-title mt-[3rem] w-full text-center lg:text-left">
 						{{ section.title }}
 					</h3>
-					<p class="font-body text-body mt-[3rem] w-full text-center lg:text-left" v-html="sanitizeHtml(section.text)"/>
+					<p class="font-body text-body mt-[3rem] w-full text-center lg:text-left section-text" v-html="sanitizeHtml(section.text)"/>
 				</template>
 				<h3 class="font-heading text-title mt-[3rem] w-full text-center lg:text-left">
 					Tournament Bracket
@@ -271,3 +271,13 @@ const closeParticipationForm = () =>{
 	</div>
 	</DefaultLayout>
 </template>
+<style lang="postcss" scoped>
+
+.section-text{
+	a{
+		text-decoration: underline;
+		color: #335B89;
+	}
+}
+
+</style>

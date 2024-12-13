@@ -1,6 +1,6 @@
 <picture>
-	<source alt="Integration Bee" media="(prefers-color-scheme: dark)" srcset="./Media/Integration_bee_logo_light_text_vec.svg">
-	<img src="./Media/Integration_bee_logo_vec.svg" alt="Integration Bee">
+	<source alt="Integration Bee logo" media="(prefers-color-scheme: dark)" srcset="./Media/logo_full_text_for_dark_theme.svg">
+	<img src="./Media/logo_full_text.svg" alt="Integration Bee logo">
 </picture>
 
 <!-- ![Integration Bee](./Media/Integration_bee_logo_lightbg.svg) -->
@@ -23,8 +23,8 @@ users and for which competition have they signed up, to create tournament bracke
 in the integral library and to have a variety of tools that make the competition possible.
 
 ## What does this app look like?
-![Home page Demo](./Media/Demo/IntegrationBee_desktop.webp)
-![News page Demo](./Media/Demo/MobileNews.webp)
+![Home page Demo](./Media/Demo/IntegrationBee_desktop_2.webp)
+![News page Demo](./Media/Demo/MobileNews_2.webp)
 
 ## The app is available online
 
