@@ -273,10 +273,10 @@ const closeParticipationForm = () =>{
 </template>
 <style lang="postcss" scoped>
 
-.section-text{
-	a{
-		text-decoration: underline;
-		color: #335B89;
+.section-text {
+	::v-deep a {
+	  text-decoration: underline;
+	  color: #335B89;
 	}
 }
 
