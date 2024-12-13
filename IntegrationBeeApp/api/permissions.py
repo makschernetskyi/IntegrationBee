@@ -22,12 +22,13 @@ class HasCompetitionPermission(BasePermission):
         return
 
 
-class IsWagtailAdminUser(IsAdminUser):
+class HasIntegralEditorPermission(BasePermission):
     def has_permission(self, request, view):
         user = request.user
         if user.is_authenticated:
-            return user.is_superuser or user.is_staff
-        return False
+            if user.is_submission_editor or user.is_wagtail_admin or user.is_integral_editor:
+                return True
+        return
 
 
 @hooks.register('register_permissions')
