@@ -67,7 +67,7 @@ function switchFocusToFullScreenInput(newsItem:any){
 							<p class="flex flex-wrap text-right text-body">{{ newsItem.date }}</p>
 						</div>
 						<div>
-							<p v-html="sanitizeHtml(newsItem.content).split(' ').slice(0,50).join(' ')"/>
+							<p class="news-text" v-html="sanitizeHtml(newsItem.content).split(' ').slice(0,50).join(' ')"/>
 							<template v-if="sanitizeHtml(newsItem.content).split(' ').length > 300">
 								<br>
 								<p>
@@ -131,7 +131,7 @@ function switchFocusToFullScreenInput(newsItem:any){
 							<p class="flex flex-wrap text-right text-body">{{ fullViewNews.date }}</p>
 						</div>
 						<div>
-							<p v-html="sanitizeHtml(fullViewNews.content)"/>
+							<p class="news-text" v-html="sanitizeHtml(fullViewNews.content)"/>
 						</div>
 						<div v-if="fullViewNews.pictureSrc" class="w-full h-max max-h-[50rem] overflow-hidden rounded-[0.7rem]">
 							<img :src="fullViewNews.pictureSrc" :alt="fullViewNews.pictureAlt" class="w-full">
@@ -174,6 +174,13 @@ function switchFocusToFullScreenInput(newsItem:any){
 .scrollbar-hidden::-webkit-scrollbar {
   width: 0;
   height: 0;
+}
+
+.news-text {
+	::v-deep a {
+	  text-decoration: underline;
+	  color: #335B89;
+	}
 }
 
 </style>
