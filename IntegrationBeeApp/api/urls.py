@@ -7,8 +7,8 @@ from rest_framework_simplejwt.views import (
 from .views import RegisterView, UserDataView, CompetitionView, VerifyEmailView, DownloadLatexPdfReportView, \
     DownloadLatexTexReportView, DownloadParticipantsCsvView, GenerateBracketView, UpdateUserView, \
     PasswordResetConfirmView, RequestPasswordResetView, CompetitionListView, CompetitionSeriesDetailView, \
-    CompetitionTieBreakersView, UserEloListView, UserGymEloListView, DailyIntegralTodayView, \
-    CheckDailyIntegralAnswerView, UserGymStatsView
+    CompetitionTieBreakersView, UserEloListView, DailyIntegralTodayView, \
+    CheckDailyIntegralAnswerView, UserGymStatsView, UserGymRankingListView
 
 urlpatterns = [
     path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -28,7 +28,7 @@ urlpatterns = [
     path('competitions/<int:competition_id>/series/<str:series_id>/', CompetitionSeriesDetailView.as_view(), name='competition_series_detail'),
     path('competitions/<int:competition_id>/tie-breakers/', CompetitionTieBreakersView.as_view(), name='competition_tie_breakers'),
     path('eloUserData/', UserEloListView.as_view(), name='user-elo-list'),
-    path('gymEloUserData/', UserGymEloListView.as_view(), name='user-gym-elo-list'),
+    path('gymUserData/', UserGymRankingListView.as_view(), name='user-gym-elo-list'),
     path('daily-integral/', DailyIntegralTodayView.as_view(), name='daily-integral-today'),
     path('daily-integral/check/<int:integral_id>/', CheckDailyIntegralAnswerView.as_view(), name='check-daily-integral'),
     path('gymUserStats/', UserGymStatsView.as_view(), name='gym-user-stats'),

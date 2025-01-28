@@ -54,7 +54,7 @@ class User(AbstractUser):
 
     region = models.CharField(max_length=100, null=True, blank=True, default='Austria')
     ranking_elo = models.FloatField(default=1000)
-    ranking_elo_gym = models.FloatField(default=1000)
+    ranking_gym = models.IntegerField(default=0)
 
     is_verified = models.BooleanField(default=False, null=False, blank=False)
 

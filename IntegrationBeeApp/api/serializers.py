@@ -332,7 +332,7 @@ class UserEloSerializer(serializers.ModelSerializer):
         ]
 
 
-class UserGymEloSerializer(serializers.ModelSerializer):
+class UserGymRankingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
@@ -340,7 +340,7 @@ class UserGymEloSerializer(serializers.ModelSerializer):
             'id',
             'first_name',
             'last_name',
-            'ranking_elo_gym',
+            'ranking_gym',
             'institution',
             'region',
         ]

@@ -31,8 +31,8 @@ from .models import PasswordResetToken, EmailVerificationToken, \
     DailyIntegralToUserRelationship  # Ensure you have PasswordResetToken model
 
 from .serializers import UserSerializer, UserToCompetitionRelationshipSerializer, CompetitionSerializer, \
-    CompetitionListSerializer, UserEloSerializer, UserGymEloSerializer, DailyIntegralSerializer, \
-    DailyIntegralSolveSerializer
+    CompetitionListSerializer, UserEloSerializer, DailyIntegralSerializer, \
+    DailyIntegralSolveSerializer, UserGymRankingSerializer
 from .permissions import HasCompetitionPermission, HasIntegralEditorPermission
 
 from rest_framework.views import APIView
@@ -45,6 +45,8 @@ from datetime import timedelta
 from .models import PasswordResetToken
 
 from wagtail.users.models import UserProfile as WagtailUserProfile
+
+from .templatetags.custom_filters import register
 
 
 class PasswordResetConfirmView(APIView):
@@ -399,10 +401,9 @@ class UserEloListView(ListAPIView):
     ordering = ['-ranking_elo']
 
 
-class UserGymEloListView(ListAPIView):
-
+class UserGymRankingListView(ListAPIView):
     queryset = User.objects.all()
-    serializer_class = UserGymEloSerializer
+    serializer_class = UserGymRankingSerializer
 
     filter_backends = [
         DjangoFilterBackend,
@@ -413,8 +414,8 @@ class UserGymEloListView(ListAPIView):
 
     search_fields = ['first_name', 'last_name']
 
-    ordering_fields = ['ranking_elo_gym']
-    ordering = ['-ranking_elo_gym']
+    ordering_fields = ['ranking_gym']
+    ordering = ['-ranking_gym']
 
 
 class DailyIntegralTodayView(generics.RetrieveAPIView):
@@ -475,7 +476,8 @@ class CheckDailyIntegralAnswerView(generics.GenericAPIView):
 
                 rel.solved = True
                 self.update_user_streak(request.user, integral)
-                self.update_user_gym_elo(request.user)
+                request.user.ranking_gym += 1
+                request.user.save()
                 rel.save()
                 return Response({"correct": True, "message": "Correct answer!"})
             else:
@@ -485,9 +487,6 @@ class CheckDailyIntegralAnswerView(generics.GenericAPIView):
         except Exception as e:
             rel.save()
             return Response({"correct": False, "message": f"Error parsing answer: {str(e)}"}, status=400)
-
-    def update_user_gym_elo(self, user):
-        pass
 
     def update_user_streak(self, user, integral):
         today = timezone.localdate()
@@ -515,5 +514,5 @@ class UserGymStatsView(APIView):
             "daily_streak": user.get_gym_daily_streak,
             "daily_streak_max": user.get_gym_daily_streak_max,
             "success_rate": user.get_gym_success_rate,
-            "gym_elo": user.ranking_elo_gym
+            "gym_ranking": user.ranking_gym
         })
