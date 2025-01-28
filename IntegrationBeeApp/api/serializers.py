@@ -1,10 +1,11 @@
+import json
 from pprint import pprint
 
 from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import Serializer, ModelSerializer
 
 from .models import User, Competition, EmailVerificationToken, ForgotPasswordToken, UserToCompetitionRelationship, \
-    Round, Match
+    Round, Match, DailyIntegral, DailyIntegralToUserRelationship
 from rest_framework import serializers
 from .models import User
 
@@ -304,14 +305,68 @@ class LocationSerializer(serializers.ModelSerializer):
             return None
 
 
-
 class IntegralSerializer(serializers.Serializer):
     id = serializers.CharField()
     integral = serializers.CharField(required=False, allow_blank=True)
     integral_answer = serializers.CharField(required=False, allow_blank=True)
     original_author = serializers.CharField(required=False, allow_blank=True)
 
+
 class SeriesSerializer(serializers.Serializer):
     id = serializers.CharField()
     series_name = serializers.CharField()
     integrals = IntegralSerializer(many=True)
+
+
+class UserEloSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = [
+            'id',
+            'first_name',
+            'last_name',
+            'ranking_elo',
+            'institution',
+            'region',
+        ]
+
+
+class UserGymEloSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = [
+            'id',
+            'first_name',
+            'last_name',
+            'ranking_elo_gym',
+            'institution',
+            'region',
+        ]
+
+
+class DailyIntegralSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = DailyIntegral
+        fields = ['id', 'integral', 'date', 'difficulty_level', 'original_author']
+
+
+class DailyIntegralSolveSerializer(serializers.Serializer):
+    user_answer = serializers.CharField()
+
+
+class DailyIntegralSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = DailyIntegral
+        fields = ['id', 'integral', 'date', 'difficulty_level', 'original_author']
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        integral_data = json.loads(representation['integral'])
+        if integral_data and isinstance(integral_data, list):
+            representation['integral'] = integral_data[0].get('value', '') if 'value' in integral_data[0] else ''
+
+        return representation

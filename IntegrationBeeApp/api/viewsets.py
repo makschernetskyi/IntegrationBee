@@ -5,7 +5,7 @@ from wagtail.snippets.models import register_snippet
 from wagtail.snippets.views.snippets import SnippetViewSet
 from wagtail.users.views.users import UserViewSet as WagtailUserViewSet
 
-from api.models import Competition, UserToCompetitionRelationship
+from api.models import Competition, UserToCompetitionRelationship, DailyIntegral
 from .forms import CustomUserCreationForm, CustomUserEditForm
 from .views import CustomRevisionsCompareView
 
@@ -23,6 +23,18 @@ class UserViewSet(WagtailUserViewSet):
 class CompetitionManager(Manager):
     def visible_in_admin(self):
         return self.filter(show_in_admin='ALL')  # Adjust as needed
+
+
+class DailyIntegralSnippetViewSet(SnippetViewSet):
+    model = DailyIntegral
+    icon = 'code'
+    menu_label = 'Daily Integrals'
+    add_to_settings_menu = False
+    add_to_admin_menu = True
+    menu_order = 302
+
+    list_display = ('id', 'date', 'original_author', "difficulty_level")
+    search_fields = ('date', 'original_author')
 
 
 class CompetitionSnippetViewSet(SnippetViewSet):
@@ -111,3 +123,5 @@ class UserToCompetitionRelationshipSnippetViewSet(SnippetViewSet):
 
 register_snippet(CompetitionSnippetViewSet)
 register_snippet(UserToCompetitionRelationshipSnippetViewSet)
+register_snippet(DailyIntegralSnippetViewSet)
+
