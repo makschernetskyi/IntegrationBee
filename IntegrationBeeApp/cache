@@ -1,0 +1,4 @@
+./api/migrations/__pycache__
+./api/__pycache__
+./home/management/commands/__pycache__
+./IntegrationBeeApp/settings/__pycache__
