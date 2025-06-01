@@ -6,24 +6,33 @@ from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
 from django.db import IntegrityError
 from django.db import transaction
+from django.db.models import Window, F
+from django.db.models.functions import Rank
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
-from rest_framework import status
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import status, generics
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.exceptions import ValidationError
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from sympy import sympify, simplify
 from wagtail.snippets.views.snippets import RevisionsCompareView
 from django.conf import settings
 
 from api.services.send_email import send_email
+from .filters import UserEloFilter
 from .models import PasswordResetToken, EmailVerificationToken, \
-    UserToCompetitionRelationship, Competition, User  # Ensure you have PasswordResetToken model
+    UserToCompetitionRelationship, Competition, User, DailyIntegral, \
+    DailyIntegralToUserRelationship  # Ensure you have PasswordResetToken model
 
-from .serializers import UserSerializer, UserToCompetitionRelationshipSerializer, CompetitionSerializer, CompetitionListSerializer
+from .serializers import UserSerializer, UserToCompetitionRelationshipSerializer, CompetitionSerializer, \
+    CompetitionListSerializer, UserEloSerializer, DailyIntegralSerializer, \
+    DailyIntegralSolveSerializer, UserGymRankingSerializer
 from .permissions import HasCompetitionPermission, HasIntegralEditorPermission
 
 from rest_framework.views import APIView
@@ -36,6 +45,8 @@ from datetime import timedelta
 from .models import PasswordResetToken
 
 from wagtail.users.models import UserProfile as WagtailUserProfile
+
+from .templatetags.custom_filters import register
 
 
 class PasswordResetConfirmView(APIView):
@@ -370,3 +381,138 @@ class CustomRevisionsCompareView(RevisionsCompareView):
         if not request.user.is_superuser:
             return HttpResponseForbidden()
         return super().dispatch(request, *args, **kwargs)
+
+
+class UserEloListView(ListAPIView):
+
+    queryset = User.objects.all()
+    serializer_class = UserEloSerializer
+
+    filter_backends = [
+        DjangoFilterBackend,
+        SearchFilter,
+        OrderingFilter,
+    ]
+    filterset_class = UserEloFilter
+
+    search_fields = ['first_name', 'last_name']
+
+    ordering_fields = ['ranking_elo']
+    ordering = ['-ranking_elo']
+
+
+class UserGymRankingListView(ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserGymRankingSerializer
+
+    filter_backends = [
+        DjangoFilterBackend,
+        SearchFilter,
+        OrderingFilter,
+    ]
+    filterset_class = UserEloFilter
+
+    search_fields = ['first_name', 'last_name']
+
+    ordering_fields = ['ranking_gym']
+    ordering = ['-ranking_gym']
+
+
+class DailyIntegralTodayView(generics.RetrieveAPIView):
+
+    permission_classes = [IsAuthenticated]
+    serializer_class = DailyIntegralSerializer
+
+    def get_object(self):
+        today = timezone.localdate()
+        integral = DailyIntegral.objects.filter(date=today).first()
+
+        if not integral:
+            integral = DailyIntegral.objects.filter(date=None).first()
+            if integral:
+                integral.date = today
+                integral.save()
+        return integral
+
+    def get(self, request, *args, **kwargs):
+        integral = self.get_object()
+        if not integral:
+            return Response({"detail": "No integral for today."}, status=404)
+        serializer = self.serializer_class(integral)
+        return Response(serializer.data)
+
+
+class CheckDailyIntegralAnswerView(generics.GenericAPIView):
+
+    permission_classes = [IsAuthenticated]
+    serializer_class = DailyIntegralSolveSerializer
+
+    def post(self, request, *args, **kwargs):
+        integral_id = kwargs.get('integral_id') or request.data.get('integral_id')
+        if not integral_id:
+            return Response({"detail": "Missing integral_id."}, status=400)
+
+        try:
+            integral = DailyIntegral.objects.get(id=integral_id)
+        except DailyIntegral.DoesNotExist:
+            return Response({"detail": "Integral not found."}, status=404)
+
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user_answer_str = serializer.validated_data['user_answer']
+
+        rel, created = DailyIntegralToUserRelationship.objects.get_or_create(
+            user=request.user,
+            integral=integral
+        )
+        rel.attempts += 1
+
+        try:
+            correct_answer_expr = sympify(integral.integral_answer)
+            user_answer_expr = sympify(user_answer_str)
+
+            difference = simplify(correct_answer_expr - user_answer_expr)
+            if difference == 0:
+
+                rel.solved = True
+                self.update_user_streak(request.user, integral)
+                request.user.ranking_gym += 1
+                request.user.save()
+                rel.save()
+                return Response({"correct": True, "message": "Correct answer!"})
+            else:
+                rel.save()
+                return Response({"correct": False, "message": "Incorrect answer."})
+
+        except Exception as e:
+            rel.save()
+            return Response({"correct": False, "message": f"Error parsing answer: {str(e)}"}, status=400)
+
+    def update_user_streak(self, user, integral):
+        today = timezone.localdate()
+        if integral.date == today:
+            yesterday = today - timedelta(days=1)
+            if user.gym_last_completed == yesterday:
+                user.gym_daily_streak += 1
+            else:
+                user.gym_daily_streak = 1
+
+            if user.gym_daily_streak > user.gym_daily_streak_max:
+                user.gym_daily_streak_max = user.gym_daily_streak
+
+            user.gym_last_completed = today
+            user.save()
+
+
+class UserGymStatsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        user = request.user
+        return Response({
+            "daily_streak": user.get_gym_daily_streak,
+            "daily_streak_max": user.get_gym_daily_streak_max,
+            "success_rate": user.get_gym_success_rate,
+            "gym_ranking": user.ranking_gym
+        })

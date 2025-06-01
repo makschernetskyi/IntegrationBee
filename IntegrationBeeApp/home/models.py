@@ -369,4 +369,23 @@ class HomePage(Page):
         index.SearchField('why_participate', partial_match=True),
     ]
 
-    subpage_types = ["home.NewsPage", "home.CompetitionsPage", "home.ContactsPage", "home.ImprintPage", "home.TermsOfUsePage"]
+    subpage_types = ["home.NewsPage", "home.CompetitionsPage", "home.ContactsPage", "home.ImprintPage",
+                     "home.TermsOfUsePage", "home.PrivacyPolicyPage", "home.IntegrationGymRulesPage"]
+
+
+class IntegrationGymRulesPage(Page):
+    """A simple page in Wagtail that shows the rules."""
+    body = RichTextField(blank=True, null=True, features=["bold", "italic", "link", "ol", "ul"])
+
+    content_panels = Page.content_panels + [
+        FieldPanel('body'),
+    ]
+
+    api_fields = [
+        APIField('title'),
+        APIField('body'),
+    ]
+
+    search_fields = Page.search_fields + [
+        index.SearchField('body', partial_match=True),
+    ]

@@ -10,3 +10,4 @@ IntegrationBeeApp/backup/
 Frontend/IntegrationBeeFrontend/node_modules/
 Frontend/IntegrationBeeFrontend/dist/
 /IntegrationBeeApp/media/
+__pycache__/
