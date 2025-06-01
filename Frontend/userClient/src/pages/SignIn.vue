@@ -56,11 +56,11 @@ function closePasswordRecovery (){
 		<div class="w-full h-[8rem] lg:h-[10rem] bg-screenBlack"/>
 		<div class="w-full flex flex-col bg-pearl-white gap-[4rem] py-[5rem] text-body font-body text-screenBlack">
 			<div class="flex items-center justify-between">
-				<div class="w-[10vw] lg:w-[30vw] h-[4rem] bg-primary"/>
+				<div class="w-[10vw] lg:w-[30vw] h-[4rem] rounded-r-[2px] bg-primary"/>
 				<h1 class="font-heading text-subtitle lg:text-title text-center">
 					Sign in
 				</h1>
-				<div class="w-[10vw] lg:w-[30vw] h-[4rem] bg-primary"/>
+				<div class="w-[10vw] lg:w-[30vw] h-[4rem] rounded-l-[2px] bg-primary"/>
 			</div>
 			<!--Form-->
 			<div class="w-full flex justify-center">

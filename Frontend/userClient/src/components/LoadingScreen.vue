@@ -25,7 +25,11 @@ const loadingPhrases: string[] = [
   "Escaping singularities",
   "Conducting Fourier analysis",
   "Dividing and conquering",
-  "Synchronizing with sine waves"
+  "Synchronizing with sine waves",
+  "Optimizing decay factors",
+  "Grilling the sandwich theorem",
+  "Remembering Bunyakovsky",
+  "Making inequalities equal"
 ];
 
 const currentPhrase = ref(loadingPhrases[Math.floor(Math.random()*loadingPhrases.length)])
@@ -34,6 +38,8 @@ const currentPhrase = ref(loadingPhrases[Math.floor(Math.random()*loadingPhrases
 <template>
     <div class="fixed top-0 left-0 w-full h-full bg-pearl-white z-[10000] flex flex-col justify-center items-center px-[2rem]">
         <Loader class="scale-[0.8]"/>
-        <p class="text-screenBlack text-body font-body text-center">{{ currentPhrase }}</p>
+        <div class="h-[5rem] flex justify-center items-center">\
+            <p class="text-screenBlack text-body font-body text-center">{{ currentPhrase }}</p>
+        </div>
     </div>
 </template>

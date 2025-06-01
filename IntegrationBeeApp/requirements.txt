@@ -40,8 +40,7 @@ matplotlib-inline==0.1.7
 openpyxl==3.1.5
 parso==0.8.4
 pexpect==4.9.0
-pillow==10.1.0
-pillow_heif==0.20.0
+
 prompt_toolkit==3.0.48
 ptyprocess==0.7.0
 pure_eval==0.2.3
@@ -68,3 +67,6 @@ wcwidth==0.2.13
 webencodings==0.5.1
 whitenoise==6.6.0
 Willow==1.9.0
+
+pillow==10.4.0
+

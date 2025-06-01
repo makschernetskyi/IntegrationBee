@@ -25,10 +25,12 @@
     "katex": "^0.16.11",
     "leaflet": "^1.9.4",
     "lingua-recorder": "^2.2.1",
+    "mathlive": "^0.105.3",
     "pinia": "^2.2.3",
     "postcss-nested": "^6.2.0",
     "video.js": "^8.17.4",
     "videojs-youtube": "^3.0.1",
+    "vite-svg-loader": "^5.1.0",
     "vue": "^3.4.37",
     "vue-router": "4",
     "yarn": "^1.22.22"
