@@ -72,7 +72,7 @@ router.beforeEach(async (to, from, next) => {
 	//if user data was not requested - make the request
     if(authStore.userDataRequest.status == null){
         
-        //await authStore.getProfileData()
+        await authStore.getProfileData()
     }
 
     const isAuthenticated = authStore.isAuthenticated
