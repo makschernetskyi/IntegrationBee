@@ -21,6 +21,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from sympy import sympify, simplify
+from sympy.parsing.latex import parse_latex
 from wagtail.snippets.views.snippets import RevisionsCompareView
 from django.conf import settings
 
@@ -385,25 +386,48 @@ class CustomRevisionsCompareView(RevisionsCompareView):
 
 class UserEloListView(ListAPIView):
 
-    queryset = User.objects.all()
     serializer_class = UserEloSerializer
+    permission_classes = []  # Allow public access to rankings
 
     filter_backends = [
         DjangoFilterBackend,
         SearchFilter,
-        OrderingFilter,
     ]
     filterset_class = UserEloFilter
 
     search_fields = ['first_name', 'last_name']
 
-    ordering_fields = ['ranking_elo']
-    ordering = ['-ranking_elo']
+    def get_queryset(self):
+        """
+        Return all users - ordering will be handled by list() method
+        """
+        return User.objects.all()
+    
+    def list(self, request, *args, **kwargs):
+        """
+        Override list method to apply proper ordering by display ratings
+        """
+        from api.elo_utils import get_display_rating
+        
+        queryset = self.filter_queryset(self.get_queryset())
+        
+        # Convert to list and sort by display rating
+        users_list = list(queryset)
+        users_list.sort(key=lambda user: get_display_rating(user.ranking_elo), reverse=True)
+        
+        page = self.paginate_queryset(users_list)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(users_list, many=True)
+        return Response(serializer.data)
 
 
 class UserGymRankingListView(ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserGymRankingSerializer
+    permission_classes = []  # Allow public access to rankings
 
     filter_backends = [
         DjangoFilterBackend,
@@ -438,7 +462,7 @@ class DailyIntegralTodayView(generics.RetrieveAPIView):
         integral = self.get_object()
         if not integral:
             return Response({"detail": "No integral for today."}, status=404)
-        serializer = self.serializer_class(integral)
+        serializer = self.serializer_class(integral, context={'request': request})
         return Response(serializer.data)
 
 
@@ -465,11 +489,12 @@ class CheckDailyIntegralAnswerView(generics.GenericAPIView):
             user=request.user,
             integral=integral
         )
+
         rel.attempts += 1
 
         try:
             correct_answer_expr = sympify(integral.integral_answer)
-            user_answer_expr = sympify(user_answer_str)
+            user_answer_expr = parse_latex(user_answer_str)
 
             difference = simplify(correct_answer_expr - user_answer_expr)
             if difference == 0:

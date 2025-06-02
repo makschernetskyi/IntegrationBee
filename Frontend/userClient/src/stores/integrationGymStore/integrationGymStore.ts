@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import axios from 'axios'
+import {api} from '@/api'
+import { useToastStore } from '../toastStore/toastStore'
 
 type RequestStatus = 'idle' | 'loading' | 'success' | 'error'
 
@@ -9,148 +10,153 @@ interface RequestState {
   error: string | null
 }
 
-export const useIntegrationGymStore = defineStore('integrationGym', () => {
+export const useIntegrationGymStore = defineStore('integrationGym', {
   // State
-  const currentIntegral = ref<string>('\\int x^2 dx')
-  const userAnswer = ref<string>('')
-  const problemId = ref<string>('')
-  const hasSubmitted = ref<boolean>(false)
-  const submissionResult = ref<{correct: boolean, message: string} | null>(null)
-  
-  // Request states
-  const dailyProblemRequest = ref<RequestState>({
-    status: 'idle', // idle = not loaded yet, loading = fetching, success = loaded, error = failed
-    error: null
-  })
-  
-  const submitAnswerRequest = ref<RequestState>({
-    status: 'idle',
-    error: null
-  })
-
-  // Computed getters for better UX
-  const isProblemLoaded = computed(() => dailyProblemRequest.value.status === 'success')
-  const isProblemLoading = computed(() => dailyProblemRequest.value.status === 'loading')
-  const isProblemError = computed(() => dailyProblemRequest.value.status === 'error')
-  
-  const isSubmitting = computed(() => submitAnswerRequest.value.status === 'loading')
-  const isSubmitError = computed(() => submitAnswerRequest.value.status === 'error')
-
-  // Actions
-  const fetchDailyProblem = async () => {
-    dailyProblemRequest.value = { status: 'loading', error: null }
-    
-    try {
-      // Placeholder endpoint - replace with actual backend endpoint when available
-      const response = await axios.get('/api/integration-gym/daily-problem')
-      
-      currentIntegral.value = response.data.integral
-      problemId.value = response.data.id
-      
-      // Reset user state for new problem
-      userAnswer.value = ''
-      hasSubmitted.value = false
-      submissionResult.value = null
-      
-      dailyProblemRequest.value = { status: 'success', error: null }
-      
-    } catch (error) {
-      console.error('Failed to fetch daily problem:', error)
-      
-      // Fallback to default problem
-      currentIntegral.value = '\\int \\frac{1}{x^2 + 1} dx'
-      problemId.value = 'fallback-problem'
-      
-      dailyProblemRequest.value = { 
-        status: 'error', 
-        error: 'Failed to fetch daily problem. Using fallback.'
-      }
-    }
-  }
-
-  const submitAnswer = async () => {
-    if (!userAnswer.value.trim() || hasSubmitted.value) {
-      return
-    }
-
-    submitAnswerRequest.value = { status: 'loading', error: null }
-    
-    try {
-      // Placeholder endpoint - replace with actual backend endpoint when available
-      const response = await axios.post('/api/integration-gym/submit-answer', {
-        problemId: problemId.value,
-        answer: userAnswer.value
-      })
-      
-      submissionResult.value = {
-        correct: response.data.correct,
-        message: response.data.message
-      }
-      hasSubmitted.value = true
-      
-      submitAnswerRequest.value = { status: 'success', error: null }
-      
-    } catch (error) {
-      console.error('Failed to submit answer:', error)
-      
-      submissionResult.value = {
-        correct: false,
-        message: 'Failed to submit answer. Please try again.'
-      }
-      
-      submitAnswerRequest.value = { 
-        status: 'error', 
-        error: 'Failed to submit answer. Please try again.'
-      }
-    }
-  }
-
-  const resetProblem = () => {
-    userAnswer.value = ''
-    hasSubmitted.value = false
-    submissionResult.value = null
-    submitAnswerRequest.value = { status: 'idle', error: null }
-  }
-
-  const resetSubmission = () => {
-    submitAnswerRequest.value = { status: 'idle', error: null }
-    submissionResult.value = null
-  }
-
-  const $reset = () => {
-    currentIntegral.value = '\\int x^2 dx'
-    userAnswer.value = ''
-    problemId.value = ''
-    hasSubmitted.value = false
-    submissionResult.value = null
-    dailyProblemRequest.value = { status: 'idle', error: null }
-    submitAnswerRequest.value = { status: 'idle', error: null }
-  }
-
-  return {
-    // State
-    currentIntegral,
-    userAnswer,
-    problemId,
-    hasSubmitted,
-    submissionResult,
+  state: () => ({
+    currentIntegral:{
+      id: null as null|string,
+      integral: null as null|string,
+      author: null as null|string,
+      user_solved: null as null|boolean,
+      user_attempts: null as null|number,
+    },
+    userAnswer:'' as string,
+    hasSubmitted: false as boolean,
+    submissionResult: null as {correct: boolean, message: string} | null,
     
     // Request states
-    dailyProblemRequest,
-    submitAnswerRequest,
+    dailyProblemRequest:{
+      status: 'idle', // idle = not loaded yet, loading = fetching, success = loaded, error = failed
+      error: null
+    } as RequestState,
     
-    // Computed getters
-    isProblemLoaded,
-    isProblemLoading,
-    isProblemError,
-    isSubmitting,
-    isSubmitError,
-    
-    // Actions
-    fetchDailyProblem,
-    submitAnswer,
-    resetProblem,
-    resetSubmission,
-    $reset
+    submitAnswerRequest: {
+      status: 'idle',
+      error: null
+    } as RequestState,
+
+    // Computed getters for better UX
+  }),
+  getters: {
+    isProblemLoaded: (state) => state.dailyProblemRequest.status === 'success',
+    isProblemLoading: (state) => state.dailyProblemRequest.status === 'loading',
+    isProblemError: (state) => state.dailyProblemRequest.status === 'error',
+    isSubmitting: (state) => state.submitAnswerRequest.status === 'loading',
+    isSubmitError: (state) => state.submitAnswerRequest.status === 'error',
+  },
+
+  actions: {
+
+  // Actions
+    async fetchDailyProblem(resetSubmissionState = true){
+      this.dailyProblemRequest = { status: 'loading', error: null }
+      
+      try {
+        // Placeholder endpoint - replace with actual backend endpoint when available
+        const response = await api.get('/daily-integral/')
+
+        console.log(response.data)
+        
+        this.currentIntegral = {
+          id: response.data.id,
+          integral: response.data.integral,
+          author: response.data.original_author,
+          user_solved: response.data.user_solved,
+          user_attempts: response.data.user_attempts,
+        }
+        
+        // Reset user state for new problem only if specified
+        if (resetSubmissionState) {
+          this.userAnswer = ''
+          this.hasSubmitted = false
+          this.submissionResult = null
+        }
+        
+        this.dailyProblemRequest = { status: 'success', error: null }
+        
+      } catch (error) {
+        console.error('Failed to fetch daily problem:', error)
+        
+        this.currentIntegral = {
+          id: null,
+          integral: null,
+          author: null,
+          user_solved: null,
+          user_attempts: null,
+        }
+        
+        // Reset user state for new problem only if specified
+        if (resetSubmissionState) {
+          this.userAnswer = ''
+          this.hasSubmitted = false
+          this.submissionResult = null
+        }
+        
+        this.dailyProblemRequest = { status: 'success', error: null }
+        
+        useToastStore().addToast({
+          type: 'warning',
+          title: 'Demo Mode',
+          message: 'Using demo problem. Backend not available.'
+        })
+      }
+    },
+
+    async submitAnswer (){
+      if (!this.userAnswer.trim() || this.hasSubmitted) {
+        return
+      }
+
+      this.submitAnswerRequest = { status: 'loading', error: null }
+      
+      try {
+        // Placeholder endpoint - replace with actual backend endpoint when available
+        const response = await api.post(`/daily-integral/check/${this.currentIntegral.id}/`, {
+          user_answer: this.userAnswer
+        })
+        
+        this.submissionResult = {
+          correct: response.data.correct,
+          message: response.data.message
+        }
+        this.hasSubmitted = true
+        
+        this.submitAnswerRequest = { status: 'success', error: null }
+        
+        // Update user stats without resetting submission state
+        await this.fetchDailyProblem(false)
+        
+      } catch (error) {
+        console.error('Failed to submit answer:', error)
+        
+        
+        
+        this.submissionResult = {
+          correct: false,
+          message: ''
+        }
+        this.hasSubmitted = true
+        
+        this.submitAnswerRequest = { status: 'success', error: null }
+        
+        useToastStore().addToast({
+          type: 'info',
+          title: 'Demo Mode',
+          message: 'Answer checked locally. Backend not available.'
+        })
+      }
+    },
+
+    resetProblem(){
+      this.userAnswer = ''
+      this.hasSubmitted = false
+      this.submissionResult = null
+      this.submitAnswerRequest = { status: 'idle', error: null }
+    },
+
+    resetSubmission(){
+      this.submitAnswerRequest = { status: 'idle', error: null }
+      this.submissionResult = null
+    }
   }
 }) 

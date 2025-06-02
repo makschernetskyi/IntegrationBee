@@ -319,6 +319,7 @@ class SeriesSerializer(serializers.Serializer):
 
 
 class UserEloSerializer(serializers.ModelSerializer):
+    elo_rating = serializers.SerializerMethodField()  # Use skewed rating for display
 
     class Meta:
         model = User
@@ -326,10 +327,15 @@ class UserEloSerializer(serializers.ModelSerializer):
             'id',
             'first_name',
             'last_name',
-            'ranking_elo',
+            'elo_rating',  # Changed from ranking_elo to elo_rating
             'institution',
             'region',
         ]
+    
+    def get_elo_rating(self, obj):
+        """Return the display rating using the skew function"""
+        from api.elo_utils import get_display_rating
+        return get_display_rating(obj.ranking_elo)
 
 
 class UserGymRankingSerializer(serializers.ModelSerializer):
@@ -347,26 +353,36 @@ class UserGymRankingSerializer(serializers.ModelSerializer):
 
 
 class DailyIntegralSerializer(serializers.ModelSerializer):
-
+    user_solved = serializers.SerializerMethodField()
+    user_attempts = serializers.SerializerMethodField()
+    
     class Meta:
         model = DailyIntegral
-        fields = ['id', 'integral', 'date', 'difficulty_level', 'original_author']
-
-
-class DailyIntegralSolveSerializer(serializers.Serializer):
-    user_answer = serializers.CharField()
-
-
-class DailyIntegralSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = DailyIntegral
-        fields = ['id', 'integral', 'date', 'difficulty_level', 'original_author']
+        fields = ['id', 'integral', 'date', 'difficulty_level', 'original_author', 'user_solved', 'user_attempts']
+    
+    def get_user_solved(self, obj):
+        user = self.context['request'].user
+        try:
+            rel = DailyIntegralToUserRelationship.objects.get(user=user, integral=obj)
+            return rel.solved
+        except DailyIntegralToUserRelationship.DoesNotExist:
+            return False
+    
+    def get_user_attempts(self, obj):
+        user = self.context['request'].user
+        try:
+            rel = DailyIntegralToUserRelationship.objects.get(user=user, integral=obj)
+            return rel.attempts
+        except DailyIntegralToUserRelationship.DoesNotExist:
+            return 0
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         integral_data = json.loads(representation['integral'])
         if integral_data and isinstance(integral_data, list):
             representation['integral'] = integral_data[0].get('value', '') if 'value' in integral_data[0] else ''
-
         return representation
+
+
+class DailyIntegralSolveSerializer(serializers.Serializer):
+    user_answer = serializers.CharField()

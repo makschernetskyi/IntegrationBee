@@ -24,6 +24,7 @@ from wagtailmath.blocks import MathBlock
 
 from api.blocks import SeriesBlock
 from api.widgets import Base64AudioWidget
+from api.elo_config import MU, DECAY_INTERVAL
 
 
 class UserManager(BaseUserManager):
@@ -53,7 +54,7 @@ class User(AbstractUser):
     program_of_study = models.CharField(max_length=100, null=True, blank=True)
 
     region = models.CharField(max_length=100, null=True, blank=True, default='Austria')
-    ranking_elo = models.FloatField(default=1000)
+    ranking_elo = models.FloatField(default=MU)
     ranking_gym = models.IntegerField(default=0)
 
     is_verified = models.BooleanField(default=False, null=False, blank=False)
@@ -176,6 +177,9 @@ class Competition(RevisionMixin, ClusterableModel):
     event_date_end = models.DateTimeField(blank=True, null=True)
     close_registration = models.CharField(max_length=100, null=True, blank=True, default="Registration Closed")
     _revisions = GenericRelation("wagtailcore.Revision", related_query_name="competition")
+    
+    # Track if decay has been applied for this competition
+    decay_applied = models.BooleanField(default=False)
 
     series = StreamField([('series', SeriesBlock()), ], null=True, blank=True, use_json_field=True)
 
@@ -354,8 +358,73 @@ class Competition(RevisionMixin, ClusterableModel):
 
     download_report.short_description = "Download"
 
-    def update_user_elo(self):
-        pass
+    def update_user_elo(self, match=None):
+        """
+        Update ELO ratings using the proprietary IntegrationBee algorithm.
+        Called after every match to update ELO for that specific match.
+        Decay is only applied when Finals match is completed (competition finished).
+        """
+        from .elo_utils import calculate_k_factor, calculate_elo_change, apply_decay_to_rating
+        from .elo_config import DECAY_INTERVAL
+        
+        # Update ELO for the specific match that was just completed
+        if match and match.winner and match.player1 and match.player2:
+            winner = match.winner
+            loser = match.player1 if match.player2 == winner else match.player2
+            
+            # Get current ratings
+            winner_rating = winner.ranking_elo
+            loser_rating = loser.ranking_elo
+            
+            try:
+                # Calculate K factor for this round
+                k_factor = calculate_k_factor(match.round.name)
+            except ValueError:
+                # Skip if invalid round name
+                return
+            
+            # Calculate ELO changes using proprietary algorithm
+            winner_change, loser_change = calculate_elo_change(
+                winner_rating, loser_rating, k_factor
+            )
+            
+            # Apply changes
+            winner.ranking_elo += winner_change
+            loser.ranking_elo += loser_change
+            
+            # Save updated ratings
+            winner.save()
+            loser.save()
+        
+        # Check if we need to apply decay ONLY when Finals is completed
+        if match and match.round.name == 'Finals' and not self.decay_applied:
+            # Count completed competitions (those with Finals winner set and decay already applied)
+            completed_competitions = Competition.objects.filter(
+                rounds__name='Finals',
+                rounds__matches__winner__isnull=False,
+                decay_applied=True
+            ).distinct().count()
+            
+            # Include this competition in the count
+            total_completed = completed_competitions + 1
+            
+            # Check if this is a multiple of DECAY_INTERVAL competitions
+            if total_completed % DECAY_INTERVAL == 0:
+                self._apply_decay_to_all_users()
+                self.decay_applied = True
+                self.save()
+
+    def _apply_decay_to_all_users(self):
+        """
+        Apply decay formula to all users' ratings.
+        Called every 5th competition completion.
+        """
+        from .elo_utils import apply_decay_to_rating
+        
+        # Apply decay to all users
+        for user in User.objects.all():
+            user.ranking_elo = apply_decay_to_rating(user.ranking_elo)
+            user.save()
 
 
 class Round(ClusterableModel):
@@ -421,10 +490,12 @@ class Match(ClusterableModel):
                                                                                        competition=self.round.competition)
                 second_player_relationship.status = 'SECOND_PLACE'
                 second_player_relationship.save()
-                self.round.competition.update_user_elo()
+            
+            # Call update_user_elo for this specific match
+            self.round.competition.update_user_elo(match=self)
 
         super().save(**kwargs)
-
+    
     def update_participant_status(self):
         try:
             relationship = UserToCompetitionRelationship.objects.get(user=self.winner,
