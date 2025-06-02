@@ -9,21 +9,34 @@ def get_skew_functions() -> Tuple[Callable[[float], float], Callable[[float], fl
     Returns the skew function f and its inverse f_inverse.
     Used for displaying ratings to frontend (apply f) and internal calculations.
     """
+    T = 0.0  # Parameter T for the rational branch
+    
     def f(x: float) -> float:
         if x > MU:
-            return (x - MU) * LAM + MU
+            return MU + LAM * (x - MU)
         elif x < MU:
-            return MU - (MU) * (1 - np.exp(-ALPHA * (MU - x))) / LAM + MU
-        else:
-            return x
+            # New "steeper" rational branch for x < mu:
+            #   f(x) = T + ( (mu - T)**3 ) / (2*mu - x - T)**2
+            denominator = (2 * MU - x - T)**2
+            if denominator == 0:
+                return float('inf')  # Avoid division by zero
+            return T + (MU - T)**3 / denominator
+        else:  # x == MU
+            return MU
 
-    def f_inverse(x: float) -> float:
-        if x > MU:
-            return (x - MU) / LAM + MU
-        elif x < MU:
-            return np.log((- x) / (- MU)) + MU
-        else:
-            return x
+    def f_inverse(y: float) -> float:
+        if y > MU:
+            return MU + (y - MU) / LAM
+        elif y < MU:
+            # Invert T + (mu - T)^3 / (2*mu - x - T)^2 = y
+            #   ⇒ (2*mu - x - T)^2 = (mu - T)^3 / (y - T)
+            #   ⇒ 2*mu - x - T =  (mu - T)^(3/2) / sqrt(y - T)
+            #   ⇒ x = 2*mu - T - (mu - T)**1.5 / sqrt(y - T)
+            if y <= T:
+                return float('-inf')  # Invalid input for this branch
+            return 2 * MU - T - (MU - T)**1.5 / np.sqrt(y - T)
+        else:  # y == MU
+            return MU
 
     return f, f_inverse
 
