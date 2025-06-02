@@ -13,7 +13,7 @@ def get_skew_functions() -> Tuple[Callable[[float], float], Callable[[float], fl
         if x > MU:
             return (x - MU) * LAM + MU
         elif x < MU:
-            return MU - (MU - TAU) * (1 - np.exp(-ALPHA * (MU - x))) / LAM + MU
+            return MU - (MU) * (1 - np.exp(-ALPHA * (MU - x))) / LAM + MU
         else:
             return x
 
@@ -21,7 +21,7 @@ def get_skew_functions() -> Tuple[Callable[[float], float], Callable[[float], fl
         if x > MU:
             return (x - MU) / LAM + MU
         elif x < MU:
-            return np.log((TAU - x) / (TAU - MU)) + MU
+            return np.log((- x) / (- MU)) + MU
         else:
             return x
 
@@ -62,7 +62,7 @@ def calculate_elo_change(winner_rating: float, loser_rating: float, k_factor: fl
         Tuple of (winner_change, loser_change)
     """
     # Calculate expected scores using standard ELO formula
-    expected_winner = 1 / (1 + math.pow(10, (loser_rating - winner_rating) / 400))
+    expected_winner = 1 / (1 + np.exp((loser_rating - winner_rating) / TAU))
     expected_loser = 1 - expected_winner
     
     # Actual scores (1 for win, 0 for loss)
