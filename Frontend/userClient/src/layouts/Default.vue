@@ -19,10 +19,11 @@ function toggleShouldMenuBeVisible(){
 <template>
 	<div>
 		<!-- button works better if we pass is-menu-visible="shouldMenuBeVisible"--> 
-		<Header
-			:is-menu-visible="shouldMobileMenuBeVisible"
-			@switch-menu-visibility="toggleShouldMenuBeVisible"
-		/>
+		<KeepAlive>
+			<Header
+				@switch-menu-visibility="toggleShouldMenuBeVisible">
+			</Header>
+		</KeepAlive>
 		<slot></slot>
 		<Footer></Footer>
 		

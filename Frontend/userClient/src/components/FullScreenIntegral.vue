@@ -17,7 +17,6 @@ const latexFontSize = ref(`text-[${defaultFontSize}px]`);
 
 const formula = computed(() => {
 	const f = cleanLatex(props.integral);
-	console.log(f)
 	latexFontSize.value = `text-[${calculateLatexFontSize(f, defaultFontSize)}px]`;
 	return katex.renderToString(f, { throwOnError: false, displayMode: true });
 });

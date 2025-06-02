@@ -17,10 +17,10 @@ const isLoading = ref(true)
 
 onBeforeMount(()=>{
 	Promise.all([
-		useHomePageStore().fetchHomePageData(),
-		useNewsPageStore().fetchNewsPage(),
-		useContactPageStore().fetchContactData(),
-		useEventsPageStore().fetchTitle(),
+		// useHomePageStore().fetchHomePageData(),
+		// useNewsPageStore().fetchNewsPage(),
+		// useContactPageStore().fetchContactData(),
+		// useEventsPageStore().fetchTitle(),
 	]).finally(()=>{
 		isLoading.value = false
 	})

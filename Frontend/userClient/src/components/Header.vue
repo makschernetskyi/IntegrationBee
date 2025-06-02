@@ -2,15 +2,14 @@
 import MenuButton from '@/components/MenuButton.vue';
 import { useAuthStore } from '@/stores/authStore/authStore';
 
-import {toRefs} from "vue"
+import {toRefs, ref} from "vue"
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
+import { useUiStore } from '@/stores/uiStore/uiStore';
 
-const props = defineProps({
-	isMenuVisible: Boolean,
-})
+const uiStore = useUiStore()
 
-const {isMenuVisible} = toRefs(props)
+const {shouldMobileMenuBeVisible: isMenuVisible} = storeToRefs(uiStore)
 
 const emit = defineEmits(['switchMenuVisibility'])
 
@@ -26,15 +25,21 @@ const handleLogout = async () => {
 	router.push('/')
 }
 
+const isExpandableMenuVisible = ref(false)
+
+document.addEventListener('click', ()=>{
+	isExpandableMenuVisible.value = false
+})
+
 </script>
 <template>
-	<div class="fixed top-0 w-full lg:px-[2rem] xl:px-[10vw] font-body z-30 h-[6rem] lg:h-[10rem] text-secondary lg:py-4">
-		<div class="w-full h-full bg-screenBlack lg:bg-pearl-white lg:bg-opacity-90 lg:backdrop-blur-sm overflow-hidden lg:rounded-3xl shadow-md px-8 lg:px-6">
-			<div class="relative h-full flex justify-center items-center ">
+	<div class="fixed top-0 w-full px-[1rem] lg:px-[2rem] xl:px-[10vw] font-body z-30 h-[8rem] lg:h-[10rem] text-secondary py-4">
+		<div class="w-full h-full bg-screenBlack lg:bg-pearl-white lg:bg-opacity-90 lg:backdrop-blur-sm rounded-xl lg:rounded-3xl shadow-md px-8 lg:px-6">
+			<div class="relative h-full flex items-center ">
 				
 				<!-- mobile-only menu button-->
-				 <teleport to='body'>
-					<div class="fixed left-[1rem] top-[0.5rem] h-[5rem] w-[5rem] lg:hidden flex z-[500] p-[1rem]">
+				<teleport to='body'>
+					<div class="fixed left-[1.5rem] top-[1.5rem] h-[5rem] w-[5rem] lg:hidden flex z-[500] p-[1rem]">
 						<MenuButton :is-menu-visible="isMenuVisible" @toggle-menu-visibility="emit('switchMenuVisibility')" class="h-[3rem] w-[3rem]"/>
 					</div>
 				</teleport>
@@ -53,19 +58,27 @@ const handleLogout = async () => {
 					</RouterLink>
 				</div>
 				
-				<!-- invisible on mobile-->
-				<div class="hidden lg:flex justify-center items-center gap-[2rem] lg:text-body">
+				<!-- invisible on mobile (right is to ensure they never intersect with auth buttons)-->
+				<div class="hidden lg:flex absolute right-[max(50%,60rem)] translate-x-[50%] justify-center items-center gap-[2rem] lg:text-body">
 					<!-- links to pages -->
+					<RouterLink to="/games" class="hover:bg-screenBlack-400 hover:bg-opacity-15 transition-all duration-100 px-[1.5rem] py-[0.8rem] rounded-2xl cursor-pointer relative after:absolute after:right-[-0.5rem] after:top-[-0.3rem] after:text-red after:text-text-sm after:font-semibold after:bg-red-200 after:bg-opacity-25 after:rounded-md after:px-[0.5rem] after:content-['new']">games</RouterLink>
 					<RouterLink to="/events" class="hover:bg-screenBlack-400 hover:bg-opacity-15 transition-all duration-100 px-[1.5rem] py-[0.8rem] rounded-2xl cursor-pointer">events</RouterLink>
 					<RouterLink to="/news" class="hover:bg-screenBlack-400  hover:bg-opacity-15 transition-all duration-100 px-[1.5rem] py-[0.8rem] rounded-2xl">news</RouterLink>
-					<RouterLink to="/contact" class="hover:bg-screenBlack-400  hover:bg-opacity-15 transition-all duration-100 px-[1.5rem] py-[0.8rem] rounded-2xl">contact</RouterLink>
+					<!-- <RouterLink to="/contact" class="hover:bg-screenBlack-400  hover:bg-opacity-15 transition-all duration-100 px-[1.5rem] py-[0.8rem] rounded-2xl">contact</RouterLink> -->
+					<button @click="(e)=>{e.stopPropagation();isExpandableMenuVisible = !isExpandableMenuVisible}" class="hover:bg-screenBlack-400  hover:bg-opacity-15 transition-all duration-100 px-[1.5rem] py-[0.8rem] rounded-2xl relative" tabindex="0">
+						<p>other ▾</p>
+						<div v-if="isExpandableMenuVisible" class="rounded-2xl absolute z-[50] left-[50%] -translate-x-[50%] top-[100%] bg-pearl-white shadow-sm flex flex-col py-[1rem]">
+							<RouterLink to="/contact" class="h-[4rem] flex justify-center items-center px-[2rem] hover:bg-screenBlack-400 hover:bg-opacity-15 transition-all duration-100">contact</RouterLink>
+							<RouterLink to="/rankings" class="h-[4rem] flex justify-center items-center px-[2rem] hover:bg-screenBlack-400 hover:bg-opacity-15 transition-all duration-100">rankings</RouterLink>
+						</div>
+					</button>
 				</div>
 				<!--visible only for  not authenticated usets-->
 				<template v-if="!isAuthenticated">
 					<!-- invisible on mobile-->
 					<div class="hidden lg:flex absolute right-0 items-center gap-[2rem] text-body">
 						<!-- sign in and sign up buttons -->
-							<RouterLink to="/sign_in" class="px-[2.4rem] py-[1rem] rounded-2xl text-pearl-white bg-primary font-semibold">
+							<RouterLink to="/sign_in" class="px-[2.4rem] py-[1rem] rounded-2xl text-pearl-white bg-[#F5B338] font-semibold transition-all duration-100 outline-transparent hover:lg:outline-primary-50 outline-4 outline">
 								Sign in
 							</RouterLink>
 							<RouterLink to="/sign_up" class="px-[2.4rem] py-[1rem] h-max w-max hover:bg-screenBlack-400 hover:bg-opacity-15 rounded-2xl signUpBtn">

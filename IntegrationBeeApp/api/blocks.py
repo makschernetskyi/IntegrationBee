@@ -50,3 +50,4 @@ class SeriesBlock(blocks.StructBlock):
     class Meta:
         icon = "list-ul"
         label = "Series"
+
