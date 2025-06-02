@@ -129,7 +129,9 @@ onMounted(async () => {
             <div class="z-20 top-0 grid grid-cols-[4rem_2fr_1fr_2fr_2fr] md:grid-cols-[8rem_2fr_1fr_2fr_1fr] text-text-xs md:text-text-sm xl:text-body overflow-y-auto text-pearl-white py-[2rem] gutterStable">
                 <div class="flex justify-center items-center">#</div>
                 <div class="flex justify-center items-center">name</div>
-                <div class="flex justify-center items-center gap-2">
+                <div class="flex justify-center items-center gap-2"
+                    :title="selectedRankingType === 'Integration Bee' ? 'Modified ELO Rating' : 'Gym problems solved'"
+                >
                     {{ selectedRankingType === 'Integration Bee' ? 'Rating' : 'Gym Rating' }}
                     <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" class="hidden md:flex">
                         <path d="M16.4692 3.77109L23.4637 11.1924L20.5339 20.9605L10.6096 23.3072L3.61513 15.8859L6.54491 6.11786L16.4692 3.77109Z" stroke="#F2F1F0" stroke-width="1.17031"/>
