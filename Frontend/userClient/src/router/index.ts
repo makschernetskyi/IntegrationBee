@@ -10,13 +10,15 @@ import SignIn from '@/pages/SignIn.vue'
 import Imprint from "@/pages/Imprint.vue"
 import TermsOfUse from "@/pages/TermsOfUse.vue"
 import PasswordReset from "@/pages/PasswordReset.vue"
+import Games from "@/pages/Games.vue"
 
 import { createRouter, createWebHashHistory, createWebHistory  } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore/authStore.ts'
 import Presenting from "@/pages/Presenting.vue"
 import MainMenu from "@/pages/Presenting/MainMenu.vue"
 import SeriesPresentation from "@/pages/Presenting/SeriesPresentation.vue"
-
+import Rankings from "@/pages/Rankings.vue"
+import IntegrationGym from "@/pages/Games/IntegrationGym.vue"
 
 
 const router = createRouter({
@@ -48,6 +50,9 @@ const router = createRouter({
             {path: '', component: MainMenu, name: "presenting_main_menu" },
             {path: 'series_presentation/:competition/:series', component: SeriesPresentation, name: "series_presentation" }
         ]},
+        {path: "/games", component: Games, name: "games"},
+        {path: "/game/integration_gym", component: IntegrationGym, name: "integration_gym"},
+        {path: "/rankings", component: Rankings, name: "rankings"},
         {path: "/:pathMatch(.*)*", redirect: {name: 'home'}, name: 'not_found'},
         
 	],
@@ -67,7 +72,7 @@ router.beforeEach(async (to, from, next) => {
 	//if user data was not requested - make the request
     if(authStore.userDataRequest.status == null){
         
-        await authStore.getProfileData()
+        //await authStore.getProfileData()
     }
 
     const isAuthenticated = authStore.isAuthenticated

@@ -11,8 +11,10 @@ const {shouldMenuBeVisible, isMenuVisible} = toRefs(props)
 
 const emit = defineEmits(['endAction', 'closeMenu'])
 
-const linksNumber = 4;
+const linksNumber = 5;
 const linksShown = ref(0)
+
+const DURATION = 50;
 
 const toggleInternalVisibility = ()=>{
 	const t = setInterval( ()=>{
@@ -23,7 +25,7 @@ const toggleInternalVisibility = ()=>{
 			clearInterval(t)
 			emit('endAction')
 		}
-	}, 100 + 100*(Number(shouldMenuBeVisible.value)))
+	}, DURATION + DURATION*(Number(shouldMenuBeVisible.value)))
 }
 
 onMounted(toggleInternalVisibility)
@@ -37,11 +39,15 @@ watch(shouldMenuBeVisible, toggleInternalVisibility)
 				<ul class="flex flex-col items-center gap-[2rem] lg:text-subtitle-lg text-pearl-white font-body font-semibold">
 					<MobileMenuLink to="/" :isShown="linksShown>=1" :disabled="shouldMenuBeVisible!=isMenuVisible" @close-menu="emit('closeMenu')">home</MobileMenuLink>
 					
-					<MobileMenuLink to="/events" :isShown="linksShown>=2" :disabled="shouldMenuBeVisible!=isMenuVisible" @close-menu="emit('closeMenu')">events</MobileMenuLink>
+					<MobileMenuLink to="/games" :isShown="linksShown>=2" :disabled="shouldMenuBeVisible!=isMenuVisible" @close-menu="emit('closeMenu')">games</MobileMenuLink>
+
+					<MobileMenuLink to="/events" :isShown="linksShown>=3" :disabled="shouldMenuBeVisible!=isMenuVisible" @close-menu="emit('closeMenu')">events</MobileMenuLink>
 					
-					<MobileMenuLink to="/news" :isShown="linksShown>=3" :disabled="shouldMenuBeVisible!=isMenuVisible" @close-menu="emit('closeMenu')">news</MobileMenuLink>
+					<MobileMenuLink to="/news" :isShown="linksShown>=4" :disabled="shouldMenuBeVisible!=isMenuVisible" @close-menu="emit('closeMenu')">news</MobileMenuLink>
 					
-					<MobileMenuLink to="/contact" :isShown="linksShown>=4" :disabled="shouldMenuBeVisible!=isMenuVisible" @close-menu="emit('closeMenu')">contact</MobileMenuLink>
+					<MobileMenuLink to="/rankings" :isShown="linksShown>=5" :disabled="shouldMenuBeVisible!=isMenuVisible" @close-menu="emit('closeMenu')">rankings</MobileMenuLink>
+
+					<MobileMenuLink to="/contact" :isShown="linksShown>=6" :disabled="shouldMenuBeVisible!=isMenuVisible" @close-menu="emit('closeMenu')">contact</MobileMenuLink>
 				</ul>
 			</div>
 </template>
