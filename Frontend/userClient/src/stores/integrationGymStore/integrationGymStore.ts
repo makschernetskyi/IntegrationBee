@@ -133,17 +133,11 @@ export const useIntegrationGymStore = defineStore('integrationGym', {
         
         this.submissionResult = {
           correct: false,
-          message: ''
+          message: 'failed to submit answer'
         }
         this.hasSubmitted = true
         
         this.submitAnswerRequest = { status: 'success', error: null }
-        
-        useToastStore().addToast({
-          type: 'info',
-          title: 'Demo Mode',
-          message: 'Answer checked locally. Backend not available.'
-        })
       }
     },
 
