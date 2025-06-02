@@ -15,8 +15,6 @@ def get_skew_functions() -> Tuple[Callable[[float], float], Callable[[float], fl
         if x > MU:
             return MU + LAM * (x - MU)
         elif x < MU:
-            # New "steeper" rational branch for x < mu:
-            #   f(x) = T + ( (mu - T)**3 ) / (2*mu - x - T)**2
             denominator = (2 * MU - x - T)**2
             if denominator == 0:
                 return float('inf')  # Avoid division by zero
@@ -28,10 +26,6 @@ def get_skew_functions() -> Tuple[Callable[[float], float], Callable[[float], fl
         if y > MU:
             return MU + (y - MU) / LAM
         elif y < MU:
-            # Invert T + (mu - T)^3 / (2*mu - x - T)^2 = y
-            #   ⇒ (2*mu - x - T)^2 = (mu - T)^3 / (y - T)
-            #   ⇒ 2*mu - x - T =  (mu - T)^(3/2) / sqrt(y - T)
-            #   ⇒ x = 2*mu - T - (mu - T)**1.5 / sqrt(y - T)
             if y <= T:
                 return float('-inf')  # Invalid input for this branch
             return 2 * MU - T - (MU - T)**1.5 / np.sqrt(y - T)
