@@ -493,7 +493,7 @@ class CheckDailyIntegralAnswerView(generics.GenericAPIView):
         rel.attempts += 1
 
         try:
-            correct_answer_expr = sympify(integral.integral_answer)
+            correct_answer_expr = parse_latex(integral.integral_answer)
             user_answer_expr = parse_latex(user_answer_str)
 
             difference = simplify(correct_answer_expr - user_answer_expr)
