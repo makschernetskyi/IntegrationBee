@@ -393,10 +393,10 @@ watch(userAnswer, (newAnswer) => {
                 </div>
                 
                 <!-- Submission Result -->
-                <div v-if="submissionResult" class="flex justify-center">
+                <div v-if="submissionResult" class="flex justify-center px-[2rem]">
                     <div 
                         :class="{
-                            'w-[50rem] px-4 py-2 rounded-lg text-center font-medium text-body': true,
+                            'w-full lg:w-[50rem] px-4 py-2 rounded-lg text-center font-medium text-body': true,
                             'bg-green text-white': submissionResult.correct,
                             'bg-red text-white': !submissionResult.correct
                         }"
@@ -406,8 +406,8 @@ watch(userAnswer, (newAnswer) => {
                 </div>
 
                 <!-- Submit Error -->
-                <div v-if="isSubmitError" class="flex justify-center">
-                    <div class="w-[50rem] px-4 py-2 rounded-lg text-center text-body font-medium bg-red text-white">
+                <div v-if="isSubmitError" class="flex justify-center px-[2rem]">
+                    <div class="w-full lg:w-[50rem] px-4 py-2 rounded-lg text-center text-body font-medium bg-red text-white">
                         {{ submitAnswerRequest.error }}
                     </div>
                 </div>

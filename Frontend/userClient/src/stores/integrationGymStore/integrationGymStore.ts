@@ -119,7 +119,7 @@ export const useIntegrationGymStore = defineStore('integrationGym', {
           correct: response.data.correct,
           message: response.data.message
         }
-        this.hasSubmitted = true
+        this.hasSubmitted = response.data.correct || this.hasSubmitted
         
         this.submitAnswerRequest = { status: 'success', error: null }
         
