@@ -53,7 +53,7 @@ class User(AbstractUser):
     phone_number = models.CharField(max_length=20, null=True, blank=True)
     program_of_study = models.CharField(max_length=100, null=True, blank=True)
 
-    region = models.CharField(max_length=100, null=True, blank=True, default='Austria')
+    region = models.CharField(max_length=100, null=True, blank=True, default='No Affiliation')
     ranking_elo = models.FloatField(default=MU)
     ranking_gym = models.IntegerField(default=0)
 

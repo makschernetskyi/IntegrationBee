@@ -110,6 +110,7 @@ watch(isRulesVisible, (newValue) => {
 })
 
 const handleSubmit = async () => {
+    console.log("answer was:", userAnswer.value)
     await integrationGymStore.submitAnswer()
 }
 
@@ -130,6 +131,7 @@ const initializeGame = async () => {
     const hasSeenRules = localStorage.getItem('integrationGymRulesRead')
     if (!hasSeenRules) {
         showRulesModalFunction()
+        await integrationGymStore.fetchDailyProblem()
         return
     }
 
@@ -138,7 +140,6 @@ const initializeGame = async () => {
 }
 
 onMounted(async () => {
-    console.log('IntegrationGym component mounted with mathlive')
     isInitialized.value = true
     await initializeGame()
 })
@@ -233,24 +234,25 @@ watch(userAnswer, (newAnswer) => {
                             <div class="space-y-4 text-body text-gray-700">
                                 <div class="bg-gray-50 p-4 rounded-lg">
                                     <h4 class="font-heading text-body font-semibold mb-2 text-screenBlack">🎯 Objective</h4>
-                                    <p>Solve the daily integration problem by entering your answer in LaTeX format using the math input field.</p>
+                                    <p>Solve the daily integration problem by entering your answer using the math input field.</p>
                                 </div>
                                 
                                 <div class="bg-gray-50 p-4 rounded-lg">
                                     <h4 class="font-heading text-body font-semibold mb-2 text-screenBlack">📝 How to Play</h4>
                                     <ul class="list-disc list-inside space-y-1">
                                         <li>A new integration problem is available each day</li>
-                                        <li>Use the math input field to enter your solution in LaTeX format</li>
+                                        <li>Use the math input field to enter your solution</li>
                                         <li>Click "Submit" to check your answer</li>
-                                        <li>You can only submit one answer per day</li>
+                                        <li>You can only solve one integrals per day</li>
+                                        <li>Keep only real valued functions or real numbers as the answer</li>
                                     </ul>
                                 </div>
                                 
                                 <div class="bg-gray-50 p-4 rounded-lg">
                                     <h4 class="font-heading text-body font-semibold mb-2 text-screenBlack">✍️ Math Input Tips</h4>
                                     <ul class="list-disc list-inside space-y-1">
-                                        <li>Use standard LaTeX notation (e.g., \frac{1}{2}, \sin(x), \int)</li>
                                         <li>The input field supports virtual keyboard for symbols</li>
+                                        <li>The input supports standard LaTeX notation</li>
                                         <li>Use parentheses to group terms: (x+1)^2</li>
                                         <li>Constants like C should be included: + C</li>
                                     </ul>
@@ -393,10 +395,10 @@ watch(userAnswer, (newAnswer) => {
                 </div>
                 
                 <!-- Submission Result -->
-                <div v-if="submissionResult" class="flex justify-center">
+                <div v-if="submissionResult" class="flex justify-center px-[2rem]">
                     <div 
                         :class="{
-                            'w-[50rem] px-4 py-2 rounded-lg text-center font-medium text-body': true,
+                            'w-full lg:w-[50rem] px-4 py-2 rounded-lg text-center font-medium text-body': true,
                             'bg-green text-white': submissionResult.correct,
                             'bg-red text-white': !submissionResult.correct
                         }"
@@ -406,8 +408,8 @@ watch(userAnswer, (newAnswer) => {
                 </div>
 
                 <!-- Submit Error -->
-                <div v-if="isSubmitError" class="flex justify-center">
-                    <div class="w-[50rem] px-4 py-2 rounded-lg text-center text-body font-medium bg-red text-white">
+                <div v-if="isSubmitError" class="flex justify-center px-[2rem]">
+                    <div class="w-full lg:w-[50rem] px-4 py-2 rounded-lg text-center text-body font-medium bg-red text-white">
                         {{ submitAnswerRequest.error }}
                     </div>
                 </div>
