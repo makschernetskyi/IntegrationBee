@@ -110,6 +110,7 @@ watch(isRulesVisible, (newValue) => {
 })
 
 const handleSubmit = async () => {
+    console.log("answer was:", userAnswer.value)
     await integrationGymStore.submitAnswer()
 }
 
@@ -130,6 +131,7 @@ const initializeGame = async () => {
     const hasSeenRules = localStorage.getItem('integrationGymRulesRead')
     if (!hasSeenRules) {
         showRulesModalFunction()
+        await integrationGymStore.fetchDailyProblem()
         return
     }
 
@@ -138,7 +140,6 @@ const initializeGame = async () => {
 }
 
 onMounted(async () => {
-    console.log('IntegrationGym component mounted with mathlive')
     isInitialized.value = true
     await initializeGame()
 })
