@@ -401,7 +401,13 @@ class UserEloListView(ListAPIView):
         """
         Return all users - ordering will be handled by list() method
         """
-        return User.objects.all()
+        qualified_user_ids = (
+            UserToCompetitionRelationship.objects
+            .filter(status='QUALIFIED')
+            .values_list('user_id', flat=True)
+            .distinct()
+        )
+        return User.objects.filter(id__in=qualified_user_ids)
     
     def list(self, request, *args, **kwargs):
         """
