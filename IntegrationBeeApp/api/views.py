@@ -403,9 +403,19 @@ class UserEloListView(ListAPIView):
         """
         Return all users - ordering will be handled by list() method
         """
+        qualifying_statuses = [
+            'QUALIFIED',
+            'EIGHTH_FINALIST',
+            'QUARTER_FINALIST',
+            'SEMIFINALIST',
+            'FINALIST',
+            'SECOND_PLACE',
+            'WINNER',
+        ]
+
         qualified_user_ids = (
             UserToCompetitionRelationship.objects
-            .filter(status='QUALIFIED')
+            .filter(status__in=qualifying_statuses)
             .values_list('user_id', flat=True)
             .distinct()
         )
