@@ -49,6 +49,8 @@ from wagtail.users.models import UserProfile as WagtailUserProfile
 
 from .templatetags.custom_filters import register
 
+from .latex_utils import normalize_basic
+
 
 class PasswordResetConfirmView(APIView):
 
@@ -499,8 +501,8 @@ class CheckDailyIntegralAnswerView(generics.GenericAPIView):
         rel.attempts += 1
 
         try:
-            correct_answer_expr = parse_latex(integral.integral_answer)
-            user_answer_expr = parse_latex(user_answer_str)
+            correct_answer_expr = parse_latex(normalize_basic(integral.integral_answer))
+            user_answer_expr = parse_latex(normalize_basic(user_answer_str))
 
             difference = simplify(correct_answer_expr - user_answer_expr)
             if difference == 0:
