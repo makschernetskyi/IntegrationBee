@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
 from django.db import IntegrityError
 from django.db import transaction
-from django.db.models import Window, F
+from django.db.models import Window, F, Q
 from django.db.models.functions import Rank
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
@@ -419,7 +419,15 @@ class UserEloListView(ListAPIView):
             .values_list('user_id', flat=True)
             .distinct()
         )
-        return User.objects.filter(id__in=qualified_user_ids)
+        
+        # Exclude placeholder users from rankings
+        queryset = User.objects.filter(id__in=qualified_user_ids)
+        queryset = queryset.exclude(
+            Q(first_name__icontains='placeholder') | 
+            Q(last_name__icontains='placeholder')
+        )
+        
+        return queryset
     
     def list(self, request, *args, **kwargs):
         """
@@ -443,7 +451,6 @@ class UserEloListView(ListAPIView):
 
 
 class UserGymRankingListView(ListAPIView):
-    queryset = User.objects.all()
     serializer_class = UserGymRankingSerializer
     permission_classes = []  # Allow public access to rankings
 
@@ -458,6 +465,17 @@ class UserGymRankingListView(ListAPIView):
 
     ordering_fields = ['ranking_gym']
     ordering = ['-ranking_gym']
+    
+    def get_queryset(self):
+        """
+        Return all users excluding placeholder users
+        """
+        queryset = User.objects.all()
+        queryset = queryset.exclude(
+            Q(first_name__icontains='placeholder') | 
+            Q(last_name__icontains='placeholder')
+        )
+        return queryset
 
 
 class DailyIntegralTodayView(generics.RetrieveAPIView):
