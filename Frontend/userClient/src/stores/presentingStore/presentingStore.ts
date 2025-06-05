@@ -20,7 +20,8 @@ export const usePresentingStore = defineStore('presenting', {
 	  async fetchCompetitions() {
 		try {
 		  const response = await api.get('/competitions/');
-		  this.competitions = response.data;
+		  this.competitions = response.data.results;
+		  console.log("competitions set", response.data.results	)
 		} catch (error) {
 		  useToastStore().addToast({
 			type: 'error',
@@ -34,6 +35,7 @@ export const usePresentingStore = defineStore('presenting', {
 	  async fetchSeries(competitionId:string, seriesId:string) {
 		try {
 		  const response = await api.get(`/competitions/${competitionId}/series/${seriesId}/`);
+		  console.log("series response", response.data)
 		  const seriesData = response.data;
   
 		  // Update the store with the fetched series data
