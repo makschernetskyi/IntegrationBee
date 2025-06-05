@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { usePresentingStore } from '@/stores/presentingStore/presentingStore';
-import {ref, onMounted} from 'vue'
+import {ref, onMounted, watch} from 'vue'
 
 
 const presentingStore = usePresentingStore()
@@ -11,6 +11,11 @@ const selectedSeries = ref<null|number>(null)
 
 onMounted(async()=>{
     await presentingStore.fetchCompetitions()
+    console.log("competitions", presentingStore.competitions)
+})
+
+watch(presentingStore.competitions, (newVal)=>{
+    console.log("selectedCompetition", newVal)
 })
 
 
@@ -40,9 +45,13 @@ onMounted(async()=>{
             </h2>
             <div class="bg-white h-[calc(100vh-30rem)] min-h-[25rem] w-full rounded-xl overflow-y-auto px-[1rem] py-[1rem] col-start-1 col-span-1">
                 <div class="w-full h-max flex flex-col gap-[1rem]">
-                    <div v-for="competition, i in presentingStore.competitions" :key="i" @click="()=>selectedCompetition=competition.id.toString()" :class="`w-full h-[5rem] rounded-lg  flex justify-center items-center cursor-pointer transition-colors hover:bg-gray-100 ${selectedCompetition == competition.id.toString() ? 'bg-gray-100' : 'bg-pearl-white'}`">
+                    <div v-for="competition, i in presentingStore.competitions" :key="i" @click="()=>{selectedCompetition=competition?.id?.toString()}" :class="`w-full h-[5rem] rounded-lg  flex justify-center items-center cursor-pointer transition-colors hover:bg-gray-100 ${selectedCompetition == competition?.id?.toString() ? 'bg-gray-100' : 'bg-pearl-white'}`">
+                        
+                        {{ 
+                            (()=>{console.log("competition", competition, presentingStore.competitions)})() }}
+                        
                         <p class="text-center">
-                            {{ competition.name }}
+                            {{ competition?.name }}
                         </p>
                     </div>            
                 </div>
@@ -65,7 +74,7 @@ onMounted(async()=>{
                 </div>
                 <div v-if="selectedCompetition !== null" class="bg-white h-[calc(100vh-55rem)] w-full rounded-xl overflow-y-auto px-[1rem] py-[1rem]">
                     <div class="w-full h-max flex flex-col gap-[1rem]">
-                        <div v-for="series, i in presentingStore.competitions.find(comp=>comp.id.toString() == selectedCompetition).series" :key="i" @click="()=>{selectedSeries = series.id}" :class="`w-full h-[5rem] rounded-lg flex justify-center items-center cursor-pointer transition-colors hover:bg-gray-100 ${selectedSeries == series.id.toString() ? 'bg-gray-100' : 'bg-pearl-white'}`">
+                        <div v-for="series, i in presentingStore.competitions.find(comp=>comp?.id?.toString() == selectedCompetition).series" :key="i" @click="()=>{selectedSeries = series.id}" :class="`w-full h-[5rem] rounded-lg flex justify-center items-center cursor-pointer transition-colors hover:bg-gray-100 ${selectedSeries == series?.id?.toString() ? 'bg-gray-100' : 'bg-pearl-white'}`">
                             <p class="text-center">
                                 {{ series.series_name }}
                             </p>
