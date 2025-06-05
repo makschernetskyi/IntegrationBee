@@ -372,29 +372,37 @@ class Competition(RevisionMixin, ClusterableModel):
             winner = match.winner
             loser = match.player1 if match.player2 == winner else match.player2
             
-            # Get current ratings
-            winner_rating = winner.ranking_elo
-            loser_rating = loser.ranking_elo
+            # Skip rating update if either player is a placeholder
+            player1_name = f"{match.player1.first_name} {match.player1.last_name}".lower()
+            player2_name = f"{match.player2.first_name} {match.player2.last_name}".lower()
             
-            try:
-                # Calculate K factor for this round
-                k_factor = calculate_k_factor(match.round.name)
-            except ValueError:
-                # Skip if invalid round name
-                return
-            
-            # Calculate ELO changes using proprietary algorithm
-            winner_change, loser_change = calculate_elo_change(
-                winner_rating, loser_rating, k_factor
-            )
-            
-            # Apply changes
-            winner.ranking_elo += winner_change
-            loser.ranking_elo += loser_change
-            
-            # Save updated ratings
-            winner.save()
-            loser.save()
+            if "placeholder" in player1_name or "placeholder" in player2_name:
+                # Skip ELO update for matches involving placeholder players
+                pass
+            else:
+                # Get current ratings
+                winner_rating = winner.ranking_elo
+                loser_rating = loser.ranking_elo
+                
+                try:
+                    # Calculate K factor for this round
+                    k_factor = calculate_k_factor(match.round.name)
+                except ValueError:
+                    # Skip if invalid round name
+                    return
+                
+                # Calculate ELO changes using proprietary algorithm
+                winner_change, loser_change = calculate_elo_change(
+                    winner_rating, loser_rating, k_factor
+                )
+                
+                # Apply changes
+                winner.ranking_elo += winner_change
+                loser.ranking_elo += loser_change
+                
+                # Save updated ratings
+                winner.save()
+                loser.save()
         
         # Check if we need to apply decay ONLY when Finals is completed
         if match and match.round.name == 'Finals' and not self.decay_applied:
@@ -418,11 +426,18 @@ class Competition(RevisionMixin, ClusterableModel):
         """
         Apply decay formula to all users' ratings.
         Called every 5th competition completion.
+        Excludes placeholder users from decay.
         """
         from .elo_utils import apply_decay_to_rating
+        from django.db.models import Q
         
-        # Apply decay to all users
-        for user in User.objects.all():
+        # Apply decay to all users except placeholders
+        users = User.objects.exclude(
+            Q(first_name__icontains='placeholder') | 
+            Q(last_name__icontains='placeholder')
+        )
+        
+        for user in users:
             user.ranking_elo = apply_decay_to_rating(user.ranking_elo)
             user.save()
 
