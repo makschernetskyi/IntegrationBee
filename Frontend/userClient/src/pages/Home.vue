@@ -2,11 +2,69 @@
 import DefaultLayout from "@/layouts/Default.vue"
 import VideoPlayer from "@/components/VideoPlayer.vue";
 import { useAuthStore } from "@/stores/authStore/authStore";
-import { onMounted, watchEffect, ref } from "vue"
+import { onMounted, watchEffect, ref, onUnmounted } from "vue"
 import { useHomePageStore } from "@/stores/homePageStore/homePageStore";
 import { sanitizeHtml } from "@/utils/htmlSanitizers";
 
 const store = useHomePageStore()
+
+// Countries array for typewriter effect
+const countries = [
+	"AUSTRIA",
+	"POLAND"
+]
+
+// Typewriter effect state
+const currentCountryIndex = ref(0)
+const displayedText = ref("")
+const isTyping = ref(true)
+const isErasing = ref(false)
+const pauseCounter = ref(0)
+let typewriterInterval: NodeJS.Timeout | null = null
+
+// Typewriter animation function
+const startTypewriter = () => {
+	const currentCountry = countries[currentCountryIndex.value]
+	
+	if (isTyping.value) {
+		// Typing phase
+		if (displayedText.value.length < currentCountry.length) {
+			displayedText.value = currentCountry.substring(0, displayedText.value.length + 1)
+		} else {
+			// Finished typing, start pause counter
+			pauseCounter.value++
+			if (pauseCounter.value >= 20) { // 20 * 100ms = 2 seconds
+				pauseCounter.value = 0
+				isTyping.value = false
+				isErasing.value = true
+			}
+		}
+	} else if (isErasing.value) {
+		// Erasing phase
+		if (displayedText.value.length > 0) {
+			displayedText.value = displayedText.value.substring(0, displayedText.value.length - 1)
+		} else {
+			// Finished erasing, move to next country
+			isErasing.value = false
+			isTyping.value = true
+			currentCountryIndex.value = (currentCountryIndex.value + 1) % countries.length
+		}
+	}
+}
+
+// Start the typewriter effect
+onMounted(() => {
+	// Initialize with first country
+	displayedText.value = ""
+	typewriterInterval = setInterval(startTypewriter, 100) // 100ms interval for smooth animation
+})
+
+// Cleanup on unmount
+onUnmounted(() => {
+	if (typewriterInterval) {
+		clearInterval(typewriterInterval)
+	}
+})
 
 
 
@@ -49,7 +107,7 @@ const {isAuthenticated} = useAuthStore()
 				<div class="flex flex-col font-body text-pearl-white gap-[3rem] w-full">
 					<div class="flex flex-col gap-0" data-aos="fade-right" data-aos-offset="0">
 						<h1 class="font-heading text-title lg:text-heading">INTEGRATION BEE</h1>
-						<h2 class="font-heading text-primary text-subtitle lg:text-title">AUSTRIA</h2>
+						<h2 class="font-heading text-primary text-subtitle lg:text-title">{{ displayedText }}<span class="animate-pulse">|</span></h2>
 						<h3 class="text-body lg:text-title" v-html="store.slogan && sanitizeHtml(store.slogan)"/>
 					</div>
 					<div class="flex justify-between md:justify-start items-center w-full md:gap-[2.4rem] lg:text-body">
