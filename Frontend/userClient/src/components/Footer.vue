@@ -75,10 +75,10 @@ const {isAuthenticated} = useAuthStore()
 				<p>© 2024 JugendWAVE All Rights Reserved.</p>
 			</div>
             <div class="flex justify-between lg:justify-end gap-[4rem]">
-                <RouterLink to="/imprint" class="underline underline-offset-4 decoration-pearl-white relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:-bottom-[2px] after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
+                <RouterLink to="/imprint" class="underline underline-offset-4 decoration-pearl-white">
 					impressum
 				</RouterLink>
-                <RouterLink to="/terms_of_use" class="underline underline-offset-4 decoration-pearl-white relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:-bottom-[2px] after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
+                <RouterLink to="/terms_of_use" class="underline underline-offset-4 decoration-pearl-white">
 					terms of use
 				</RouterLink>
 			</div>
@@ -89,7 +89,7 @@ const {isAuthenticated} = useAuthStore()
 		<div class="w-full flex justify-center items-center text-pearl-white-50 text-body text-center lg:text-body font-body py-[4rem]">
             <p>
 				this page was created by
-                <a href="https://www.formamind.com" target="_blank" class="underline underline-offset-4 decoration-pearl-white relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:-bottom-[2px] after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
+                <a href="https://www.formamind.com" target="_blank" class="underline underline-offset-4 decoration-pearl-white">
 					Formamind
 				</a>
 			</p>

@@ -39,8 +39,8 @@ const handleSearchClick = async () =>{
 				</div>
 			</div> -->
 
-			<div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 auto-rows-auto gap-y-[2rem] md:gap-x-[2rem] px-[2rem] py-[5rem] overflow-x-hidden">
-				<RouterLink v-for="event in store.events" :to="`/event/${event.id}`" class="underline underline-offset-4 decoration-screenBlack">
+			<div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 auto-rows-auto gap-y-[2rem] md:gap-x-[2rem] px-[2rem] py-[5rem] overflow-x-hidden">
+				<RouterLink v-for="event in store.events" :to="`/event/${event.id}`" class="focus-visible:outline-[3px] focus-visible:outline-[#7AB8FF] focus-visible:outline focus-visible:outline-offset-4 focus-visible:outline-solid">
 					<div class="w-full flex flex-col gap-[1rem] text-screenBlack p-4" data-aos="fade-left" data-aos-offset="-50">
 						<div class="w-full aspect-[8/5] overflow-hidden rounded-3xl relative">
 							<img :src="event.pictureSrc" :alt="`${event.name} - ${event.edition}`" :class="`w-full h-full object-cover`">
