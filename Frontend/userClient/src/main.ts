@@ -11,6 +11,10 @@ import aos from './plugins/aos.ts'
 //masonry for tiles in news page
 import MasonryWall from '@yeger/vue-masonry-wall'
 
+// Vidstack custom elements
+import { defineCustomElements } from 'vidstack/elements';
+defineCustomElements();
+
 
 
 //set up pinia store manager

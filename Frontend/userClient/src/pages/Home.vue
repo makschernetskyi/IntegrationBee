@@ -108,7 +108,13 @@ const {isAuthenticated} = useAuthStore()
 				<div class="flex flex-col font-body text-pearl-white gap-[3rem] w-full">
 					<div class="flex flex-col gap-0" data-aos="fade-right" data-aos-offset="0">
 						<h1 class="font-heading text-title lg:text-heading">INTEGRATION BEE</h1>
-						<h2 class="font-heading text-primary text-subtitle lg:text-title">{{ displayedText }}<span class="animate-pulse">|</span></h2>
+						<!-- Visually hidden list of all locations for screen readers -->
+						<div class="sr-only" id="country-list">
+							Available locations: {{ countries.join(', ') }}
+						</div>
+						<h2 class="font-heading text-primary text-subtitle lg:text-title" aria-live="polite" aria-describedby="country-list" :aria-label="`Current location: ${displayedText}`">
+							{{ displayedText }}<span class="animate-pulse" aria-hidden="true">|</span>
+						</h2>
 						<h3 class="text-body lg:text-title" v-html="store.slogan && sanitizeHtml(store.slogan)"/>
 					</div>
 					<div class="flex justify-between md:justify-start items-center w-full md:gap-[2.4rem] lg:text-body">
@@ -143,7 +149,7 @@ const {isAuthenticated} = useAuthStore()
 				</div>
 				<!-- video example -->
 				<div class="flex justify-center items-center w-full lg:px-[3rem]">
-					<video-player :options="videoOptions" class="rounded-[30px] lg:rounded-3xl w-full aspect-video border-pearl-white border-4 box-content"/>
+					<video-player :options="videoOptions" />
 				</div>
 			</section>
 			<!-- steps to participate -->
@@ -251,9 +257,9 @@ const {isAuthenticated} = useAuthStore()
 							<h3 class="text-screen-black text-subtitle md:text-title text-left ">
 								{{ store.nextEvent?.title }}
 							</h3>
-							<h5 class="text-secondary text-subtitle md:text-title text-left">
+							<h4 class="text-secondary text-subtitle md:text-title text-left">
 								{{ store.nextEvent?.edition }}
-							</h5>
+							</h4>
 						</div>
 						<div class="flex justify-center md:justify-end items-start p-[2rem]">
 							<div class="w-[90%] md:w-[100%] h-min rounded-[20px] overflow-hidden shadow-[-1.5rem_1.5rem_0px_0px_#FBC151]">
