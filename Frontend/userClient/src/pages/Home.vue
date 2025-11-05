@@ -360,7 +360,7 @@ const {isAuthenticated} = useAuthStore()
 										</div>
 									</div>
 									<div class="relative z-[4] w-full flex justify-center items-start pt-[1rem]">
-                                        <p class="font-heading text-subtitle lg:text-subtitle text-pearl-white">{{ sponsor.sponsorName }}</p>
+                                        <p class="font-heading text-subtitle lg:text-subtitle text-screenBlack">{{ sponsor.sponsorName }}</p>
 									</div>
 								</div>
 								
@@ -407,7 +407,7 @@ const {isAuthenticated} = useAuthStore()
 										</div>
 									</div>
 									<div class="relative z-[4] w-full flex justify-center items-start pt-[1rem]">
-                                        <p class="font-heading text-body lg:text-subtitle text-pearl-white">{{ sponsor.sponsorName }}</p>
+                                        <p class="font-heading text-body lg:text-subtitle text-screenBlack">{{ sponsor.sponsorName }}</p>
 									</div>
 								</div>
 								
@@ -454,7 +454,7 @@ const {isAuthenticated} = useAuthStore()
 										</div>
 									</div>
 									<div class="relative z-[4] w-full flex justify-center items-start pt-[1rem]">
-                                        <p class="font-heading text-body lg:text-body text-pearl-white">{{ sponsor.sponsorName }}</p>
+                                        <p class="font-heading text-body lg:text-body text-screenBlack">{{ sponsor.sponsorName }}</p>
 									</div>
 								</div>
 								
@@ -554,40 +554,45 @@ const {isAuthenticated} = useAuthStore()
 }
 
 /* Focus visible styles for accessibility - WCAG 2.4.7 */
-a:focus-visible,
-button:focus-visible {
-	outline: 3px solid #242424;
-	outline-offset: 2px;
-	border-radius: 1rem;
+a:focus, a:focus-visible,
+button:focus, button:focus-visible {
+    outline: 3px solid #242424;
+    outline-offset: 2px;
+    border-radius: 1rem;
+    box-shadow: 0 0 0 3px #242424;
 }
 
 /* Sign in/Events buttons on primary (yellow) background - use screenBlack */
-a[href="/sign_in"]:focus-visible,
-a[href="/events"]:focus-visible {
-	outline: 3px solid #242424;
-	outline-offset: 2px;
+a[href="/sign_in"]:focus, a[href="/sign_in"]:focus-visible,
+a[href="/events"]:focus, a[href="/events"]:focus-visible {
+    outline: 3px solid #242424;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px #242424;
 }
 
 /* Learn More button - on dark background, use pearl-white */
-a[href="#about"]:focus-visible {
-	outline: 3px solid #F2F1F0;
-	outline-offset: 2px;
+a[href="#about"]:focus, a[href="#about"]:focus-visible {
+    outline: 3px solid #F2F1F0;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px #F2F1F0;
 }
 
 /* Next event card link - on white background, use screenBlack */
-a[href*="/events/"]:focus-visible,
-a[href*="/event/"]:focus-visible {
-	outline: 3px solid #242424;
-	outline-offset: 2px;
-	border-radius: 2.5rem;
+a[href*="/events/"]:focus, a[href*="/events/"]:focus-visible,
+a[href*="/event/"]:focus, a[href*="/event/"]:focus-visible {
+    outline: 3px solid #242424;
+    outline-offset: 2px;
+    border-radius: 2.5rem;
+    box-shadow: 0 0 0 3px #242424;
 }
 
 /* Social media links - on dark background, use pearl-white */
-a[href^="http"]:focus-visible,
-a[href^="https"]:focus-visible {
-	outline: 3px solid #F2F1F0;
-	outline-offset: 2px;
-	border-radius: 0.5rem;
+a[href^="http"]:focus, a[href^="http"]:focus-visible,
+a[href^="https"]:focus, a[href^="https"]:focus-visible {
+    outline: 3px solid #F2F1F0;
+    outline-offset: 2px;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 0 3px #F2F1F0;
 }
 
 </style>

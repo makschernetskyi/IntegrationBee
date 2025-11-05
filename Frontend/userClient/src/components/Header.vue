@@ -87,7 +87,7 @@ document.addEventListener('click', ()=>{
 								Sign in
 							</RouterLink>
                             <RouterLink to="/sign_up" class="px-[2.4rem] py-[1rem] h-max w-max hover:bg-screenBlack-400 hover:bg-opacity-15 rounded-2xl signUpBtn text-secondary">
-                                <p class="relative text-secondary">Sign up</p>
+                                <p class="relative text-screenBlack">Sign up</p>
 								<!--<div class="signUpBtn_Bg bg-pearl-white"/>-->
 							</RouterLink>
 						</div>
@@ -183,16 +183,18 @@ document.addEventListener('click', ()=>{
 @media (min-width: 1024px) {
     a:focus, a:focus-visible,
     button:focus, button:focus-visible {
-		outline: 3px solid #242424;
-		outline-offset: 2px;
-		border-radius: 0.5rem;
-	}
+        outline: 3px solid #242424;
+        outline-offset: 2px;
+        border-radius: 0.5rem;
+        box-shadow: 0 0 0 3px #242424; /* ensure visibly strong indicator */
+    }
 
 	/* Logo link specific focus style - on light background */
     a[href="/"]:focus, a[href="/"]:focus-visible {
-		outline: 3px solid #242424;
-		outline-offset: 4px;
-	}
+        outline: 3px solid #242424;
+        outline-offset: 4px;
+        box-shadow: 0 0 0 3px #242424;
+    }
 
 	/* Sign in button - on yellow background, use screenBlack */
     a[href="/sign_in"]:focus, a[href="/sign_in"]:focus-visible {
@@ -205,48 +207,54 @@ document.addEventListener('click', ()=>{
     a[href="/events"]:focus, a[href="/events"]:focus-visible,
     a[href="/news"]:focus, a[href="/news"]:focus-visible,
     button:focus, button:focus-visible {
-		outline: 3px solid #242424;
-		outline-offset: 2px;
-	}
+        outline: 3px solid #242424;
+        outline-offset: 2px;
+        box-shadow: 0 0 0 3px #242424;
+    }
 
 	/* Dropdown menu links - on light background */
     a[href="/contact"]:focus, a[href="/contact"]:focus-visible,
     a[href="/rankings"]:focus, a[href="/rankings"]:focus-visible {
-		outline: 3px solid #242424;
-		outline-offset: 2px;
-	}
+        outline: 3px solid #242424;
+        outline-offset: 2px;
+        box-shadow: 0 0 0 3px #242424;
+    }
 
 	/* Sign up, profile, and logout buttons - on light background */
     a[href="/sign_up"]:focus, a[href="/sign_up"]:focus-visible,
     a[href="/myprofile"]:focus, a[href="/myprofile"]:focus-visible,
     button.signUpBtn:focus, button.signUpBtn:focus-visible {
-		outline: 3px solid #242424;
-		outline-offset: 2px;
-	}
+        outline: 3px solid #242424;
+        outline-offset: 2px;
+        box-shadow: 0 0 0 3px #242424;
+    }
 }
 
 /* Mobile focus styles - dark background */
 @media (max-width: 1023px) {
     a:focus, a:focus-visible,
     button:focus, button:focus-visible {
-		outline: 3px solid #F2F1F0;
-		outline-offset: 2px;
-		border-radius: 0.5rem;
-	}
+        outline: 3px solid #F2F1F0;
+        outline-offset: 2px;
+        border-radius: 0.5rem;
+        box-shadow: 0 0 0 3px #F2F1F0;
+    }
 
 	/* Logo link specific focus style - on dark background */
     a[href="/"]:focus, a[href="/"]:focus-visible {
-		outline: 3px solid #F2F1F0;
-		outline-offset: 4px;
-	}
+        outline: 3px solid #F2F1F0;
+        outline-offset: 4px;
+        box-shadow: 0 0 0 3px #F2F1F0;
+    }
 
 	/* Mobile login/profile buttons - icon buttons need more offset, on dark background */
     a[href="/sign_in"].relative:focus, a[href="/sign_in"].relative:focus-visible,
     a[href="/myprofile"].relative:focus, a[href="/myprofile"].relative:focus-visible,
     button.relative:focus, button.relative:focus-visible {
-		outline: 3px solid #F2F1F0;
-		outline-offset: 4px;
-	}
+        outline: 3px solid #F2F1F0;
+        outline-offset: 4px;
+        box-shadow: 0 0 0 3px #F2F1F0;
+    }
 }
 
 </style>
