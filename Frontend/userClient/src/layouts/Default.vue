@@ -18,6 +18,8 @@ function toggleShouldMenuBeVisible(){
 </script>
 <template>
 	<div>
+		<!-- Skip to main content link for accessibility -->
+		<a href="#main" class="skip-link">Skip to main content</a>
 		<!-- button works better if we pass is-menu-visible="shouldMenuBeVisible"--> 
 		<KeepAlive>
 			<Header
@@ -29,3 +31,23 @@ function toggleShouldMenuBeVisible(){
 		
 	</div>
 </template>
+
+<style scoped>
+/* Skip link - hidden by default, visible when focused */
+.skip-link {
+	position: absolute;
+	top: -40px;
+	left: 0;
+	background: #FBC151;
+	color: #001D37;
+	padding: 8px 16px;
+	text-decoration: none;
+	font-weight: bold;
+	z-index: 10000;
+	border-radius: 0 0 4px 0;
+}
+
+.skip-link:focus {
+	top: 0;
+}
+</style>

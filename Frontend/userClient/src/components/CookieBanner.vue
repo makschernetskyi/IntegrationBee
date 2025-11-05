@@ -38,14 +38,14 @@ function acceptCookies() {
         >
           We use cookies to enhance your experience. By continuing to visit this
           site, you agree to our use of cookies. For more details, see our
-          <RouterLink to="/terms_of_use" class="text-primary-500 underline">
+          <RouterLink to="/terms_of_use" class="text-secondary underline">
             Terms of Use
           </RouterLink>
           .
         </div>
         <button
           @click="acceptCookies"
-          class="bg-primary text-white px-6 py-2 rounded-xl lg:hover:bg-primary-400 transition-colors duration-100 font-body text-body"
+          class="bg-primary text-secondary px-6 py-2 rounded-xl lg:hover:bg-primary-400 transition-colors duration-100 font-body text-body"
         >
           Accept
         </button>
