@@ -360,7 +360,7 @@ const {isAuthenticated} = useAuthStore()
 										</div>
 									</div>
 									<div class="relative z-[4] w-full flex justify-center items-start pt-[1rem]">
-										<p class="font-heading text-subtitle lg:text-subtitle text-black">{{ sponsor.sponsorName }}</p>
+                                        <p class="font-heading text-subtitle lg:text-subtitle text-pearl-white">{{ sponsor.sponsorName }}</p>
 									</div>
 								</div>
 								
@@ -407,7 +407,7 @@ const {isAuthenticated} = useAuthStore()
 										</div>
 									</div>
 									<div class="relative z-[4] w-full flex justify-center items-start pt-[1rem]">
-										<p class="font-heading text-body lg:text-subtitle text-black">{{ sponsor.sponsorName }}</p>
+                                        <p class="font-heading text-body lg:text-subtitle text-pearl-white">{{ sponsor.sponsorName }}</p>
 									</div>
 								</div>
 								
@@ -454,7 +454,7 @@ const {isAuthenticated} = useAuthStore()
 										</div>
 									</div>
 									<div class="relative z-[4] w-full flex justify-center items-start pt-[1rem]">
-										<p class="font-heading text-body lg:text-body text-black">{{ sponsor.sponsorName }}</p>
+                                        <p class="font-heading text-body lg:text-body text-pearl-white">{{ sponsor.sponsorName }}</p>
 									</div>
 								</div>
 								
