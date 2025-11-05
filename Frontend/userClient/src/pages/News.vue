@@ -76,7 +76,7 @@ function switchFocusToFullScreenInput(newsItem:any){
 							</template>
 						</div>
 						<div v-if="newsItem.pictureSrc" class="w-full max-h-[50rem] overflow-hidden rounded-[1.5rem]">
-							<img :src="newsItem.pictureSrc" :alt="newsItem.pictureAlt" class="w-full">
+							<img :src="newsItem.pictureSrc" :alt="newsItem.pictureAlt || newsItem.title || 'News image'" class="w-full">
 						</div>
 						<!--comments-->
 						<!--<div class="text-text-sm w-full flex flex-col gap-[2rem]">
@@ -134,7 +134,7 @@ function switchFocusToFullScreenInput(newsItem:any){
 							<p class="news-text" v-html="sanitizeHtml(fullViewNews.content)"/>
 						</div>
 						<div v-if="fullViewNews.pictureSrc" class="w-full h-max max-h-[50rem] overflow-hidden rounded-[0.7rem]">
-							<img :src="fullViewNews.pictureSrc" :alt="fullViewNews.pictureAlt" class="w-full">
+							<img :src="fullViewNews.pictureSrc" :alt="fullViewNews.pictureAlt || fullViewNews.title || 'News image'" class="w-full">
 						</div>
 						<!--comments-->
 						<!--<div class="text-text-sm w-full flex flex-col gap-[2rem]">
