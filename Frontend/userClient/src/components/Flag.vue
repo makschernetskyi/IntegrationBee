@@ -17,7 +17,7 @@ const FlagComponent = computed(() => {
 
 <template>
   <div>
-    <component v-if="FlagComponent" :is="FlagComponent" class="block w-full h-full"/>
+    <component v-if="FlagComponent" :is="FlagComponent" class="block w-full h-full" aria-hidden="true" role="img"/>
     <div v-else>{{ countryCode }}</div>
   </div>
 </template>

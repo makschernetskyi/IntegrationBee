@@ -89,6 +89,7 @@ function closePasswordRecovery (){
 							class="overflow-hidden w-[90%] rounded-3xl font-heading text-subtitle pt-[0.8rem] pb-[0.6rem] relative bg-primary border-primary border-2 text-screenBlack after:absolute after:w-full after:h-full after:top-0 after:left-0 after:bg-pearl-white after:transition-transform after:duration-200 after:will-change-transform after:origin-top after:scale-y-0 lg:hover:after:scale-y-100"
 							title="sign in"
 							type="submit"
+							aria-label="sign in (click to submit form)"
 							:disabled="store.loading"
 						>
 							<span class="relative z-[2]">
@@ -99,7 +100,7 @@ function closePasswordRecovery (){
 						
 					</div>
 					<div class="flex text-center items-center flex-col text-body font-body gap-2 mt-[1rem]">
-						<button @click="showPasswordRecovery" type="button" class="lg:hover:underline text-screen-black">
+						<button @click="showPasswordRecovery" type="button" aria-label="forgot password (click to show password recovery modal)" class="lg:hover:underline text-screen-black">
 							Forgot password?
 						</button>
 					</div>
