@@ -12,41 +12,48 @@ const {isAuthenticated} = useAuthStore()
 		</div>
 		<div class="w-full flex flex-col gap-[8rem] lg:gap-0 lg:grid lg:grid-cols-[2fr_3fr] py-[4rem]">
 			<div class="flex justify-center lg:justify-start items-center">
-				<ul class="flex flex-col gap-[2rem] text-center lg:text-left font-body text-pearl-white text-body lg:text-body">
-					<li>
-						<RouterLink to="/" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
-							Home
-						</RouterLink>
-					</li>
-					<li>
-						<RouterLink to="/events" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
-							Events
-						</RouterLink>
-					</li>
-					<li>
-						<RouterLink to="/news" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
-							News
-						</RouterLink>
-					</li>
-					<li>
-						<RouterLink to="/contact" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
-							Contact
-						</RouterLink>
-					</li>
-					<!--login and signup for not authenticated users-->
-					<template v-if="!isAuthenticated">
+				<nav aria-label="Sitemap">
+					<ul class="flex flex-col gap-[2rem] text-center lg:text-left font-body text-pearl-white text-body lg:text-body">
 						<li>
-							<RouterLink to="/sign_in" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
-								Sign in
+							<RouterLink to="/" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
+								Home
 							</RouterLink>
 						</li>
 						<li>
-							<RouterLink to="/sign_up" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
-								Sign up
+							<RouterLink to="/games" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
+								Games
 							</RouterLink>
 						</li>
-					</template>
-				</ul>
+						<li>
+							<RouterLink to="/events" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
+								Events
+							</RouterLink>
+						</li>
+						<li>
+							<RouterLink to="/news" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
+								News
+							</RouterLink>
+						</li>
+						<li>
+							<RouterLink to="/contact" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
+								Contact
+							</RouterLink>
+						</li>
+						<!--login and signup for not authenticated users-->
+						<template v-if="!isAuthenticated">
+							<li>
+								<RouterLink to="/sign_in" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
+									Sign in
+								</RouterLink>
+							</li>
+							<li>
+								<RouterLink to="/sign_up" class="relative after:bg-pearl-white after:absolute after:w-full after:h-[3px] after:bottom-0 after:left-0 after:scale-x-[0] after:transition-all after:duration-100 after:origin-left after:will-change-transform hover:after:scale-x-[1]">
+									Sign up
+								</RouterLink>
+							</li>
+						</template>
+					</ul>
+				</nav>
 			</div>
 			<div class="w-full flex items-center justify-center lg:justify-end">
 				<div class="flex flex-col items-end text-pearl-white">

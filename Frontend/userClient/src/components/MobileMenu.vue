@@ -35,19 +35,21 @@ watch(shouldMenuBeVisible, toggleInternalVisibility)
 
 </script>
 <template>
-	<div class="z-[100] will-change-transform origin-left fixed left-0 top-0 bg-secondary bg-opacity-90 w-full h-full flex justify-center lg:justify-start lg:pl-[20vw] pt-[30vh]">
-				<ul class="flex flex-col items-center gap-[2rem] lg:text-subtitle-lg text-pearl-white font-body font-semibold">
-					<MobileMenuLink to="/" :isShown="linksShown>=1" :disabled="shouldMenuBeVisible!=isMenuVisible" @close-menu="emit('closeMenu')">home</MobileMenuLink>
-					
-					<MobileMenuLink to="/games" :isShown="linksShown>=2" :disabled="shouldMenuBeVisible!=isMenuVisible" @close-menu="emit('closeMenu')">games</MobileMenuLink>
+	<div class="z-[100] will-change-transform origin-left fixed left-0 top-0 bg-secondary bg-opacity-[94%] backdrop-blur-sm w-full h-full flex justify-center lg:justify-start lg:pl-[20vw] pt-[21vh]">
+		<nav aria-label="Mobile navigation menu">
+			<ul class="flex flex-col items-center gap-[2rem] lg:text-subtitle-lg text-pearl-white font-body font-semibold">
+				<MobileMenuLink to="/" :isShown="linksShown>=1" :disabled="shouldMenuBeVisible!=isMenuVisible" @close-menu="emit('closeMenu')">home</MobileMenuLink>
+				
+				<MobileMenuLink to="/games" :isShown="linksShown>=2" :disabled="shouldMenuBeVisible!=isMenuVisible" @close-menu="emit('closeMenu')">games</MobileMenuLink>
 
-					<MobileMenuLink to="/events" :isShown="linksShown>=3" :disabled="shouldMenuBeVisible!=isMenuVisible" @close-menu="emit('closeMenu')">events</MobileMenuLink>
-					
-					<MobileMenuLink to="/news" :isShown="linksShown>=4" :disabled="shouldMenuBeVisible!=isMenuVisible" @close-menu="emit('closeMenu')">news</MobileMenuLink>
-					
-					<MobileMenuLink to="/rankings" :isShown="linksShown>=5" :disabled="shouldMenuBeVisible!=isMenuVisible" @close-menu="emit('closeMenu')">rankings</MobileMenuLink>
+				<MobileMenuLink to="/events" :isShown="linksShown>=3" :disabled="shouldMenuBeVisible!=isMenuVisible" @close-menu="emit('closeMenu')">events</MobileMenuLink>
+				
+				<MobileMenuLink to="/news" :isShown="linksShown>=4" :disabled="shouldMenuBeVisible!=isMenuVisible" @close-menu="emit('closeMenu')">news</MobileMenuLink>
+				
+				<MobileMenuLink to="/rankings" :isShown="linksShown>=5" :disabled="shouldMenuBeVisible!=isMenuVisible" @close-menu="emit('closeMenu')">rankings</MobileMenuLink>
 
-					<MobileMenuLink to="/contact" :isShown="linksShown>=6" :disabled="shouldMenuBeVisible!=isMenuVisible" @close-menu="emit('closeMenu')">contact</MobileMenuLink>
-				</ul>
-			</div>
+				<MobileMenuLink to="/contact" :isShown="linksShown>=6" :disabled="shouldMenuBeVisible!=isMenuVisible" @close-menu="emit('closeMenu')">contact</MobileMenuLink>
+			</ul>
+		</nav>
+	</div>
 </template>

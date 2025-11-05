@@ -11,7 +11,8 @@ const store = useHomePageStore()
 // Countries array for typewriter effect
 const countries = [
 	"AUSTRIA",
-	"POLAND"
+	"POLAND",
+	"SLOVENIA"
 ]
 
 // Typewriter effect state
@@ -33,7 +34,7 @@ const startTypewriter = () => {
 		} else {
 			// Finished typing, start pause counter
 			pauseCounter.value++
-			if (pauseCounter.value >= 20) { // 20 * 100ms = 2 seconds
+			if (pauseCounter.value >= 40) { // 20 * 100ms = 2 seconds
 				pauseCounter.value = 0
 				isTyping.value = false
 				isErasing.value = true
@@ -98,7 +99,7 @@ const {isAuthenticated} = useAuthStore()
 </script>
 <template>
 	<DefaultLayout>
-		<div class="top-0 h-max bg-screenBlack overflow-x-hidden">
+		<main id="main" class="top-0 h-max bg-screenBlack overflow-x-hidden">
 			<!-- first welcome section -->
 			<section 
 				class="top-0 flex justify-start pt-[30vh] md:pt-0 md:items-center lg:min-h-[40rem] h-[111vh] px-[2rem] lg:px-[12rem] xl:px-[10vw] bg-no-repeat bg-cover [clip-path:polygon(0_0,100%_0,100%_90%,0%_100%)] relative"
@@ -123,7 +124,7 @@ const {isAuthenticated} = useAuthStore()
 				</div>
 				<!-- arrow down (animated) -->
 				<div class="w-[5rem] aspect-square absolute left-[calc(50vw-2.5rem)] bottom-[max(15rem,20vh)] stroke-primary down-arrow">
-					<svg width="61" height="34" viewBox="0 0 61 34" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+					<svg width="61" height="34" viewBox="0 0 61 34" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full" aria-hidden="true">
 						<path d="M1.58545 1.35022L30.7674 30.5322L59.1498 2.14972" stroke-width="3.7689"/>
 					</svg>
 				</div>
@@ -156,7 +157,7 @@ const {isAuthenticated} = useAuthStore()
 							</h2>
 							<div class="w-full flex justify-start">
 								<div class="w-auto h-auto">
-									<svg width="749" height="82" viewBox="0 0 749 82" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full -scale-x-[1]">
+									<svg width="749" height="82" viewBox="0 0 749 82" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full -scale-x-[1]" aria-hidden="true">
 										<path d="M749 0H2.8793C0.9697 0 0.146249 2.42068 1.65973 3.58513L103.039 81.5851C103.389 81.8541 103.818 82 104.259 82H749V0Z" fill="#FBC151"/>
 									</svg>
 								</div>
@@ -167,14 +168,14 @@ const {isAuthenticated} = useAuthStore()
 				<div class="w-full h-max grid grid-cols-1 auto-rows-[25rem] gap-y-[2rem] relative px-[2rem] lg:px-[0rem]">
 					<div class="grid grid-cols-[4rem_1fr] grid-rows-1 gap-x-[1rem] text-pearl-white">
 						<div class="relative pt-[calc(6rem)] z-[1]">
-							<svg width="49" height="45" viewBox="0 0 49 45" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full aspect-square">
+							<svg width="49" height="45" viewBox="0 0 49 45" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full aspect-square" aria-hidden="true">
 								<path d="M34.0532 0.508602L48.3827 19.7613L38.8741 41.7973L15.036 44.5807L0.706578 25.328L10.2152 3.29193L34.0532 0.508602Z" fill="#FBC151"/>
 							</svg>
 						</div>
 						<div class="grid grid-cols-1 grid-rows-[7rem_4px_auto] gap-[1rem] h-full" data-aos="fade-up">
-							<h4 class="font-heading text-subtitle lg:text-title">
+							<h3 class="font-heading text-subtitle lg:text-title">
 								{{ store.stepsToParticipate[0]?.title }}
-							</h4>
+							</h3>
 							<div class="h-[4px] bg-primary w-full"/>
 							<p class="font-body text-body">
 								{{ store.stepsToParticipate[0]?.description }}
@@ -184,14 +185,14 @@ const {isAuthenticated} = useAuthStore()
 
 					<div class="grid grid-cols-[4rem_1fr] grid-rows-1 gap-x-[1rem] text-pearl-white">
 						<div class="relative pt-[calc(6rem)] z-[1]">
-							<svg width="49" height="45" viewBox="0 0 49 45" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full aspect-square">
+							<svg width="49" height="45" viewBox="0 0 49 45" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full aspect-square" aria-hidden="true">
 								<path d="M34.0532 0.508602L48.3827 19.7613L38.8741 41.7973L15.036 44.5807L0.706578 25.328L10.2152 3.29193L34.0532 0.508602Z" fill="#FBC151"/>
 							</svg>
 						</div>
 						<div class="grid grid-cols-1 grid-rows-[7rem_4px_auto] gap-[1rem] h-full" data-aos="fade-up">
-							<h4 class="font-heading text-subtitle lg:text-title">
+							<h3 class="font-heading text-subtitle lg:text-title">
 								{{store.stepsToParticipate[1]?.title}}
-							</h4>
+							</h3>
 							<div class="h-[4px] bg-primary w-full"/>
 							<p class="font-body text-body">
 								{{ store.stepsToParticipate[1]?.description }}	
@@ -201,14 +202,14 @@ const {isAuthenticated} = useAuthStore()
 
 					<div class="grid grid-cols-[4rem_1fr] grid-rows-1 gap-x-[1rem] text-pearl-white">
 						<div class="relative pt-[calc(6rem)] z-[1]">
-							<svg width="49" height="45" viewBox="0 0 49 45" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full aspect-square">
+							<svg width="49" height="45" viewBox="0 0 49 45" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full aspect-square" aria-hidden="true">
 								<path d="M34.0532 0.508602L48.3827 19.7613L38.8741 41.7973L15.036 44.5807L0.706578 25.328L10.2152 3.29193L34.0532 0.508602Z" fill="#FBC151"/>
 							</svg>
 						</div>
 						<div class="grid grid-cols-1 grid-rows-[7rem_4px_auto] gap-[1rem] h-full" data-aos="fade-up" data-aos-offset="-50">
-							<h4 class="font-heading text-subtitle lg:text-title">
+							<h3 class="font-heading text-subtitle lg:text-title">
 								{{ store.stepsToParticipate[2]?.title }}
-							</h4>
+							</h3>
 							<div class="h-[4px] bg-primary w-full"/>
 							<p class="font-body text-body">
 								{{ store.stepsToParticipate[2]?.description }}
@@ -217,7 +218,7 @@ const {isAuthenticated} = useAuthStore()
 					</div>
 
 					<div class="absolute top-[calc(8rem+2px)] left-[calc(4rem-3px)] lg:left-[calc(2rem-3px)] z-0 w-[6px] h-[calc(54rem+2px)]">
-						<svg viewBox="0 0 6 507" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" class="w-full h-full">
+						<svg viewBox="0 0 6 507" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" class="w-full h-full" aria-hidden="true">
 							<path d="M3 0V507" stroke="#FBC151" stroke-width="5" stroke-dasharray="6 6"/>
 						</svg>
 					</div>
@@ -235,7 +236,7 @@ const {isAuthenticated} = useAuthStore()
 							</h2>
 							<div class="w-full flex justify-start">
 								<div>
-									<svg width="469" height="82" viewBox="0 0 469 82" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+									<svg width="469" height="82" viewBox="0 0 469 82" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full" aria-hidden="true">
 										<path d="M0 0H466.793C468.478 0 469.408 1.95593 468.344 3.26264L404.847 81.2626C404.467 81.7292 403.898 82 403.296 82H0V0Z" fill="#FBC151"/>
 									</svg>
 								</div>
@@ -247,10 +248,10 @@ const {isAuthenticated} = useAuthStore()
 				<div class="w-full h-max px-[2rem] lg:px-[0]" data-aos="fade-left">
 					<RouterLink :to="store.nextEvent?.link as string" class="w-full h-max lg:h-[45rem] bg-pearl-white rounded-[40px] grid grid-cols-1 md:grid-cols-[5fr_4fr] auto-rows-auto md:grid-rows-[5fr_5fr] cursor-pointer">
 						<div class="font-heading flex flex-col justify-center items-start p-[2rem]">
-							<h4 class="text-screen-black text-subtitle md:text-title text-left ">
+							<h3 class="text-screen-black text-subtitle md:text-title text-left ">
 								{{ store.nextEvent?.title }}
-							</h4>
-							<h5 class="text-primary text-subtitle md:text-title text-left">
+							</h3>
+							<h5 class="text-secondary text-subtitle md:text-title text-left">
 								{{ store.nextEvent?.edition }}
 							</h5>
 						</div>
@@ -289,7 +290,7 @@ const {isAuthenticated} = useAuthStore()
 					<div class="relative h-[10rem] w-full flex justify-center items-center">
 						<!--TODO: change svg so works on mobile-->
 						<div class="w-full absolute top-[2rem] left-0 hidden xl:flex">
-							<svg width="1439" height="46" viewBox="0 0 1439 46" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+							<svg width="1439" height="46" viewBox="0 0 1439 46" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full" aria-hidden="true">
 								<path fill-rule="evenodd" clip-rule="evenodd" d="M1439 0.809456L1213.55 9.45089C1213.06 9.46978 1212.59 9.67003 1212.23 10.0132L1194.53 27.1656C1193.22 28.4422 1194.17 30.6707 1196 30.6004L1439 21.2864V0.809456Z" fill="#FBC151"/>
 								<path fill-rule="evenodd" clip-rule="evenodd" d="M0 45.4958L265.844 35.3061C266.355 35.2866 266.839 35.0721 267.196 34.7068L283.956 17.5904C285.221 16.2981 284.257 14.1234 282.45 14.1927L0 25.0188V45.4958Z" fill="#FBC151"/>
 							</svg>
@@ -322,7 +323,7 @@ const {isAuthenticated} = useAuthStore()
 					<!-- if there is no silver or bronze sponsors then golden sponsors are just sponsors-->
 					<div v-if="store.silverSponsors.length || store.bronzeSponsors.length || store.mainSponsorExists" class="relative w-full h-max py-[12rem]">
 						<div class="absolute left-[70%] md:left-[50%] lg:left-[70%] xl:left-[50%] 2xl:left-auto 2xl:right-0 xl:right-0 top-[43%]">
-							<svg width="782" height="31" viewBox="0 0 782 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<svg width="782" height="31" viewBox="0 0 782 31" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 								<path fill-rule="evenodd" clip-rule="evenodd" d="M782 0.926632L45.1191 9.80528C44.8717 9.80826 44.627 9.85712 44.3974 9.94936L2.16181 26.9214C0.107586 27.7469 0.717887 30.8037 2.9316 30.777L782 21.3901V0.926632Z" fill="#FBC151"/>
 							</svg>
 						</div>
@@ -337,7 +338,7 @@ const {isAuthenticated} = useAuthStore()
 							<div v-for="(sponsor, i) in store.goldSponsors" :key="i" data-aos="fade-left" :data-aos-delay="i*50" data-aos-offset="20" class="relative w-[35rem] h-[35rem]">
 								<!-- background hexagon -->
 								<div class="w-full h-full absolute z-[1]">
-									<svg width="485" height="485" viewBox="0 0 485 485" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" class="w-full h-full">
+									<svg width="485" height="485" viewBox="0 0 485 485" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" class="w-full h-full" aria-hidden="true">
 										<path d="M315.567 73.0906L425.715 221.082L352.624 390.468L169.386 411.863L59.2388 263.872L132.329 94.4854L315.567 73.0906Z" fill="#FBC151"/>
 										<path d="M309.567 91.0447L407.668 222.852L342.571 373.714L179.372 392.769L81.2699 260.962L146.367 110.1L309.567 91.0447Z" fill="#F2F1F0"/>
 									</svg>
@@ -353,7 +354,7 @@ const {isAuthenticated} = useAuthStore()
 										</div>
 									</div>
 									<div class="relative z-[4] w-full flex justify-center items-start pt-[1rem]">
-										<p class="font-heading text-subtitle lg:text-subtitle text-screenBlack">{{ sponsor.sponsorName }}</p>
+										<p class="font-heading text-subtitle lg:text-subtitle text-black">{{ sponsor.sponsorName }}</p>
 									</div>
 								</div>
 								
@@ -369,7 +370,7 @@ const {isAuthenticated} = useAuthStore()
 				<template v-if="store.silverSponsors.length">
 					<div class="relative w-full h-max py-[12rem] flex justify-end">
 						<div class="absolute right-[70%] md:right-[50%] lg:right-[70%] xl:right-[60%] 2xl:left-0 top-[43%]">
-							<svg width="701" height="29" viewBox="0 0 701 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<svg width="701" height="29" viewBox="0 0 701 29" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 								<path fill-rule="evenodd" clip-rule="evenodd" d="M0 29.005L658.721 21.0681C658.981 21.065 659.237 21.0114 659.476 20.9102L699.536 3.9644C701.556 3.10981 700.926 0.0961456 698.733 0.122574L0 8.54158V29.005Z" fill="#FBC151"/>
 							</svg>
 						</div>
@@ -384,7 +385,7 @@ const {isAuthenticated} = useAuthStore()
 							<div v-for="(sponsor, i) in store.silverSponsors" :key="i" data-aos="fade-left" :data-aos-delay="i*50" data-aos-offset="20" class="relative w-[30rem] h-[30rem]">
 								<!-- background hexagon -->
 								<div class="w-full h-full absolute z-[1]">
-									<svg width="372" height="372" viewBox="0 0 372 372" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" class="w-full h-full">
+									<svg width="372" height="372" viewBox="0 0 372 372" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" class="w-full h-full" aria-hidden="true">
 										<path d="M242.067 56.0666L326.559 169.588L270.492 299.522L129.934 315.933L45.4412 202.412L101.508 72.4782L242.067 56.0666Z" fill="#757575"/>
 										<path d="M237.463 69.839L312.715 170.946L262.78 286.67L137.593 301.287L62.3406 200.18L112.276 84.4558L237.463 69.839Z" fill="#F2F1F0"/>
 									</svg>
@@ -400,7 +401,7 @@ const {isAuthenticated} = useAuthStore()
 										</div>
 									</div>
 									<div class="relative z-[4] w-full flex justify-center items-start pt-[1rem]">
-										<p class="font-heading text-body lg:text-subtitle text-screenBlack">{{ sponsor.sponsorName }}</p>
+										<p class="font-heading text-body lg:text-subtitle text-black">{{ sponsor.sponsorName }}</p>
 									</div>
 								</div>
 								
@@ -416,7 +417,7 @@ const {isAuthenticated} = useAuthStore()
 				<template v-if="store.bronzeSponsors.length">
 					<div class="relative w-full h-max py-[12rem] overflow-x-hidden">
 						<div class="absolute left-[70%] md:left-[50%] lg:left-[70%] xl:left-[50%] 2xl:left-auto 2xl:right-0 xl:right-0 top-[43%]">
-							<svg width="782" height="31" viewBox="0 0 782 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<svg width="782" height="31" viewBox="0 0 782 31" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 								<path fill-rule="evenodd" clip-rule="evenodd" d="M782 0.926632L45.1191 9.80528C44.8717 9.80826 44.627 9.85712 44.3974 9.94936L2.16181 26.9214C0.107586 27.7469 0.717887 30.8037 2.9316 30.777L782 21.3901V0.926632Z" fill="#FBC151"/>
 							</svg>
 						</div>
@@ -431,7 +432,7 @@ const {isAuthenticated} = useAuthStore()
 							<div v-for="(sponsor, i) in store.bronzeSponsors" :key="i" data-aos="fade-left" :data-aos-delay="i*50" data-aos-offset="20" class="relative w-[25rem] h-[25rem]">
 								<!-- background hexagon -->
 								<div class="w-full h-full absolute z-[1]">
-									<svg width="293" height="293" viewBox="0 0 293 293" fill="none" xmlns="http://www.w3.org/2000/svg" preserve-aspect-ratio="none" class="w-full h-full">
+									<svg width="293" height="293" viewBox="0 0 293 293" fill="none" xmlns="http://www.w3.org/2000/svg" preserve-aspect-ratio="none" class="w-full h-full" aria-hidden="true">
 										<path d="M190.66 44.16L257.209 133.574L213.049 235.914L102.34 248.84L35.7908 159.426L79.9508 57.0863L190.66 44.16Z" fill="#CD7F32"/>
 										<path d="M187.034 55.0074L246.306 134.643L206.975 225.791L108.373 237.304L49.1018 157.668L88.4324 66.5201L187.034 55.0074Z" fill="#F2F1F0"/>
 									</svg>
@@ -447,7 +448,7 @@ const {isAuthenticated} = useAuthStore()
 										</div>
 									</div>
 									<div class="relative z-[4] w-full flex justify-center items-start pt-[1rem]">
-										<p class="font-heading text-body lg:text-body text-screenBlack">{{ sponsor.sponsorName }}</p>
+										<p class="font-heading text-body lg:text-body text-black">{{ sponsor.sponsorName }}</p>
 									</div>
 								</div>
 								
@@ -472,24 +473,24 @@ const {isAuthenticated} = useAuthStore()
 				</div>
 				<div class="flex lg:flex-row justify-center items-center w-full">
 					<div class="flex gap-[5rem]">
-						<a v-for="(socialMedia, i) in store.socialMediaLinks" :key="i" :href="socialMedia.url" class="aspect-square h-[6rem] lg:h-[10rem] lg:hover:scale-110 lg:hover:rotate-12 transition-all duration-75">
-							<svg v-if="socialMedia.platform == 'instagram'" width="104" height="104" viewBox="0 0 104 104" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+						<a v-for="(socialMedia, i) in store.socialMediaLinks" :key="i" :href="socialMedia.url" class="aspect-square h-[6rem] lg:h-[10rem] lg:hover:scale-110 lg:hover:rotate-12 transition-all duration-75" :aria-label="`Follow us on ${socialMedia.platform}`">
+							<svg v-if="socialMedia.platform == 'instagram'" width="104" height="104" viewBox="0 0 104 104" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full" aria-hidden="true">
 								<path fill-rule="evenodd" clip-rule="evenodd" d="M12.584 0H91.416C98.3424 0 104 5.69591 104 12.646V91.354C104 98.3145 98.332 104 91.416 104H12.584C5.6576 104 0 98.3041 0 91.354V12.646C0 5.68546 5.668 0 12.584 0ZM11.232 42.8186H21.6216C20.54 45.9853 19.9472 49.3715 19.9472 52.904C19.9472 70.3262 34.2992 84.4458 52 84.4458C69.7008 84.4458 84.0528 70.3262 84.0528 52.904C84.0528 49.382 83.46 45.9853 82.3784 42.8186H92.768V86.6092C92.768 89.7132 90.2408 92.2424 87.1624 92.2424H16.4112C13.5616 92.2424 11.232 89.9013 11.232 87.0377V42.8186ZM75.6496 10.3049H87.724C90.4488 10.3049 92.6848 12.5519 92.6848 15.2901V26.567C92.6848 29.3052 90.4488 31.5522 87.724 31.5522H75.6496C72.9248 31.5522 70.6888 29.3052 70.6888 26.567V15.2901C70.6888 12.5519 72.9248 10.3049 75.6496 10.3049ZM52.0312 30.6848C63.5232 30.6848 72.8416 39.8609 72.8416 51.1691C72.8416 62.4773 63.5232 71.6535 52.0312 71.6535C40.5392 71.6535 31.2208 62.4773 31.2208 51.1691C31.2208 39.8609 40.5392 30.6848 52.0312 30.6848Z" fill="#FBC151"/>
 							</svg>
-							<svg v-if="socialMedia.platform == 'facebook'" width="104" height="104" viewBox="0 0 104 104" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+							<svg v-if="socialMedia.platform == 'facebook'" width="104" height="104" viewBox="0 0 104 104" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full" aria-hidden="true">
 								<path d="M98.2597 0H5.74031C4.21789 0 2.75782 0.604781 1.6813 1.6813C0.604781 2.75782 0 4.21789 0 5.74031L0 98.2597C0 99.7821 0.604781 101.242 1.6813 102.319C2.75782 103.395 4.21789 104 5.74031 104H55.5547V63.7812H42.0469V48.0391H55.5547V36.4609C55.5547 23.0283 63.7589 15.7137 75.7453 15.7137C81.4836 15.7137 86.4175 16.1403 87.8516 16.3231V30.3611H79.5844C73.0641 30.3611 71.8006 33.4587 71.8006 38.0067V48.0391H87.3884L85.3572 63.7812H71.8006V104H98.2556C99.0098 104.001 99.7567 103.852 100.454 103.564C101.151 103.276 101.784 102.853 102.317 102.32C102.851 101.787 103.274 101.154 103.563 100.457C103.851 99.7606 104 99.0139 104 98.2597V5.74031C104 4.21789 103.395 2.75782 102.319 1.6813C101.242 0.604781 99.7821 0 98.2597 0Z" fill="#FBC151"/>
 							</svg>
-							<svg v-if="socialMedia.platform == 'telegram'" width="94" height="84" viewBox="0 0 94 84" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+							<svg v-if="socialMedia.platform == 'telegram'" width="94" height="84" viewBox="0 0 94 84" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full" aria-hidden="true">
 								<path d="M6.46107 36.1617C31.6988 24.3084 48.5239 16.4933 56.9364 12.7177C80.9839 1.93636 85.9747 0.0638868 89.2342 0.000562376C89.951 -0.0119458 91.547 0.179093 92.5884 1.08763C93.454 1.85324 93.6974 2.88865 93.8192 3.61489C93.9274 4.34113 94.0762 5.99633 93.9544 7.2884C92.656 22.0466 87.0161 57.86 84.1488 74.3901C82.9451 81.3845 80.5511 83.7294 78.2384 83.9584C73.2071 84.4571 69.393 80.3767 64.524 76.9363C56.9094 71.5507 52.6084 68.1995 45.2103 62.9452C36.6624 56.8727 42.2077 53.5346 47.0767 48.0805C48.3481 46.6528 70.502 24.9312 70.9213 22.961C70.9754 22.7145 71.0295 21.7958 70.5156 21.3116C70.0151 20.826 69.2713 20.9922 68.7303 21.1235C67.9593 21.3101 55.8003 29.9842 32.2127 47.1443C28.7638 49.7022 25.6395 50.949 22.8263 50.8834C19.7426 50.8119 13.7916 48.9992 9.36895 47.4505C3.95894 45.5503 -0.35554 44.5455 0.0231604 41.3183C0.212511 39.6383 2.36299 37.9189 6.46107 36.1617Z" fill="#FBC151"/>
 							</svg>
-							<svg v-if="socialMedia.platform == 'youtube'"width="257" height="180" viewBox="0 0 257 180" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+							<svg v-if="socialMedia.platform == 'youtube'"width="257" height="180" viewBox="0 0 257 180" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full" aria-hidden="true">
 								<path fill-rule="evenodd" clip-rule="evenodd" d="M228.172 5.51149C239.215 8.49959 247.841 17.1256 250.829 28.1683C259.284 62.2027 257.331 115.955 250.993 151.303C248.005 162.346 239.379 170.972 228.337 173.96C208.471 179.378 128.515 179.378 128.515 179.378C128.515 179.378 48.56 179.378 28.6943 173.96C17.6517 170.972 9.02562 162.346 6.03753 151.303C-2.46697 117.416 -0.135623 63.631 5.87335 28.3324C8.86144 17.2898 17.4875 8.66377 28.5301 5.67567C48.3958 0.257747 128.351 0.0935669 128.351 0.0935669C128.351 0.0935669 208.307 0.0935669 228.172 5.51149ZM169.232 89.7356L102.903 128.154V51.3176L169.232 89.7356Z" fill="#FBC151"/>
 							</svg>
 						</a>
 					</div>
 				</div>
 			</section>
-		</div>
+		</main>
 	</DefaultLayout>
 </template>
 <style scoped lang="pcss">
@@ -546,5 +547,41 @@ const {isAuthenticated} = useAuthStore()
 	}
 }
 
+/* Focus visible styles for accessibility - WCAG 2.4.7 */
+a:focus-visible,
+button:focus-visible {
+	outline: 3px solid #242424;
+	outline-offset: 2px;
+	border-radius: 1rem;
+}
+
+/* Sign in/Events buttons on primary (yellow) background - use screenBlack */
+a[href="/sign_in"]:focus-visible,
+a[href="/events"]:focus-visible {
+	outline: 3px solid #242424;
+	outline-offset: 2px;
+}
+
+/* Learn More button - on dark background, use pearl-white */
+a[href="#about"]:focus-visible {
+	outline: 3px solid #F2F1F0;
+	outline-offset: 2px;
+}
+
+/* Next event card link - on white background, use screenBlack */
+a[href*="/events/"]:focus-visible,
+a[href*="/event/"]:focus-visible {
+	outline: 3px solid #242424;
+	outline-offset: 2px;
+	border-radius: 2.5rem;
+}
+
+/* Social media links - on dark background, use pearl-white */
+a[href^="http"]:focus-visible,
+a[href^="https"]:focus-visible {
+	outline: 3px solid #F2F1F0;
+	outline-offset: 2px;
+	border-radius: 0.5rem;
+}
 
 </style>

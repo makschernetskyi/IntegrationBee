@@ -58,5 +58,39 @@
   color: #001D37 !important;
 }
 
+/* Focus visible styles for Video.js controls - WCAG 2.4.7 */
+/* Video controls are typically on dark background, use pearl-white */
+.vjs-button:focus-visible,
+.vjs-control:focus-visible,
+.vjs-menu-button:focus-visible {
+  outline: 3px solid #F2F1F0 !important;
+  outline-offset: 2px !important;
+  border-radius: 4px !important;
+}
+
+.vjs-slider:focus-visible,
+.vjs-slider-bar:focus-visible,
+.vjs-progress-holder:focus-visible,
+.vjs-volume-bar:focus-visible {
+  outline: 3px solid #F2F1F0 !important;
+  outline-offset: 2px !important;
+  border-radius: 4px !important;
+}
+
+/* Video.js select elements (caption settings) - on dark background, use pearl-white */
+.video-js select:focus-visible {
+  outline: 3px solid #F2F1F0 !important;
+  outline-offset: 2px !important;
+  border-radius: 4px !important;
+}
+
+.vjs-default-button:focus-visible,
+.vjs-done-button:focus-visible,
+.vjs-close-button:focus-visible {
+  outline: 3px solid #F2F1F0 !important;
+  outline-offset: 2px !important;
+  border-radius: 4px !important;
+}
+
 </style>
   
