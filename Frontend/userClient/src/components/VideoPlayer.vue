@@ -107,12 +107,14 @@
 
 	const youtubeEmbedUrl = computed(() => {
 		if (!youtubeId.value) return '';
-		// Build embed URL with start time if present
-		let embedUrl = `https://www.youtube.com/embed/${youtubeId.value}`;
+		// Build privacy-enhanced embed URL with safe params
+		const params: string[] = ['rel=0', 'modestbranding=1', 'playsinline=1'];
 		if (youtubeStartTime.value !== null && youtubeStartTime.value > 0) {
-			embedUrl += `?start=${youtubeStartTime.value}`;
+			params.push(`start=${youtubeStartTime.value}`);
 		}
-		return embedUrl;
+		const origin = typeof window !== 'undefined' ? window.location.origin : '';
+		if (origin) params.push(`origin=${encodeURIComponent(origin)}`);
+		return `https://www.youtube-nocookie.com/embed/${youtubeId.value}${params.length ? `?${params.join('&')}` : ''}`;
 	});
 
 	const videoTitle = computed(() => {
@@ -133,6 +135,8 @@
 			title="Integration Bee video"
 			frameborder="0"
 			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+			referrerpolicy="strict-origin-when-cross-origin"
+			loading="lazy"
 			allowfullscreen
 		></iframe>
 	</div>
