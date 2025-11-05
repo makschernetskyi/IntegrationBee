@@ -6,7 +6,7 @@ const {isAuthenticated} = useAuthStore()
 
 </script>
 <template>
-	<div class="w-full bg-screenBlack px-[2rem] lg:px-[12rem] xl:px-[10vw]">
+	<footer class="w-full bg-screenBlack px-[2rem] lg:px-[12rem] xl:px-[10vw]">
 		<div class="w-full py-[5rem]">
 			<div class="w-full h-[3px] bg-pearl-white"/>
 		</div>
@@ -94,5 +94,5 @@ const {isAuthenticated} = useAuthStore()
 				</a>
 			</p>
 		</div>
-	</div>
+	</footer>
 </template>

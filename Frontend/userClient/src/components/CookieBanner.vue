@@ -26,8 +26,10 @@ function acceptCookies() {
     leave-from-class="translate-y-0 opacity-100"
     leave-to-class="translate-y-full opacity-0"
   >
-    <div
+    <aside
       v-if="showModal"
+      role="region"
+      aria-label="Cookie consent banner"
       class="fixed bottom-0 left-0 right-0 p-[2rem] bg-pearl-white shadow-lg z-[10000] shadow"
     >
       <div
@@ -50,6 +52,6 @@ function acceptCookies() {
           Accept
         </button>
       </div>
-    </div>
+    </aside>
   </transition>
 </template>
