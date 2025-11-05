@@ -86,9 +86,8 @@ document.addEventListener('click', ()=>{
 							<RouterLink to="/sign_in" class="px-[2.4rem] py-[1rem] rounded-2xl text-secondary bg-[#F5B338] font-semibold transition-all duration-100 outline-transparent hover:lg:outline-primary-50 outline-4 outline">
 								Sign in
 							</RouterLink>
-                            <RouterLink to="/sign_up" class="px-[2.4rem] py-[1rem] h-max w-max hover:bg-screenBlack-400 hover:bg-opacity-15 rounded-2xl signUpBtn text-secondary">
-                                <p class="relative text-screenBlack">Sign up</p>
-								<!--<div class="signUpBtn_Bg bg-pearl-white"/>-->
+                            <RouterLink to="/sign_up" class="px-[2.4rem] py-[1rem] h-max w-max hover:bg-screenBlack-400 hover:bg-opacity-15 rounded-2xl signUpBtn text-black">
+                                Sign up
 							</RouterLink>
 						</div>
 
@@ -183,23 +182,24 @@ document.addEventListener('click', ()=>{
 @media (min-width: 1024px) {
     a:focus, a:focus-visible,
     button:focus, button:focus-visible {
-        outline: 3px solid #242424;
-        outline-offset: 2px;
-        border-radius: 0.5rem;
-        box-shadow: 0 0 0 3px #242424; /* ensure visibly strong indicator */
+        outline: 3px solid #242424 !important;
+        outline-offset: 2px !important;
+        border-radius: 0.5rem !important;
+        box-shadow: 0 0 0 3px #242424 !important; /* ensure visibly strong indicator */
     }
 
 	/* Logo link specific focus style - on light background */
     a[href="/"]:focus, a[href="/"]:focus-visible {
-        outline: 3px solid #242424;
-        outline-offset: 4px;
-        box-shadow: 0 0 0 3px #242424;
+        outline: 3px solid #242424 !important;
+        outline-offset: 4px !important;
+        box-shadow: 0 0 0 3px #242424 !important;
     }
 
-	/* Sign in button - on yellow background, use screenBlack */
+	/* Sign in button - on yellow background, use screenBlack - override outline-transparent */
     a[href="/sign_in"]:focus, a[href="/sign_in"]:focus-visible {
 		outline: 3px solid #242424 !important;
-		outline-offset: 2px;
+		outline-offset: 2px !important;
+		box-shadow: 0 0 0 3px #242424 !important;
 	}
 
 	/* Navigation links and buttons - on light background */
@@ -207,26 +207,26 @@ document.addEventListener('click', ()=>{
     a[href="/events"]:focus, a[href="/events"]:focus-visible,
     a[href="/news"]:focus, a[href="/news"]:focus-visible,
     button:focus, button:focus-visible {
-        outline: 3px solid #242424;
-        outline-offset: 2px;
-        box-shadow: 0 0 0 3px #242424;
+        outline: 3px solid #242424 !important;
+        outline-offset: 2px !important;
+        box-shadow: 0 0 0 3px #242424 !important;
     }
 
 	/* Dropdown menu links - on light background */
     a[href="/contact"]:focus, a[href="/contact"]:focus-visible,
     a[href="/rankings"]:focus, a[href="/rankings"]:focus-visible {
-        outline: 3px solid #242424;
-        outline-offset: 2px;
-        box-shadow: 0 0 0 3px #242424;
+        outline: 3px solid #242424 !important;
+        outline-offset: 2px !important;
+        box-shadow: 0 0 0 3px #242424 !important;
     }
 
 	/* Sign up, profile, and logout buttons - on light background */
     a[href="/sign_up"]:focus, a[href="/sign_up"]:focus-visible,
     a[href="/myprofile"]:focus, a[href="/myprofile"]:focus-visible,
     button.signUpBtn:focus, button.signUpBtn:focus-visible {
-        outline: 3px solid #242424;
-        outline-offset: 2px;
-        box-shadow: 0 0 0 3px #242424;
+        outline: 3px solid #242424 !important;
+        outline-offset: 2px !important;
+        box-shadow: 0 0 0 3px #242424 !important;
     }
 }
 
@@ -234,26 +234,26 @@ document.addEventListener('click', ()=>{
 @media (max-width: 1023px) {
     a:focus, a:focus-visible,
     button:focus, button:focus-visible {
-        outline: 3px solid #F2F1F0;
-        outline-offset: 2px;
-        border-radius: 0.5rem;
-        box-shadow: 0 0 0 3px #F2F1F0;
+        outline: 3px solid #F2F1F0 !important;
+        outline-offset: 2px !important;
+        border-radius: 0.5rem !important;
+        box-shadow: 0 0 0 3px #F2F1F0 !important;
     }
 
 	/* Logo link specific focus style - on dark background */
     a[href="/"]:focus, a[href="/"]:focus-visible {
-        outline: 3px solid #F2F1F0;
-        outline-offset: 4px;
-        box-shadow: 0 0 0 3px #F2F1F0;
+        outline: 3px solid #F2F1F0 !important;
+        outline-offset: 4px !important;
+        box-shadow: 0 0 0 3px #F2F1F0 !important;
     }
 
 	/* Mobile login/profile buttons - icon buttons need more offset, on dark background */
     a[href="/sign_in"].relative:focus, a[href="/sign_in"].relative:focus-visible,
     a[href="/myprofile"].relative:focus, a[href="/myprofile"].relative:focus-visible,
     button.relative:focus, button.relative:focus-visible {
-        outline: 3px solid #F2F1F0;
-        outline-offset: 4px;
-        box-shadow: 0 0 0 3px #F2F1F0;
+        outline: 3px solid #F2F1F0 !important;
+        outline-offset: 4px !important;
+        box-shadow: 0 0 0 3px #F2F1F0 !important;
     }
 }
 
