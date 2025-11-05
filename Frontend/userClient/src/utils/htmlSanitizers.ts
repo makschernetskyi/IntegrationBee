@@ -32,9 +32,22 @@ export function sanitizeHtml(rawHtml: string): string {
     FORBID_ATTR: ['style', 'onerror', 'onclick', 'onload'],
   });
 
+  // Ensure all images have alt attributes for accessibility
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = cleanHtml;
+  const images = tempDiv.querySelectorAll('img');
+  images.forEach((img) => {
+    if (!img.getAttribute('alt') || img.getAttribute('alt') === '') {
+      // Extract filename from src as fallback alt text
+      const src = img.getAttribute('src') || '';
+      const filename = src.split('/').pop()?.split('.')[0] || 'News image';
+      img.setAttribute('alt', filename);
+    }
+  });
+
   // Process the text content to linkify emails, phone numbers, and URLs
-  // const linkedHtml = linkify(cleanHtml);
+  // const linkedHtml = linkify(tempDiv.innerHTML);
 
   // return linkedHtml;
-  return cleanHtml
+  return tempDiv.innerHTML;
 }
