@@ -119,13 +119,15 @@ const {isAuthenticated} = useAuthStore()
 					</div>
 					<div class="flex justify-between md:justify-start items-center w-full md:gap-[2.4rem] lg:text-body">
 						<!-- sign in/events and learn more buttons -->
-						<RouterLink v-if="!isAuthenticated" to="/sign_in" class="rounded-2xl text-secondary bg-primary w-[16rem] h-[6rem] lg:w-[18rem] lg:h-[6rem] flex justify-center items-center text-body font-semibold">Sign in</RouterLink>
-						<RouterLink v-if="isAuthenticated" to="/events" class="rounded-2xl text-secondary bg-primary w-[16rem] h-[6rem] lg:w-[18rem] lg:h-[6rem] flex justify-center items-center text-body font-semibold">Events</RouterLink>
+						<RouterLink v-if="!isAuthenticated" to="/sign_in" class="rounded-2xl text-secondary bg-primary w-[16rem] h-[6rem] lg:w-[18rem] lg:h-[6rem] flex justify-center items-center text-body font-semibold focus-visible:outline-[6px] focus-visible:outline-[#7AB8FF] focus-visible:outline focus-visible:outline-offset-4 focus-visible:outline-solid">Sign in</RouterLink>
+					<RouterLink v-if="isAuthenticated" to="/events" class="rounded-2xl text-secondary bg-primary w-[16rem] h-[6rem] lg:w-[18rem] lg:h-[6rem] flex justify-center items-center text-body font-semibold focus-visible:outline-[6px] focus-visible:outline-[#7AB8FF] focus-visible:outline focus-visible:outline-offset-4 focus-visible:outline-solid">Events</RouterLink>
 
-						<RouterLink to="#about" class="border-pearl-white border-2 rounded-2xl w-[16rem] h-[6rem] lg:w-[18rem] lg:h-[6rem] flex justify-center items-center text-body font-semibold overflow-hidden lg:hover:text-screenBlack signUpBtn">
-							<p class="relative">Learn More</p>
-							<div class="signUpBtn_Bg bg-pearl-white hidden lg:flex"/>
-						</RouterLink>
+						<div class="learn-more-wrapper rounded-2xl focus-within:outline-[6px] focus-within:outline-[#7AB8FF] focus-within:outline focus-within:outline-offset-4 focus-within:outline-solid">
+							<RouterLink to="#about" class="border-pearl-white border-2 rounded-2xl w-[16rem] h-[6rem] lg:w-[18rem] lg:h-[6rem] flex justify-center items-center text-body font-semibold lg:hover:text-screenBlack signUpBtn">
+								<p class="relative">Learn More</p>
+								<div class="signUpBtn_Bg bg-pearl-white hidden lg:flex"/>
+							</RouterLink>
+						</div>
 					</div>
 				</div>
 				<!-- arrow down (animated) -->
@@ -556,43 +558,41 @@ const {isAuthenticated} = useAuthStore()
 /* Focus visible styles for accessibility - WCAG 2.4.7 */
 a:focus, a:focus-visible,
 button:focus, button:focus-visible {
-    outline: 3px solid #242424;
-    outline-offset: 2px;
-    border-radius: 1rem;
-    box-shadow: 0 0 0 3px #242424;
+    outline: 3px solid #242424 !important;
+    outline-offset: 2px !important;
+    border-radius: 1rem !important;
+    box-shadow: 0 0 0 3px #242424 !important;
 }
 
-/* Sign in/Events buttons on primary (yellow) background - use screenBlack */
+/* Sign in/Events buttons on primary (yellow) background - use bright secondary blue */
 a[href="/sign_in"]:focus, a[href="/sign_in"]:focus-visible,
 a[href="/events"]:focus, a[href="/events"]:focus-visible {
-    outline: 3px solid #242424;
-    outline-offset: 2px;
-    box-shadow: 0 0 0 3px #242424;
+    outline: 6px solid #7AB8FF !important;
+    outline-offset: 4px !important;
 }
 
-/* Learn More button - on dark background, use pearl-white */
-a[href="#about"]:focus, a[href="#about"]:focus-visible {
-    outline: 3px solid #F2F1F0;
-    outline-offset: 2px;
-    box-shadow: 0 0 0 3px #F2F1F0;
+/* Learn More button wrapper - on dark background, use bright secondary blue */
+.learn-more-wrapper:focus-within {
+    outline: 6px solid #7AB8FF !important;
+    outline-offset: 4px !important;
 }
 
 /* Next event card link - on white background, use screenBlack */
 a[href*="/events/"]:focus, a[href*="/events/"]:focus-visible,
 a[href*="/event/"]:focus, a[href*="/event/"]:focus-visible {
-    outline: 3px solid #242424;
-    outline-offset: 2px;
-    border-radius: 2.5rem;
-    box-shadow: 0 0 0 3px #242424;
+    outline: 3px solid #242424 !important;
+    outline-offset: 2px !important;
+    border-radius: 2.5rem !important;
+    box-shadow: 0 0 0 3px #242424 !important;
 }
 
 /* Social media links - on dark background, use pearl-white */
 a[href^="http"]:focus, a[href^="http"]:focus-visible,
 a[href^="https"]:focus, a[href^="https"]:focus-visible {
-    outline: 3px solid #F2F1F0;
-    outline-offset: 2px;
-    border-radius: 0.5rem;
-    box-shadow: 0 0 0 3px #F2F1F0;
+    outline: 3px solid #F2F1F0 !important;
+    outline-offset: 2px !important;
+    border-radius: 0.5rem !important;
+    box-shadow: 0 0 0 3px #F2F1F0 !important;
 }
 
 </style>

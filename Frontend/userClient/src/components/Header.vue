@@ -67,7 +67,7 @@ document.addEventListener('click', ()=>{
 						<RouterLink to="/events" class="hover:bg-screenBlack-400 hover:bg-opacity-15 transition-all duration-100 px-[1.5rem] py-[0.8rem] rounded-2xl cursor-pointer">events</RouterLink>
 						<RouterLink to="/news" class="hover:bg-screenBlack-400  hover:bg-opacity-15 transition-all duration-100 px-[1.5rem] py-[0.8rem] rounded-2xl">news</RouterLink>
 						<!-- <RouterLink to="/contact" class="hover:bg-screenBlack-400  hover:bg-opacity-15 transition-all duration-100 px-[1.5rem] py-[0.8rem] rounded-2xl">contact</RouterLink> -->
-						<button @click="(e)=>{e.stopPropagation();isExpandableMenuVisible = !isExpandableMenuVisible}" class="hover:bg-screenBlack-400  hover:bg-opacity-15 transition-all duration-100 px-[1.5rem] py-[0.8rem] rounded-2xl relative" tabindex="0" aria-label="Other navigation menu" :aria-expanded="isExpandableMenuVisible">
+						<button @click="(e)=>{e.stopPropagation();isExpandableMenuVisible = !isExpandableMenuVisible}" class="hover:bg-screenBlack-400  hover:bg-opacity-15 transition-all duration-100 px-[1.5rem] py-[0.8rem] rounded-2xl relative" tabindex="0" aria-label="more navigation menu items (click to open)" :aria-expanded="isExpandableMenuVisible">
 							<p class="text-nowrap">other ▾</p>
 							<div v-if="isExpandableMenuVisible" class="rounded-2xl absolute z-[50] left-[50%] -translate-x-[50%] top-[100%] bg-pearl-white shadow-sm flex flex-col py-[1rem]">
 								<RouterLink to="/contact" class="h-[4rem] flex justify-center items-center px-[2rem] hover:bg-screenBlack-400 hover:bg-opacity-15 transition-all duration-100">contact</RouterLink>
