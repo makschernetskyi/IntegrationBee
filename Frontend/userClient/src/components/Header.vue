@@ -68,7 +68,7 @@ document.addEventListener('click', ()=>{
 						<RouterLink to="/news" class="hover:bg-screenBlack-400  hover:bg-opacity-15 transition-all duration-100 px-[1.5rem] py-[0.8rem] rounded-2xl">news</RouterLink>
 						<!-- <RouterLink to="/contact" class="hover:bg-screenBlack-400  hover:bg-opacity-15 transition-all duration-100 px-[1.5rem] py-[0.8rem] rounded-2xl">contact</RouterLink> -->
 						<button @click="(e)=>{e.stopPropagation();isExpandableMenuVisible = !isExpandableMenuVisible}" class="hover:bg-screenBlack-400  hover:bg-opacity-15 transition-all duration-100 px-[1.5rem] py-[0.8rem] rounded-2xl relative" tabindex="0" aria-label="Other navigation menu" :aria-expanded="isExpandableMenuVisible">
-							<p>other ▾</p>
+							<p class="text-nowrap">other ▾</p>
 							<div v-if="isExpandableMenuVisible" class="rounded-2xl absolute z-[50] left-[50%] -translate-x-[50%] top-[100%] bg-pearl-white shadow-sm flex flex-col py-[1rem]">
 								<RouterLink to="/contact" class="h-[4rem] flex justify-center items-center px-[2rem] hover:bg-screenBlack-400 hover:bg-opacity-15 transition-all duration-100">contact</RouterLink>
 								<RouterLink to="/rankings" class="h-[4rem] flex justify-center items-center px-[2rem] hover:bg-screenBlack-400 hover:bg-opacity-15 transition-all duration-100">rankings</RouterLink>
@@ -86,8 +86,8 @@ document.addEventListener('click', ()=>{
 							<RouterLink to="/sign_in" class="px-[2.4rem] py-[1rem] rounded-2xl text-secondary bg-[#F5B338] font-semibold transition-all duration-100 outline-transparent hover:lg:outline-primary-50 outline-4 outline">
 								Sign in
 							</RouterLink>
-							<RouterLink to="/sign_up" class="px-[2.4rem] py-[1rem] h-max w-max hover:bg-screenBlack-400 hover:bg-opacity-15 rounded-2xl signUpBtn text-secondary">
-								<p class="relative">Sign up</p>
+                            <RouterLink to="/sign_up" class="px-[2.4rem] py-[1rem] h-max w-max hover:bg-screenBlack-400 hover:bg-opacity-15 rounded-2xl signUpBtn text-secondary">
+                                <p class="relative text-secondary">Sign up</p>
 								<!--<div class="signUpBtn_Bg bg-pearl-white"/>-->
 							</RouterLink>
 						</div>
@@ -181,45 +181,45 @@ document.addEventListener('click', ()=>{
 
 /* Desktop focus styles - light background */
 @media (min-width: 1024px) {
-	a:focus-visible,
-	button:focus-visible {
+    a:focus, a:focus-visible,
+    button:focus, button:focus-visible {
 		outline: 3px solid #242424;
 		outline-offset: 2px;
 		border-radius: 0.5rem;
 	}
 
 	/* Logo link specific focus style - on light background */
-	a[href="/"]:focus-visible {
+    a[href="/"]:focus, a[href="/"]:focus-visible {
 		outline: 3px solid #242424;
 		outline-offset: 4px;
 	}
 
 	/* Sign in button - on yellow background, use screenBlack */
-	a[href="/sign_in"]:focus-visible {
+    a[href="/sign_in"]:focus, a[href="/sign_in"]:focus-visible {
 		outline: 3px solid #242424 !important;
 		outline-offset: 2px;
 	}
 
 	/* Navigation links and buttons - on light background */
-	a[href="/games"]:focus-visible,
-	a[href="/events"]:focus-visible,
-	a[href="/news"]:focus-visible,
-	button:focus-visible {
+    a[href="/games"]:focus, a[href="/games"]:focus-visible,
+    a[href="/events"]:focus, a[href="/events"]:focus-visible,
+    a[href="/news"]:focus, a[href="/news"]:focus-visible,
+    button:focus, button:focus-visible {
 		outline: 3px solid #242424;
 		outline-offset: 2px;
 	}
 
 	/* Dropdown menu links - on light background */
-	a[href="/contact"]:focus-visible,
-	a[href="/rankings"]:focus-visible {
+    a[href="/contact"]:focus, a[href="/contact"]:focus-visible,
+    a[href="/rankings"]:focus, a[href="/rankings"]:focus-visible {
 		outline: 3px solid #242424;
 		outline-offset: 2px;
 	}
 
 	/* Sign up, profile, and logout buttons - on light background */
-	a[href="/sign_up"]:focus-visible,
-	a[href="/myprofile"]:focus-visible,
-	button.signUpBtn:focus-visible {
+    a[href="/sign_up"]:focus, a[href="/sign_up"]:focus-visible,
+    a[href="/myprofile"]:focus, a[href="/myprofile"]:focus-visible,
+    button.signUpBtn:focus, button.signUpBtn:focus-visible {
 		outline: 3px solid #242424;
 		outline-offset: 2px;
 	}
@@ -227,23 +227,23 @@ document.addEventListener('click', ()=>{
 
 /* Mobile focus styles - dark background */
 @media (max-width: 1023px) {
-	a:focus-visible,
-	button:focus-visible {
+    a:focus, a:focus-visible,
+    button:focus, button:focus-visible {
 		outline: 3px solid #F2F1F0;
 		outline-offset: 2px;
 		border-radius: 0.5rem;
 	}
 
 	/* Logo link specific focus style - on dark background */
-	a[href="/"]:focus-visible {
+    a[href="/"]:focus, a[href="/"]:focus-visible {
 		outline: 3px solid #F2F1F0;
 		outline-offset: 4px;
 	}
 
 	/* Mobile login/profile buttons - icon buttons need more offset, on dark background */
-	a[href="/sign_in"].relative:focus-visible,
-	a[href="/myprofile"].relative:focus-visible,
-	button.relative:focus-visible {
+    a[href="/sign_in"].relative:focus, a[href="/sign_in"].relative:focus-visible,
+    a[href="/myprofile"].relative:focus, a[href="/myprofile"].relative:focus-visible,
+    button.relative:focus, button.relative:focus-visible {
 		outline: 3px solid #F2F1F0;
 		outline-offset: 4px;
 	}
