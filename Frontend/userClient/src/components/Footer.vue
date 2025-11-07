@@ -72,7 +72,7 @@ const {isAuthenticated} = useAuthStore()
 		</div>
 		<div class="w-full flex flex-col gap-[4rem] lg:gap-0 lg:flex-row flex-wrap justify-center lg:justify-between text-pearl-white text-body lg:text-body py-[5rem]">
 			<div class="hidden lg:flex">
-				<p>© 2024 JugendWAVE All Rights Reserved.</p>
+				<p>© {{ new Date().getFullYear() }} JugendWAVE All Rights Reserved.</p>
 			</div>
             <div class="flex justify-between lg:justify-end gap-[4rem]">
                 <RouterLink to="/imprint" class="underline underline-offset-4 decoration-pearl-white">

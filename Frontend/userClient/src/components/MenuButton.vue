@@ -41,18 +41,6 @@
 			}"
 			aria-hidden="true"
         />
-        <span class="menu-btn-label sr-only text-pearl-white text-text-sm">Menu</span>
+        <span class="sr-only">Menu</span>
 	</button>
 </template>
-<style scoped>
-.menu-button:focus-visible .menu-btn-label,
-.menu-button:focus .menu-btn-label {
-    position: static;
-    width: auto;
-    height: auto;
-    clip: auto;
-    clip-path: none;
-    white-space: nowrap;
-    margin-top: 0.25rem;
-}
-</style>
