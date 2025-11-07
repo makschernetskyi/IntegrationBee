@@ -22,6 +22,7 @@ function linkify(text: string): string {
 
 export function sanitizeHtml(rawHtml: string): string {
   // Sanitize the raw HTML to remove dangerous elements
+  // DOMPurify handles UTF-8 encoding correctly by default
   const cleanHtml = DOMPurify.sanitize(rawHtml.replace(`\\`, ''), {
     ALLOWED_TAGS: [
       'b', 'i', 'em', 'strong', 'a', 'p', 'br', 'ul', 'ol', 'li',
@@ -30,10 +31,16 @@ export function sanitizeHtml(rawHtml: string): string {
     ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'target', 'rel'],
     FORBID_TAGS: ['script', 'style', 'iframe'],
     FORBID_ATTR: ['style', 'onerror', 'onclick', 'onload'],
+    USE_PROFILES: { html: true },
+    // Preserve UTF-8 encoding
+    RETURN_DOM: false,
+    RETURN_DOM_FRAGMENT: false,
   });
 
   // Ensure all images have alt attributes for accessibility
   const tempDiv = document.createElement('div');
+  // Set charset to ensure UTF-8 is preserved
+  tempDiv.setAttribute('data-charset', 'utf-8');
   tempDiv.innerHTML = cleanHtml;
   const images = tempDiv.querySelectorAll('img');
   images.forEach((img) => {

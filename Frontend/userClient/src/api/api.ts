@@ -7,9 +7,12 @@ export const BASE_URL = import.meta.env.VITE_API_URL
 const api = axios.create({
   baseURL: BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json; charset=utf-8',
   },
-  withCredentials: true
+  withCredentials: true,
+  // Ensure response is treated as UTF-8
+  responseType: 'json',
+  responseEncoding: 'utf8',
 });
 
 api.interceptors.request.use(config => {
@@ -47,9 +50,12 @@ api.interceptors.response.use(response => response, async error => {
 const noAuthApi = axios.create({
   baseURL: BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json; charset=utf-8',
   },
   withCredentials: true,
+  // Ensure response is treated as UTF-8
+  responseType: 'json',
+  responseEncoding: 'utf8',
 });
 
 

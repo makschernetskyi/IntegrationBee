@@ -117,7 +117,7 @@ const {isAuthenticated} = useAuthStore()
 						</h2>
 						<h3 class="text-body lg:text-title" v-html="store.slogan && sanitizeHtml(store.slogan)"/>
 					</div>
-					<div class="flex justify-between md:justify-start items-center w-full md:gap-[2.4rem] lg:text-body">
+					<div class="flex justify-between md:justify-start items-center w-full gap-2 md:gap-[2.4rem] lg:text-body">
 						<!-- sign in/events and learn more buttons -->
 						<RouterLink v-if="!isAuthenticated" to="/sign_in" class="rounded-2xl text-secondary bg-primary w-[16rem] h-[6rem] lg:w-[18rem] lg:h-[6rem] flex justify-center items-center text-body font-semibold focus-visible:outline-[6px] focus-visible:outline-[#7AB8FF] focus-visible:outline focus-visible:outline-offset-4 focus-visible:outline-solid">Sign in</RouterLink>
 					<RouterLink v-if="isAuthenticated" to="/events" class="rounded-2xl text-secondary bg-primary w-[16rem] h-[6rem] lg:w-[18rem] lg:h-[6rem] flex justify-center items-center text-body font-semibold focus-visible:outline-[6px] focus-visible:outline-[#7AB8FF] focus-visible:outline focus-visible:outline-offset-4 focus-visible:outline-solid">Events</RouterLink>
