@@ -18,29 +18,28 @@
 		:aria-expanded="isMenuVisible"
 		type="button"
 	>
-		<div
-			class="h-[15%] w-full bg-primary rounded-sm transition-all origin-left duration-1000"
-			:class="{
-				'rotate-45 -translate-y-1/2 scale-x-[1.41] bg-bg': isMenuVisible,
-				//'bg-primary': !isMenuVisible,
-				//'bg-primary': isMenuVisible 
-			}"
-			aria-hidden="true"
-        />
-		<div
-			class="h-[15%] w-[80%] bg-primary rounded-sm transition-all"
-			:class="{ 'opacity-0': isMenuVisible }"
-			aria-hidden="true"
-        />
-		<div
-			class="h-[15%] w-full bg-primary rounded-sm transition-all origin-left duration-1000"
-			:class="{
-				'-rotate-45 translate-y-1/2 scale-x-[1.41] bg-bg': isMenuVisible,
-				//'bg-primary': !isMenuVisible,
-				//'bg-primary': isMenuVisible 
-			}"
-			aria-hidden="true"
-        />
+		<div role="img" aria-hidden="true" class="flex flex-col items-center justify-between h-full w-full">
+			<div
+				class="h-[15%] w-full bg-primary rounded-sm transition-all origin-left duration-1000"
+				:class="{
+					'rotate-45 -translate-y-1/2 scale-x-[1.41] bg-bg': isMenuVisible,
+					//'bg-primary': !isMenuVisible,
+					//'bg-primary': isMenuVisible 
+				}"
+			/>
+			<div
+				class="h-[15%] w-[80%] bg-primary rounded-sm transition-all"
+				:class="{ 'opacity-0': isMenuVisible }"
+			/>
+			<div
+				class="h-[15%] w-full bg-primary rounded-sm transition-all origin-left duration-1000"
+				:class="{
+					'-rotate-45 translate-y-1/2 scale-x-[1.41] bg-bg': isMenuVisible,
+					//'bg-primary': !isMenuVisible,
+					//'bg-primary': isMenuVisible 
+				}"
+			/>
+		</div>
         <span class="sr-only">Menu</span>
 	</button>
 </template>
