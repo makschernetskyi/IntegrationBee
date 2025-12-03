@@ -137,7 +137,7 @@ const {data} = toRefs(props)
 			v-if="data.finals[0].winner"
 			class="col-start-[20] row-start-[5] col-span-4 row-span-4 flex flex-col items-center justify-start"
 		>
-			<p class="font-heading text-text-xs lg:text-text-sm whitespace-nowrap mb-1">
+			<p class="font-heading text-body lg:text-subtitle whitespace-nowrap mb-1">
 				WINNER
 			</p>
 			<p class="font-body text-text-sm lg:text-body whitespace-nowrap mb-1">
