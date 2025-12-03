@@ -10,6 +10,7 @@ export const useSignUpPageStore = defineStore('signUpPageStore', {
 		firstName: '',
 		lastName: '',
 		institution: '',
+		region: '',
 		password: '',
 		isTermsAccepted: false,
 		loading: false,
@@ -48,6 +49,11 @@ export const useSignUpPageStore = defineStore('signUpPageStore', {
 			// this.errors.institution = 'Institution is required.';
 			// }
 
+			// Country / region validation
+			if (!this.region.trim()) {
+				this.errors.region = 'Country is required.';
+			}
+
 			// Password validation
 			if (!this.password.trim()) {
 				this.errors.password = 'Password is required.';
@@ -67,7 +73,8 @@ export const useSignUpPageStore = defineStore('signUpPageStore', {
 					school: this.institution,
 					email: this.email,
 					password: this.password,
-					...(this.institution ? {institution: this.institution} : {})
+					...(this.institution ? {institution: this.institution} : {}),
+					...(this.region ? {region: this.region} : {}),
 				})
 
 				useToastStore().addToast({

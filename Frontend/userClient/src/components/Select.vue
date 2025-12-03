@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { ref, defineProps, defineEmits, onMounted, onUnmounted } from 'vue'
+import Flag from '@/components/Flag.vue'
 
 // Define props
 const props = defineProps<{
   modelValue: string;  // The selected option
   options: string[];   // The list of available options
+  withFlags?: boolean; // If true, render country flags next to options
 }>()
 
 // Define emits to support v-model usage
@@ -48,10 +50,18 @@ onUnmounted(() => {
     <!-- Trigger button -->
     <button
       @click="toggleDropdown"
-      class="inline-flex items-center justify-between px-6 py-2 bg-white h-full w-full text-gray-700 rounded-[inherit] hover:bg-gray-50 focus:outline-none overflow-hidden"
+      class="inline-flex items-center justify-between px-4 py-2 bg-white h-full w-full text-gray-700 rounded-[inherit] hover:bg-gray-50 focus:outline-none overflow-hidden gap-2"
     >
-      <span class="mr-2 w-min-0 text-ellipsis whitespace-nowrap overflow-hidden max-w-full">
-        {{ modelValue }}
+      <span class="flex items-center gap-2 min-w-0">
+        <Flag
+          v-if="props.withFlags && modelValue"
+          :country="modelValue"
+          class="w-[2rem] h-[1.4rem] rounded-sm shadow-sm shrink-0"
+          aria-hidden="true"
+        />
+        <span class="mr-2 w-min-0 text-ellipsis whitespace-nowrap overflow-hidden max-w-full">
+          {{ modelValue }}
+        </span>
       </span>
       <!-- Simple arrow icon -->
       <svg
@@ -78,9 +88,15 @@ onUnmounted(() => {
           v-for="option in options"
           :key="option"
           @click="selectOption(option)"
-          class="cursor-pointer px-6 py-3 text-gray-700 transition-colors duration-100 hover:bg-gray-100"
+          class="cursor-pointer px-6 py-3 text-gray-700 transition-colors duration-100 hover:bg-gray-100 flex items-center gap-3 whitespace-nowrap"
         >
-          {{ option }}
+          <Flag
+            v-if="props.withFlags"
+            :country="option"
+            class="w-[2rem] h-[1.4rem] rounded-sm shadow-sm shrink-0"
+            aria-hidden="true"
+          />
+          <span>{{ option }}</span>
         </li>
       </ul>
     </div>

@@ -2,6 +2,7 @@
 import FormInput from '@/components/FormInput.vue';
 import DefaultLayout from '@/layouts/Default.vue';
 import { useSignUpPageStore } from '@/stores/signUpPageStore/signUpPageStore';
+import Select from '@/components/Select.vue';
 
 import {ref} from "vue";
 import { storeToRefs } from 'pinia';
@@ -11,7 +12,9 @@ import CheckBox from '@/components/CheckBox.vue';
 const testInputModel = ref('')
 
 const store = useSignUpPageStore()
-const {email, password, firstName, lastName, institution, isTermsAccepted, errors} = storeToRefs(store)
+const {email, password, firstName, lastName, institution, region, isTermsAccepted, errors} = storeToRefs(store)
+
+const countries = ['AUSTRIA', 'POLAND', 'SLOVENIA']
 
 
 const router = useRouter();
@@ -59,6 +62,18 @@ const handleSubmit = async (e:any) =>{
 					<div class="flex flex-col w-full">
 						<FormInput v-model="institution" class="w-full" type="text" label="Institution" name="institution" :invalid="Boolean(errors.institution)"/>
 						<div v-if="errors.institution" class="text-text-sm font-body text-red pl-[0rem]">{{errors.institution}}</div>
+					</div>
+					<div class="flex flex-col w-full">
+						<label class="mb-1 font-heading text-text-sm">Country</label>
+						<div class="w-full border border-screenBlack rounded-xl bg-white px-[0.2rem] py-[0.2rem]">
+							<Select
+								v-model="region"
+								:options="countries"
+								:with-flags="true"
+								class="w-full h-[2.5rem] rounded-[0.8rem]"
+							/>
+						</div>
+						<div v-if="errors.region" class="text-text-sm font-body text-red pl-[0rem] mt-[0.25rem]">{{errors.region}}</div>
 					</div>
 					<div class="flex flex-col w-full">
 						<FormInput v-model="password" class="w-full" type="password" label="Password" name="password" :invalid="Boolean(errors.password)"/>

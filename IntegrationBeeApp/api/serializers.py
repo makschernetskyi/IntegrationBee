@@ -55,6 +55,7 @@ class UserSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "institution",
+            "region",
             "phone_number",
             "is_verified",
             "is_superuser",
@@ -112,6 +113,7 @@ class UserSerializer(serializers.ModelSerializer):
             first_name=validated_data["first_name"],
             last_name=validated_data["last_name"],
             institution=validated_data.get("institution", ""),
+            region=validated_data.get("region", ""),
             phone_number=validated_data.get("phone_number", ""),
             program_of_study=validated_data.get("program_of_study", ""),
         )
