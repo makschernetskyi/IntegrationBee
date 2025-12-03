@@ -131,5 +131,16 @@ const {data} = toRefs(props)
 		/>
 		<div class="row-start-[15] col-start-[17] row-span-6 col-span-3 border-t-2 border-screenBlack"/>
 		<div class="row-start-[15] col-start-[24] row-span-6 col-span-3 border-t-2 border-screenBlack"/>
+
+		<!-- winner display above finals -->
+		<div
+			v-if="data.finals[0].winner"
+			class="col-start-[20] row-start-[5] col-span-4 row-span-4 flex flex-col items-center justify-end"
+		>
+			<div class="w-px h-full bg-screenBlack mb-1"/>
+			<p class="font-heading text-text-sm lg:text-body whitespace-nowrap border-b-2 border-screenBlack">
+				{{ data.finals[0].winner }}
+			</p>
+		</div>
 	</div>
 </template>

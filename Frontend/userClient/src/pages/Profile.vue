@@ -4,6 +4,7 @@ import { useAuthStore } from '@/stores/authStore/authStore';
 import { useProfilePageStore } from '@/stores/profilePageStore/profilePageStore';
 import { storeToRefs } from 'pinia';
 import { onMounted } from 'vue';
+import Flag from '@/components/Flag.vue';
 
 const store = useAuthStore()
 
@@ -68,6 +69,22 @@ const handleImageChoice = (e:any) => {
 						<span class="font-heading">email:</span>
 						<p>{{ store.email }}</p>
 					</div>
+					<div class="flex flex-col lg:flex-row gap-[1rem] items-center">
+						<span class="font-heading">Region:</span>
+						<div class="flex items-center gap-[0.75rem]">
+							<Flag
+								v-if="store.region"
+								:country="store.region"
+								class="w-[2.5rem] h-[1.7rem] rounded-sm shadow-sm"
+								:aria-label="store.region"
+							/>
+							<p v-if="store.region">{{ store.region }}</p>
+							<p v-else>No region set</p>
+						</div>
+					</div>
+					<p class="text-text-xs lg:text-text-sm text-gray-600 max-w-[28rem] text-center lg:text-left">
+						To change your region, email us or attend a live event.
+					</p>
 					<div class="flex flex-col lg:flex-row gap-[1rem] items-center">
 						<span class="font-heading">tel:</span>
 						<div v-if="editingField === 'phoneNumber'" class="flex items-center gap-[1rem] h-[3.5rem]">

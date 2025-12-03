@@ -278,7 +278,6 @@ class CompetitionListView(ListAPIView):
 
 
 class CompetitionSeriesDetailView(APIView):
-    authentication_classes = [SessionAuthentication]
     permission_classes = [HasIntegralEditorPermission]
 
     def get(self, request, competition_id, series_id):
@@ -304,7 +303,6 @@ class CompetitionSeriesDetailView(APIView):
 
 
 class CompetitionTieBreakersView(APIView):
-    authentication_classes = [SessionAuthentication]
     permission_classes = [HasIntegralEditorPermission]
 
     def get(self, request, competition_id):
@@ -468,9 +466,9 @@ class UserGymRankingListView(ListAPIView):
     
     def get_queryset(self):
         """
-        Return all users excluding placeholder users
+        Return all users with non-zero gym rating, excluding placeholder users
         """
-        queryset = User.objects.all()
+        queryset = User.objects.filter(ranking_gym__gt=0)
         queryset = queryset.exclude(
             Q(first_name__icontains='placeholder') | 
             Q(last_name__icontains='placeholder')

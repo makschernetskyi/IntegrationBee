@@ -97,7 +97,7 @@ const showPrevIntegral = () =>{
 		</RouterLink>
 		</div>
 	</header>
-	<main class="relative flex flex-col justify-center flex-1 w-full">
+	<main v-if="currentIntegral" class="relative flex flex-col justify-center flex-1 w-full">
 		<div class="w-full h-[10rem] flex justify-center items-center">
 		<div class="flex gap-[2rem] items-center">
 			<div
@@ -250,6 +250,7 @@ const showPrevIntegral = () =>{
 		</div>
 		<!-- Navigation buttons -->
 		<button
+		v-if="presentingStore.currentIntegralIndex > 0"
 		@click="showPrevIntegral"
 		class="absolute left-0 top-[50%] -translate-y-[50%] cursor-pointer h-[8rem] transition-transform will-change-transform hover:scale-[1.1]"
 		>
@@ -268,6 +269,7 @@ const showPrevIntegral = () =>{
 		</svg>
 		</button>
 		<button
+		v-if="presentingStore.currentIntegralIndex < presentingStore.series.length - 1"
 		@click="showNextIntegral"
 		class="absolute right-0 top-[50%] -translate-y-[50%] cursor-pointer h-[8rem] transition-transform will-change-transform hover:scale-[1.1]"
 		>

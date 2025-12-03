@@ -27,6 +27,7 @@ export async function getProfileDataRequestResolver(this: any) {
 		this.phoneNumber = data.phone_number
 		this.dateJoined = data.registration_date;
 		this.institution = data.institution;
+		this.region = data.region;
 		this.isAdmin = data.role['Admin'];
 		this.role = data.role
 		this.programOfStudy = data.program_of_study
