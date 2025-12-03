@@ -2,16 +2,26 @@
 import { defineProps, computed, defineAsyncComponent } from 'vue'
 
 const props = defineProps<{ country: string }>()
-const flagModules = import.meta.glob('@/assets/flags/*.svg') as Record<string, () => Promise<{ default: any }>>
+const svgFlagModules = import.meta.glob('@/assets/flags/*.svg') as Record<string, () => Promise<{ default: any }>>
+const jpgFlagModules = import.meta.glob('@/assets/flags/*.jpg') as Record<string, () => Promise<{ default: any }>>
 const countryCode = props.country.toLowerCase().replace(/\s+/g, '_')
 const FlagComponent = computed(() => {
-  const expectedFileName = `${countryCode}.svg`
-  const flagKey = Object.keys(flagModules).find(key => key.endsWith(expectedFileName))
-  if (!flagKey) {
-    console.error(`Flag for country "${props.country}" not found.`)
-    return null
+  // Try SVG first
+  const expectedSvgFileName = `${countryCode}.svg`
+  const svgFlagKey = Object.keys(svgFlagModules).find(key => key.endsWith(expectedSvgFileName))
+  if (svgFlagKey) {
+    return defineAsyncComponent(svgFlagModules[svgFlagKey])
   }
-  return defineAsyncComponent(flagModules[flagKey])
+  
+  // Try JPG if SVG not found
+  const expectedJpgFileName = `${countryCode}.jpg`
+  const jpgFlagKey = Object.keys(jpgFlagModules).find(key => key.endsWith(expectedJpgFileName))
+  if (jpgFlagKey) {
+    return defineAsyncComponent(jpgFlagModules[jpgFlagKey])
+  }
+  
+  console.error(`Flag for country "${props.country}" not found.`)
+  return null
 })
 </script>
 

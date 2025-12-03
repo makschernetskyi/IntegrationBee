@@ -85,21 +85,6 @@ const handleImageChoice = (e:any) => {
 					<p class="text-text-xs lg:text-text-sm text-gray-600 text-center lg:text-left">
 						To change your region, email us or attend a live event.
 					</p>
-					<!-- Admin/Integral Editor Links -->
-					<div v-if="store.isAdmin || (store.role && store.role['IntegralEditor'])" class="flex flex-col lg:flex-row gap-[1rem] items-center lg:items-start w-full">
-						<RouterLink 
-							to="/presenting" 
-							class="overflow-hidden rounded-xl font-heading text-body px-[2rem] py-[1rem] relative bg-primary border-primary border-2 text-screenBlack after:absolute after:w-full after:h-full after:top-0 after:left-0 after:bg-pearl-white after:transition-transform after:duration-200 after:will-change-transform after:origin-top after:scale-y-0 hover:after:scale-y-100"
-						>
-							<span class="relative z-[2]">Presenting</span>
-						</RouterLink>
-						<a 
-							href="/admin/" 
-							class="overflow-hidden rounded-xl font-heading text-body px-[2rem] py-[1rem] relative bg-screenBlack border-screenBlack border-2 text-pearl-white after:absolute after:w-full after:h-full after:top-0 after:left-0 after:bg-pearl-white after:transition-transform after:duration-200 after:will-change-transform after:origin-top after:scale-y-0 hover:after:scale-y-100 hover:after:text-screenBlack"
-						>
-							<span class="relative z-[2]">Admin Panel</span>
-						</a>
-					</div>
 					<div class="flex flex-col lg:flex-row gap-[1rem] items-center">
 						<span class="font-heading">tel:</span>
 						<div v-if="editingField === 'phoneNumber'" class="flex items-center gap-[1rem] h-[3.5rem]">
@@ -207,6 +192,28 @@ const handleImageChoice = (e:any) => {
 					</div>
 				</div>
 			</section>
+
+			<!-- Admin/Integral Editor Section -->
+			<section v-if="store.isAdmin || (store.role && store.role['IntegralEditor'])" class="flex flex-col gap-[2rem] py-[5rem] text-screenBlack font-body text-body border-t-2 border-gray-200">
+				<h2 class="font-heading text-subtitle lg:text-title text-center lg:text-left">
+					Admin Tools
+				</h2>
+				<div class="flex flex-col lg:flex-row gap-[2rem] items-center lg:items-start">
+					<RouterLink 
+						to="/presenting" 
+						class="overflow-hidden rounded-xl font-heading text-body px-[3rem] py-[1.5rem] relative bg-primary border-primary border-2 text-screenBlack after:absolute after:w-full after:h-full after:top-0 after:left-0 after:bg-pearl-white after:transition-transform after:duration-200 after:will-change-transform after:origin-top after:scale-y-0 hover:after:scale-y-100"
+					>
+						<span class="relative z-[2]">Presenting</span>
+					</RouterLink>
+					<a 
+						href="/admin/" 
+						class="overflow-hidden rounded-xl font-heading text-body px-[3rem] py-[1.5rem] relative bg-screenBlack border-screenBlack border-2 text-pearl-white after:absolute after:w-full after:h-full after:top-0 after:left-0 after:bg-pearl-white after:transition-transform after:duration-200 after:will-change-transform after:origin-top after:scale-y-0 hover:after:scale-y-100"
+					>
+						<span class="relative z-[2]">Admin Panel</span>
+					</a>
+				</div>
+			</section>
+
 			<section class="flex flex-col gap-[2rem] py-[10rem] text-screenBlack font-body text-body">
 				<div class="flex flex-col lg:flex-row items-center lg:items-start text-center lg:text-left gap-[4rem]">
 					<h2 class="font-heading text-subtitle lg:text-title">
