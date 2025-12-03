@@ -3,33 +3,51 @@ import math
 from typing import Tuple, Callable
 from .elo_config import MU, TAU, LAM, ALPHA, K_MIN, K_MAX, ROUND_MAPPING, TOTAL_ROUNDS, DECAY_FACTOR
 
+# T parameter for skew function (as specified in thesis)
+T = 0.0
+
 
 def get_skew_functions() -> Tuple[Callable[[float], float], Callable[[float], float]]:
     """
-    Returns the skew function f and its inverse f_inverse.
-    Used for displaying ratings to frontend (apply f) and internal calculations.
-    """
-    T = 0.0  # Parameter T for the rational branch
+    Returns the skew function f and its inverse f_inverse as specified in thesis (Equation 27).
     
-    def f(x: float) -> float:
-        if x > MU:
-            return MU + LAM * (x - MU)
-        elif x < MU:
-            denominator = (2 * MU - x - T)**2
-            if denominator == 0:
-                return float('inf')  # Avoid division by zero
-            return T + (MU - T)**3 / denominator
-        else:  # x == MU
+    Piecewise function (Way 2 - arctangent-based):
+    - For R < μ: f(R) = T + (2(μ-T)/π) * (arctan(α(R-μ)/(μ-T)) + π/2)
+    - For R = μ: f(R) = μ
+    - For R > μ: f(R) = λ(R - μ) + μ
+    
+    Inverse (Equation 28):
+    - For T < R* < μ: f^(-1)(R*) = μ + (μ-T)/α * tan(π/2 * (R*-T)/(μ-T) - π/2)
+    - For R* = μ: f^(-1)(R*) = μ  
+    - For R* > μ: f^(-1)(R*) = μ + (R* - μ)/λ
+    
+    Where:
+    - μ (MU) = 580 (initial rating, m in thesis)
+    - λ (LAM) = 1.4 (linear slope above μ)
+    - α (ALPHA) = 1.94 (arctan steepness parameter)
+    - T = 0.0 (lower bound parameter)
+    """
+    
+    def f(R: float) -> float:
+        if R > MU:
+            # Linear branch for ratings above μ
+            return LAM * (R - MU) + MU
+        elif R < MU:
+            # Arctangent branch for ratings below μ
+            return T + (2 * (MU - T) / np.pi) * (np.arctan(ALPHA * (R - MU) / (MU - T)) + np.pi / 2)
+        else:  # R == MU
             return MU
 
-    def f_inverse(y: float) -> float:
-        if y > MU:
-            return MU + (y - MU) / LAM
-        elif y < MU:
-            if y <= T:
-                return float('-inf')  # Invalid input for this branch
-            return 2 * MU - T - (MU - T)**1.5 / np.sqrt(y - T)
-        else:  # y == MU
+    def f_inverse(R_star: float) -> float:
+        if R_star > MU:
+            # Inverse of linear branch
+            return MU + (R_star - MU) / LAM
+        elif R_star < MU:
+            # Inverse of arctangent branch
+            if R_star <= T:
+                return float('-inf')  # Invalid input
+            return MU + (MU - T) / ALPHA * np.tan(np.pi / 2 * (R_star - T) / (MU - T) - np.pi / 2)
+        else:  # R_star == MU
             return MU
 
     return f, f_inverse
