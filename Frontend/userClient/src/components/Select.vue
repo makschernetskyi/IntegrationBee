@@ -49,8 +49,9 @@ onUnmounted(() => {
   <div ref="dropdownRef" class="relative inline-block text-left">
     <!-- Trigger button -->
     <button
+      type="button"
       @click="toggleDropdown"
-      class="inline-flex items-center justify-between px-4 py-2 bg-white h-full w-full text-gray-700 rounded-[inherit] hover:bg-gray-50 focus:outline-none overflow-hidden gap-2"
+      class="inline-flex items-center justify-between h-full w-full text-screenBlack bg-transparent rounded-[inherit] focus:outline-none overflow-hidden gap-2"
     >
       <span class="flex items-center gap-2 min-w-0">
         <Flag
@@ -59,13 +60,13 @@ onUnmounted(() => {
           class="w-[2rem] h-[1.4rem] rounded-sm shadow-sm shrink-0"
           aria-hidden="true"
         />
-        <span class="mr-2 w-min-0 text-ellipsis whitespace-nowrap overflow-hidden max-w-full">
-          {{ modelValue }}
+        <span class="w-min-0 text-ellipsis whitespace-nowrap overflow-hidden max-w-full">
+          {{ modelValue || 'Select your country' }}
         </span>
       </span>
       <!-- Simple arrow icon -->
       <svg
-        class="h-4 w-4 text-gray-500"
+        class="h-4 w-4 text-screenBlack shrink-0"
         fill="none"
         stroke="currentColor"
         stroke-width="2"
@@ -81,14 +82,14 @@ onUnmounted(() => {
     <!-- Dropdown menu -->
     <div
       v-if="isOpen"
-      class="absolute z-30 left-0 mt-2 max-h-[16rem] overflow-hidden overflow-y-auto w-max bg-white rounded-[inherit] shadow-lg ring-opacity-5 focus:outline-none "
+      class="absolute z-30 left-0 mt-2 max-h-[20rem] overflow-hidden overflow-y-auto w-max min-w-full bg-white rounded-xl shadow-lg border border-screenBlack focus:outline-none "
     >
       <ul>
         <li
           v-for="option in options"
           :key="option"
           @click="selectOption(option)"
-          class="cursor-pointer px-6 py-3 text-gray-700 transition-colors duration-100 hover:bg-gray-100 flex items-center gap-3 whitespace-nowrap"
+          class="cursor-pointer px-4 py-2 text-screenBlack transition-colors duration-100 hover:bg-gray-100 flex items-center gap-3 whitespace-nowrap"
         >
           <Flag
             v-if="props.withFlags"

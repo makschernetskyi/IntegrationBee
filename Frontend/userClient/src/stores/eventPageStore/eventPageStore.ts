@@ -175,7 +175,8 @@ export const useEventPageStore = defineStore('eventPageStore', {
             id: match.id,
             participant1: match.player1,
             participant2: match.player2,
-            winner: match.winner
+            // Wagtail API uses `match_winner` field; fall back to `winner` if present
+            winner: match.match_winner || match.winner
           }))
           this.tournamentBracket.quarterfinals = data.competition.rounds
           .find((round:any)=>round.name === "Quarterfinals")
@@ -185,7 +186,7 @@ export const useEventPageStore = defineStore('eventPageStore', {
             id: match.id,
             participant1: match.player1,
             participant2: match.player2,
-            winner: match.winner
+            winner: match.match_winner || match.winner
           }))
           this.tournamentBracket.semifinals = data.competition.rounds
           .find((round:any)=>round.name === "Semifinals")
@@ -195,7 +196,7 @@ export const useEventPageStore = defineStore('eventPageStore', {
             id: match.id,
             participant1: match.player1,
             participant2: match.player2,
-            winner: match.winner
+            winner: match.match_winner || match.winner
           }))
           this.tournamentBracket.finals = data.competition.rounds
           .find((round:any)=>round.name === "Finals")
@@ -205,7 +206,7 @@ export const useEventPageStore = defineStore('eventPageStore', {
             id: match.id,
             participant1: match.player1,
             participant2: match.player2,
-            winner: match.winner
+            winner: match.match_winner || match.winner
           }))
         }
         
