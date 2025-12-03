@@ -409,7 +409,7 @@ class Competition(RevisionMixin, ClusterableModel):
             # Count completed competitions (those with Finals winner set and decay already applied)
             completed_competitions = Competition.objects.filter(
                 rounds__name='Finals',
-                rounds__matches__winner__isnull=False,
+                rounds__matches__match_winner__isnull=False,
                 decay_applied=True
             ).distinct().count()
             
