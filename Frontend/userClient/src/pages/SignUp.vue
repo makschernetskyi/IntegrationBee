@@ -14,7 +14,78 @@ const testInputModel = ref('')
 const store = useSignUpPageStore()
 const {email, password, firstName, lastName, institution, region, isTermsAccepted, errors} = storeToRefs(store)
 
-const countries = ['AUSTRIA', 'POLAND', 'SLOVENIA']
+const countries = [
+	'ARMENIA',
+	'AUSTRIA',
+	'AZERBAIJAN',
+	'BAHAMAS',
+	'BASHKORTOSTAN',
+	'BELARUS',
+	'BELGIUM',
+	'BOSNIA AND HERZEGOVINA',
+	'BRAZIL',
+	'BULGARIA',
+	'CANADA',
+	'CHINA',
+	'COLOMBIA',
+	'CUBA',
+	'CZECH REPUBLIC',
+	'DENMARK',
+	'ENGLAND',
+	'ESTONIA',
+	'FAROE ISLANDS',
+	'FINLAND',
+	'FRANCE',
+	'GERMANY',
+	'GREECE',
+	'HONDURAS',
+	'HUNGARY',
+	'ICELAND',
+	'IRELAND',
+	'ISRAEL',
+	'ITALY',
+	'JAPAN',
+	'LATVIA',
+	'LITHUANIA',
+	'LUXEMBURG',
+	'MALTA',
+	'MAURITIUS',
+	'MOLDOVA',
+	'MONACO',
+	'MOROCCO',
+	'NETHERLANDS',
+	'NIGERIA',
+	'NO AFFILIATION',
+	'NORTH MACEDONIA',
+	'NORTHERN IRELAND',
+	'NORWAY',
+	'PALESTINE',
+	'PANAMA',
+	'PERU',
+	'PHILIPPINES',
+	'POLAND',
+	'PORTUGAL',
+	'REPUBLIC OF TATARSTAN',
+	'ROMANIA',
+	'RUSSIAN FEDERATION',
+	'SAN MARINO',
+	'SAUDI ARABIA',
+	'SCOTLAND',
+	'SLOVAKIA',
+	'SLOVENIA',
+	'SOUTH KOREA',
+	'SPAIN',
+	'SWEDEN',
+	'SWITZERLAND',
+	'TURKEY',
+	'UKRAINE',
+	'UNITED ARAB EMIRATES',
+	'UNITED KINGDOM',
+	'UNITED STATES',
+	'VATICAN',
+	'VIETNAM',
+	'WALES',
+]
 
 
 const router = useRouter();
@@ -64,16 +135,32 @@ const handleSubmit = async (e:any) =>{
 						<div v-if="errors.institution" class="text-text-sm font-body text-red pl-[0rem]">{{errors.institution}}</div>
 					</div>
 					<div class="flex flex-col w-full">
-						<label class="mb-1 font-heading text-text-sm">Country</label>
-						<div class="w-full border border-screenBlack rounded-xl bg-white px-[0.2rem] py-[0.2rem]">
-							<Select
-								v-model="region"
-								:options="countries"
-								:with-flags="true"
-								class="w-full h-[2.5rem] rounded-[0.8rem]"
-							/>
+						<div class="relative h-[8rem] flex justify-start items-end text-body text-screenBlack">
+							<div :class="{
+								'h-[50%] relative w-full border-b-2 transition-all duration-100': true,
+								'border-b-red': Boolean(errors.region),
+								'border-b-screenBlack': !Boolean(errors.region)
+							}">
+								<div class="absolute w-full h-full -top-[100%] left-0 px-[2rem] flex items-center pointer-events-none">
+									<label :class="{
+										'font-heading whitespace-nowrap': true,
+										'text-red': Boolean(errors.region),
+										'text-screenBlack': !Boolean(errors.region)
+									}">
+										Country
+									</label>
+								</div>
+								<div class="w-full h-full pl-[2rem] pr-[1rem]">
+									<Select
+										v-model="region"
+										:options="countries"
+										:with-flags="true"
+										class="w-full h-full"
+									/>
+								</div>
+							</div>
 						</div>
-						<div v-if="errors.region" class="text-text-sm font-body text-red pl-[0rem] mt-[0.25rem]">{{errors.region}}</div>
+						<div v-if="errors.region" class="text-text-sm font-body text-red pl-[0rem]">{{errors.region}}</div>
 					</div>
 					<div class="flex flex-col w-full">
 						<FormInput v-model="password" class="w-full" type="password" label="Password" name="password" :invalid="Boolean(errors.password)"/>
