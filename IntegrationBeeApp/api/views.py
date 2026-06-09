@@ -490,6 +490,14 @@ class DailyIntegralTodayView(generics.RetrieveAPIView):
             if integral:
                 integral.date = today
                 integral.save()
+
+        if not integral:
+            past_integrals = DailyIntegral.objects.filter(date__lt=today)
+            integral = past_integrals.order_by('?').first()
+            if integral:
+                integral.date = today
+                integral.save()
+
         return integral
 
     def get(self, request, *args, **kwargs):
